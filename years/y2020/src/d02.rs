@@ -1,9 +1,9 @@
 use regex::Regex;
 
 pub fn p1(s: &str) {
-  help(s, |lo, hi, want, pw| {
-    let count = pw.as_bytes().iter().filter(|&&b| b == want).count();
-    lo <= count && count <= hi
+  help(s, |n1, n2, c, pw| {
+    let count = pw.as_bytes().iter().filter(|&&b| b == c).count();
+    n1 <= count && count <= n2
   })
 }
 
@@ -18,11 +18,11 @@ where
       continue;
     }
     let caps = r.captures(line).unwrap();
-    let lo: usize = caps[1].parse().unwrap();
-    let hi: usize = caps[2].parse().unwrap();
-    let want = caps[3].as_bytes()[0];
+    let n1: usize = caps[1].parse().unwrap();
+    let n2: usize = caps[2].parse().unwrap();
+    let c = caps[3].as_bytes()[0];
     let pw = &caps[4];
-    if f(lo, hi, want, pw) {
+    if f(n1, n2, c, pw) {
       ok += 1;
     }
   }
