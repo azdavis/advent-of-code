@@ -13,6 +13,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
   match (year, day, part) {
     (2020, 1, 1) => y2020::d01::p1(&buf),
     (2020, 1, 2) => y2020::d01::p2(&buf),
+    (2020, 2, 1) => y2020::d02::p1(&buf),
     _ => return Err(SelectionError { year, day, part }.into()),
   }
   Ok(())
