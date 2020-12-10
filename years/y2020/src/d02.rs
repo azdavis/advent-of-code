@@ -1,5 +1,6 @@
 use regex::Regex;
 
+#[allow(clippy::naive_bytecount)]
 pub fn p1(s: &str) {
   help(s, |n1, n2, c, pw| {
     let count = pw.as_bytes().iter().filter(|&&b| b == c).count();
