@@ -1,6 +1,29 @@
+use std::collections::HashSet;
+
 pub fn p1(s: &str) {
   let ans = seat_ids(s).max().unwrap();
   println!("{}", ans);
+}
+
+pub fn p2(s: &str) {
+  let all_ids: HashSet<_> = seat_ids(s).collect();
+  let max_possible = seat_id(Seat {
+    row: MAX_ROW,
+    col: MAX_COL,
+  });
+  for id in 0..=max_possible {
+    if all_ids.contains(&id) {
+      continue;
+    }
+    let id_less_1 = match id.checked_sub(1) {
+      None => continue,
+      Some(x) => x,
+    };
+    if all_ids.contains(&id_less_1) && all_ids.contains(&(id + 1)) {
+      println!("{}", id);
+      return;
+    }
+  }
 }
 
 fn seat_ids(s: &str) -> impl Iterator<Item = u32> + '_ {
