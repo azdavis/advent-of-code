@@ -7,6 +7,15 @@ pub fn p1(s: &str) {
   })
 }
 
+pub fn p2(s: &str) {
+  help(s, |n1, n2, c, pw| {
+    let bs = pw.as_bytes();
+    let at_n1 = bs[n1 - 1] == c;
+    let at_n2 = bs[n2 - 1] == c;
+    (at_n1 && !at_n2) || (!at_n1 && at_n2)
+  })
+}
+
 fn help<F>(s: &str, f: F)
 where
   F: Fn(usize, usize, u8, &str) -> bool,
