@@ -1,6 +1,16 @@
 use regex::Regex;
 
 pub fn p1(s: &str) {
+  help(s, |lo, hi, want, pw| {
+    let count = pw.as_bytes().iter().filter(|&&b| b == want).count();
+    lo <= count && count <= hi
+  })
+}
+
+fn help<F>(s: &str, f: F)
+where
+  F: Fn(usize, usize, u8, &str) -> bool,
+{
   let r = Regex::new(r"(\d+)-(\d+) (\w): (\w+)").unwrap();
   let mut ok = 0;
   for line in s.split('\n') {
@@ -12,8 +22,7 @@ pub fn p1(s: &str) {
     let hi: usize = caps[2].parse().unwrap();
     let want = caps[3].as_bytes()[0];
     let pw = &caps[4];
-    let count = pw.as_bytes().iter().filter(|&&b| b == want).count();
-    if lo <= count && count <= hi {
+    if f(lo, hi, want, pw) {
       ok += 1;
     }
   }
