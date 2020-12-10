@@ -1,16 +1,16 @@
 pub fn p1(s: &str) {
-  let ans = s
-    .split('\n')
-    .filter_map(|s| {
-      if s.is_empty() {
-        None
-      } else {
-        Some(seat_id(parse_seat(s)))
-      }
-    })
-    .max()
-    .unwrap();
+  let ans = seat_ids(s).max().unwrap();
   println!("{}", ans);
+}
+
+fn seat_ids(s: &str) -> impl Iterator<Item = u32> + '_ {
+  s.split('\n').filter_map(|s| {
+    if s.is_empty() {
+      None
+    } else {
+      Some(seat_id(parse_seat(s)))
+    }
+  })
 }
 
 struct Seat {
