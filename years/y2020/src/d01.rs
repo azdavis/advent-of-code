@@ -7,28 +7,28 @@ fn parse(s: &str) -> Vec<u32> {
     .unwrap()
 }
 
-pub fn p1(s: &str) {
+pub fn p1(s: &str) -> u32 {
   let xs = parse(s);
   for &a in xs.iter() {
     for &b in xs.iter() {
       if a + b == TARGET {
-        println!("{}", a * b);
-        return;
+        return a * b;
       }
     }
   }
+  unreachable!()
 }
 
-pub fn p2(s: &str) {
+pub fn p2(s: &str) -> u32 {
   let xs = parse(s);
   for &a in xs.iter() {
     for &b in xs.iter() {
       for &c in xs.iter() {
         if a + b + c == TARGET {
-          println!("{}", a * b * c);
-          return;
+          return a * b * c;
         }
       }
     }
   }
+  unreachable!()
 }

@@ -1,11 +1,10 @@
 use std::collections::HashSet;
 
-pub fn p1(s: &str) {
-  let ans = seat_ids(s).max().unwrap();
-  println!("{}", ans);
+pub fn p1(s: &str) -> u32 {
+  seat_ids(s).max().unwrap()
 }
 
-pub fn p2(s: &str) {
+pub fn p2(s: &str) -> u32 {
   let all_ids: HashSet<_> = seat_ids(s).collect();
   let max_possible = seat_id(Seat {
     row: MAX_ROW,
@@ -20,10 +19,10 @@ pub fn p2(s: &str) {
       Some(x) => x,
     };
     if all_ids.contains(&id_less_1) && all_ids.contains(&(id + 1)) {
-      println!("{}", id);
-      return;
+      return id;
     }
   }
+  unreachable!()
 }
 
 fn seat_ids(s: &str) -> impl Iterator<Item = u32> + '_ {

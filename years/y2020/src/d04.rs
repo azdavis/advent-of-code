@@ -2,11 +2,11 @@ use maplit::hashset;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
-pub fn p1(s: &str) {
+pub fn p1(s: &str) -> usize {
   help(s, |_, _| true)
 }
 
-pub fn p2(s: &str) {
+pub fn p2(s: &str) -> usize {
   help(s, is_p2_valid_key)
 }
 
@@ -51,7 +51,7 @@ fn is_p2_valid_key(key: Key, val: &str) -> bool {
   }
 }
 
-fn help<F>(s: &str, f: F)
+fn help<F>(s: &str, f: F) -> usize
 where
   F: Fn(Key, &str) -> bool,
 {
@@ -80,7 +80,7 @@ where
       ok += 1;
     }
   }
-  println!("{}", ok);
+  ok
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
