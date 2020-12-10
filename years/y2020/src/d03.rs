@@ -2,6 +2,15 @@ pub fn p1(s: &str) {
   println!("{}", help(s, 3, 1));
 }
 
+pub fn p2(s: &str) {
+  let ans = help(s, 1, 1)
+    * help(s, 3, 1)
+    * help(s, 5, 1)
+    * help(s, 7, 1)
+    * help(s, 1, 2);
+  println!("{}", ans);
+}
+
 fn help(s: &str, right: usize, down: usize) -> usize {
   let mut trees = 0;
   let mut y = 0;
