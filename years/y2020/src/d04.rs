@@ -55,7 +55,7 @@ fn help<F>(s: &str, f: F) -> usize
 where
   F: Fn(Key, &str) -> bool,
 {
-  let mut ok = 0;
+  let mut ret = 0;
   'outer: for passport in s.split("\n\n") {
     let mut need = hashset![
       Key::BirthYear,
@@ -77,10 +77,10 @@ where
       need.remove(&key);
     }
     if need.is_empty() {
-      ok += 1;
+      ret += 1;
     }
   }
-  ok
+  ret
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

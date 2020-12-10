@@ -22,7 +22,7 @@ where
   F: Fn(usize, usize, u8, &str) -> bool,
 {
   let r = Regex::new(r"(\d+)-(\d+) (\w): (\w+)").unwrap();
-  let mut ok = 0;
+  let mut ret = 0;
   for line in s.split('\n') {
     if line.is_empty() {
       continue;
@@ -33,8 +33,8 @@ where
     let c = caps[3].as_bytes()[0];
     let pw = &caps[4];
     if f(n1, n2, c, pw) {
-      ok += 1;
+      ret += 1;
     }
   }
-  ok
+  ret
 }

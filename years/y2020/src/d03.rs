@@ -7,7 +7,7 @@ pub fn p2(s: &str) -> usize {
 }
 
 fn help(s: &str, right: usize, down: usize) -> usize {
-  let mut trees = 0;
+  let mut ret = 0;
   let mut y = 0;
   let line_len = s.split('\n').next().unwrap().len();
   let mut iter = s.split('\n');
@@ -17,7 +17,7 @@ fn help(s: &str, right: usize, down: usize) -> usize {
     }
     let bs = line.as_bytes();
     if bs[y] == b'#' {
-      trees += 1;
+      ret += 1;
     }
     y += right;
     y %= line_len;
@@ -25,5 +25,5 @@ fn help(s: &str, right: usize, down: usize) -> usize {
       iter.next();
     }
   }
-  trees
+  ret
 }
