@@ -1,3 +1,5 @@
+use maplit::hashmap;
+
 pub fn p1(s: &str) -> usize {
   let mut nums = parse(s);
   // start at 0
@@ -15,6 +17,21 @@ pub fn p1(s: &str) -> usize {
     }
   }
   gap_1 * gap_3
+}
+
+pub fn p2(s: &str) -> usize {
+  let mut nums = parse(s);
+  nums.sort_unstable();
+  let mut dp = hashmap![0 => 1];
+  for &n in nums.iter() {
+    let ans: usize = [1, 2, 3]
+      .iter()
+      .filter_map(|&gap| n.checked_sub(gap))
+      .filter_map(|k| dp.get(&k))
+      .sum();
+    dp.insert(n, ans);
+  }
+  *dp.get(nums.last().unwrap()).unwrap()
 }
 
 fn parse(s: &str) -> Vec<u16> {
