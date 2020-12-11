@@ -10,6 +10,10 @@ pub fn p1(s: &str) -> usize {
   evolve_loop(s, 4, get_nearby_p1)
 }
 
+pub fn p2(s: &str) -> usize {
+  evolve_loop(s, 5, get_nearby_p2)
+}
+
 type Grid = Vec<Vec<Tile>>;
 
 fn evolve_loop<F>(s: &str, threshold: usize, get_nearby: F) -> usize
@@ -66,6 +70,24 @@ fn get_nearby_p1(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
   FNS
     .iter()
     .filter_map(move |(f, g)| Some(*xs.get(f(i)?)?.get(g(j)?)?))
+    .collect()
+}
+
+fn get_nearby_p2(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
+  FNS
+    .iter()
+    .filter_map(move |(f, g)| {
+      let mut i = i;
+      let mut j = j;
+      loop {
+        i = f(i)?;
+        j = g(j)?;
+        let tile = *xs.get(i)?.get(j)?;
+        if matches!(tile, Tile::Empty | Tile::Occupied) {
+          return Some(tile);
+        }
+      }
+    })
     .collect()
 }
 
