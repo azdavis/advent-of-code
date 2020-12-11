@@ -2,9 +2,16 @@
 #![allow(clippy::ptr_arg)]
 
 pub fn p1(s: &str) -> usize {
+  evolve_loop(s, |grid| evolve_with(grid, get_nearby_p1))
+}
+
+fn evolve_loop<F>(s: &str, evolve: F) -> usize
+where
+  F: Fn(&Grid) -> Grid,
+{
   let mut prev = parse(s);
   loop {
-    let cur = evolve(&prev, get_nearby_p1);
+    let cur = evolve(&prev);
     if cur == prev {
       return cur
         .iter()
@@ -18,7 +25,7 @@ pub fn p1(s: &str) -> usize {
 
 type Grid = Vec<Vec<Tile>>;
 
-fn evolve<'a, F, I>(xs: &'a Grid, get_nearby: F) -> Grid
+fn evolve_with<'a, F, I>(xs: &'a Grid, get_nearby: F) -> Grid
 where
   F: Fn(usize, usize, &'a Grid) -> I,
   I: Iterator<Item = Tile> + 'a,
