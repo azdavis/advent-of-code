@@ -6,18 +6,18 @@
 #![allow(clippy::ptr_arg)]
 
 pub fn p1(s: &str) -> usize {
-  evolve_loop(s, get_nearby_p1)
+  evolve_loop(s, 4, get_nearby_p1)
 }
 
 type Grid = Vec<Vec<Tile>>;
 
-fn evolve_loop<F>(s: &str, get_nearby: F) -> usize
+fn evolve_loop<F>(s: &str, threshold: usize, get_nearby: F) -> usize
 where
   F: Fn(usize, usize, &Grid) -> Vec<Tile> + Copy,
 {
   let mut prev = parse(s);
   loop {
-    let cur = evolve_with(&prev, get_nearby);
+    let cur = evolve_with(&prev, threshold, get_nearby);
     if cur == prev {
       return cur
         .iter()
@@ -29,7 +29,7 @@ where
   }
 }
 
-fn evolve_with<F>(xs: &Grid, get_nearby: F) -> Grid
+fn evolve_with<F>(xs: &Grid, threshold: usize, get_nearby: F) -> Grid
 where
   F: Fn(usize, usize, &Grid) -> Vec<Tile>,
 {
@@ -51,7 +51,7 @@ where
             .into_iter()
             .filter(|x| matches!(x, Tile::Occupied))
             .count();
-          if count >= 4 {
+          if count >= threshold {
             ret[i][j] = Tile::Empty;
           }
         }
