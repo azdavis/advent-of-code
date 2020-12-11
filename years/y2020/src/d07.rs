@@ -23,7 +23,7 @@ pub fn p1(s: &str) -> usize {
     loop {
       let _: u32 = match next.parse() {
         Ok(x) => x,
-        Err(e) => unreachable!("{} {}", next, e),
+        Err(e) => panic!("error parsing {}: {}", next, e),
       };
       let other = Bag {
         adj: iter.next().unwrap(),
@@ -33,7 +33,7 @@ pub fn p1(s: &str) -> usize {
       match iter.next().unwrap() {
         "bag," | "bags," => {}
         "bag." | "bags." => break,
-        bad => unreachable!("bad next: {}", bad),
+        bad => panic!("bad next: {}", bad),
       }
       next = iter.next().unwrap();
     }

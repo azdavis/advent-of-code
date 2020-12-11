@@ -16,7 +16,7 @@ pub fn p1(s: &str) -> u32 {
       }
     }
   }
-  unreachable!()
+  panic!()
 }
 
 pub fn p2(s: &str) -> u32 {
@@ -30,5 +30,5 @@ pub fn p2(s: &str) -> u32 {
       }
     }
   }
-  unreachable!()
+  panic!()
 }
