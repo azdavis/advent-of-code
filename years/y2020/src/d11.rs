@@ -1,6 +1,7 @@
 //! in my quest to abstract as much as possible, i added some intermediate
 //! allocations by having `get_nearby` return a `Vec<Tile>` instead of e.g. a
-//! `impl Iterator<Item = Tile>`.
+//! `impl Iterator<Item = Tile>`. the business with `type F` and `FNS` is also a
+//! bit fanciful.
 
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::ptr_arg)]
@@ -64,8 +65,7 @@ where
 fn get_nearby_p1(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
   FNS
     .iter()
-    .filter_map(|(f, g)| f(i).zip(g(j)))
-    .filter_map(move |(i, j)| Some(*xs.get(i)?.get(j)?))
+    .filter_map(move |(f, g)| Some(*xs.get(f(i)?)?.get(g(j)?)?))
     .collect()
 }
 
