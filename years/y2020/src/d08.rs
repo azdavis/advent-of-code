@@ -116,6 +116,6 @@ impl Instr {
     let kind = InstrKind::parse(iter.next().unwrap());
     let num: i32 = iter.next().unwrap().parse().unwrap();
     assert!(iter.next().is_none());
-    Instr { kind, num }
+    Self { kind, num }
   }
 }

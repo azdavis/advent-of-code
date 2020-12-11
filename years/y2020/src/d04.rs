@@ -96,7 +96,7 @@ enum Key {
 }
 
 impl Key {
-  fn parse(s: &str) -> Option<Key> {
+  fn parse(s: &str) -> Option<Self> {
     match s {
       "byr" => Some(Self::BirthYear),
       "iyr" => Some(Self::IssueYear),
