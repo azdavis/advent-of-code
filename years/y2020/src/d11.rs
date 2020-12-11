@@ -1,3 +1,6 @@
+#![allow(clippy::needless_range_loop)]
+#![allow(clippy::ptr_arg)]
+
 pub fn p1(s: &str) -> usize {
   let mut prev = parse(s);
   loop {
@@ -15,8 +18,6 @@ pub fn p1(s: &str) -> usize {
 
 type Grid = Vec<Vec<Tile>>;
 
-#[allow(clippy::needless_range_loop)]
-#[allow(clippy::ptr_arg)]
 fn evolve(xs: &Grid) -> Grid {
   let mut ret = xs.clone();
   for i in 0..ret.len() {
