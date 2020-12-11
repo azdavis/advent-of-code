@@ -1,3 +1,7 @@
+//! in my quest to abstract as much as possible, i added some intermediate
+//! allocations by having `get_nearby` return a `Vec<Tile>` instead of e.g. a
+//! `impl Iterator<Item = Tile>`.
+
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::ptr_arg)]
 
