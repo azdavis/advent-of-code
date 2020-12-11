@@ -25,10 +25,9 @@ where
   }
 }
 
-fn evolve_with<'a, F, I>(xs: &'a Grid, get_nearby: F) -> Grid
+fn evolve_with<'a, F>(xs: &'a Grid, get_nearby: F) -> Grid
 where
-  F: Fn(usize, usize, &'a Grid) -> I,
-  I: Iterator<Item = Tile> + 'a,
+  F: Fn(usize, usize, &'a Grid) -> Vec<Tile>,
 {
   let mut ret = xs.clone();
   for i in 0..ret.len() {
@@ -36,12 +35,16 @@ where
       match ret[i][j] {
         Tile::Floor => {}
         Tile::Empty => {
-          if !get_nearby(i, j, xs).any(|x| matches!(x, Tile::Occupied)) {
+          let any_nearby = get_nearby(i, j, xs)
+            .into_iter()
+            .any(|x| matches!(x, Tile::Occupied));
+          if !any_nearby {
             ret[i][j] = Tile::Occupied;
           }
         }
         Tile::Occupied => {
           let count = get_nearby(i, j, xs)
+            .into_iter()
             .filter(|x| matches!(x, Tile::Occupied))
             .count();
           if count >= 4 {
@@ -54,14 +57,11 @@ where
   ret
 }
 
-fn get_nearby_p1(
-  i: usize,
-  j: usize,
-  xs: &Grid,
-) -> impl Iterator<Item = Tile> + '_ {
+fn get_nearby_p1(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
   adjacent(i, j)
     .into_iter()
     .filter_map(move |(i, j)| Some(*xs.get(i)?.get(j)?))
+    .collect()
 }
 
 // pretty ugly
