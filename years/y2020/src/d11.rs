@@ -25,9 +25,9 @@ where
   }
 }
 
-fn evolve_with<'a, F>(xs: &'a Grid, get_nearby: F) -> Grid
+fn evolve_with<F>(xs: &Grid, get_nearby: F) -> Grid
 where
-  F: Fn(usize, usize, &'a Grid) -> Vec<Tile>,
+  F: Fn(usize, usize, &Grid) -> Vec<Tile>,
 {
   let mut ret = xs.clone();
   for i in 0..ret.len() {
