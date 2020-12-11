@@ -1,28 +1,32 @@
-//! in my quest to abstract as much as possible, i added some intermediate
-//! allocations by having `get_nearby` return a `Vec<Tile>` instead of e.g. a
-//! `impl Iterator<Item = Tile>`. the business with `type F` and `FNS` is also a
-//! bit fanciful.
+//! how much can we abstract?
 
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::ptr_arg)]
 
 pub fn p1(s: &str) -> usize {
-  evolve_loop(s, 4, get_nearby_p1)
+  evolve_loop(s, 4, |i, j, f, g, xs| Some(*xs.get(f(i)?)?.get(g(j)?)?))
 }
 
 pub fn p2(s: &str) -> usize {
-  evolve_loop(s, 5, get_nearby_p2)
+  evolve_loop(s, 5, |mut i, mut j, f, g, xs| loop {
+    i = f(i)?;
+    j = g(j)?;
+    let tile = *xs.get(i)?.get(j)?;
+    if matches!(tile, Tile::Empty | Tile::Occupied) {
+      return Some(tile);
+    }
+  })
 }
 
 type Grid = Vec<Vec<Tile>>;
 
-fn evolve_loop<F>(s: &str, threshold: usize, get_nearby: F) -> usize
+fn evolve_loop<F>(s: &str, threshold: usize, get_one_tile: F) -> usize
 where
-  F: Fn(usize, usize, &Grid) -> Vec<Tile> + Copy,
+  F: Fn(usize, usize, ChangeFn, ChangeFn, &Grid) -> Option<Tile> + Copy,
 {
   let mut prev = parse(s);
   loop {
-    let cur = evolve_with(&prev, threshold, get_nearby);
+    let cur = evolve_with(&prev, threshold, get_one_tile);
     if cur == prev {
       return cur
         .iter()
@@ -34,9 +38,9 @@ where
   }
 }
 
-fn evolve_with<F>(xs: &Grid, threshold: usize, get_nearby: F) -> Grid
+fn evolve_with<F>(xs: &Grid, threshold: usize, get_one_tile: F) -> Grid
 where
-  F: Fn(usize, usize, &Grid) -> Vec<Tile>,
+  F: Fn(usize, usize, ChangeFn, ChangeFn, &Grid) -> Option<Tile> + Copy,
 {
   let mut ret = xs.clone();
   for i in 0..ret.len() {
@@ -44,7 +48,7 @@ where
       match ret[i][j] {
         Tile::Floor => {}
         Tile::Empty => {
-          let any_nearby = get_nearby(i, j, xs)
+          let any_nearby = get_all_tiles(i, j, xs, get_one_tile)
             .into_iter()
             .any(|x| matches!(x, Tile::Occupied));
           if !any_nearby {
@@ -52,7 +56,7 @@ where
           }
         }
         Tile::Occupied => {
-          let count = get_nearby(i, j, xs)
+          let count = get_all_tiles(i, j, xs, get_one_tile)
             .into_iter()
             .filter(|x| matches!(x, Tile::Occupied))
             .count();
@@ -66,29 +70,18 @@ where
   ret
 }
 
-fn get_nearby_p1(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
+fn get_all_tiles<'a, F: 'a>(
+  i: usize,
+  j: usize,
+  xs: &'a Grid,
+  get_one_tile: F,
+) -> impl Iterator<Item = Tile> + 'a
+where
+  F: Fn(usize, usize, ChangeFn, ChangeFn, &Grid) -> Option<Tile>,
+{
   FNS
     .iter()
-    .filter_map(move |(f, g)| Some(*xs.get(f(i)?)?.get(g(j)?)?))
-    .collect()
-}
-
-fn get_nearby_p2(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
-  FNS
-    .iter()
-    .filter_map(move |(f, g)| {
-      let mut i = i;
-      let mut j = j;
-      loop {
-        i = f(i)?;
-        j = g(j)?;
-        let tile = *xs.get(i)?.get(j)?;
-        if matches!(tile, Tile::Empty | Tile::Occupied) {
-          return Some(tile);
-        }
-      }
-    })
-    .collect()
+    .filter_map(move |&(f, g)| get_one_tile(i, j, f, g, xs))
 }
 
 type ChangeFn = fn(usize) -> Option<usize>;
