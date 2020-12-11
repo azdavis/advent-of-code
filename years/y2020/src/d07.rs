@@ -5,13 +5,13 @@ where
   F: Fn(Bag<'a>, u32, Bag<'a>) -> (Bag<'a>, T),
   T: std::hash::Hash + Eq + 'a,
 {
-  let mut map = HashMap::new();
+  let mut ret = HashMap::new();
   for line in s.split('\n') {
     if line.is_empty() {
       continue;
     }
     let mut iter = line.split_ascii_whitespace();
-    let this = Bag {
+    let container = Bag {
       adj: iter.next().unwrap(),
       color: iter.next().unwrap(),
     };
@@ -29,12 +29,12 @@ where
         Ok(x) => x,
         Err(e) => panic!("error parsing {}: {}", next, e),
       };
-      let other = Bag {
+      let contained = Bag {
         adj: iter.next().unwrap(),
         color: iter.next().unwrap(),
       };
-      let (key, val) = add(this, num, other);
-      map.entry(key).or_insert_with(HashSet::new).insert(val);
+      let (key, val) = add(container, num, contained);
+      ret.entry(key).or_insert_with(HashSet::new).insert(val);
       match iter.next().unwrap() {
         "bag," | "bags," => {}
         "bag." | "bags." => break,
@@ -44,11 +44,11 @@ where
     }
     assert!(iter.next().is_none());
   }
-  map
+  ret
 }
 
 pub fn p1(s: &str) -> usize {
-  let map = mk_graph(s, |a, _, b| (b, a));
+  let graph = mk_graph(s, |a, _, b| (b, a));
   let start = Bag {
     adj: "shiny",
     color: "gold",
@@ -59,7 +59,7 @@ pub fn p1(s: &str) -> usize {
     if !visited.insert(bag) {
       continue;
     }
-    let neighbors = match map.get(&bag) {
+    let neighbors = match graph.get(&bag) {
       None => continue,
       Some(x) => x,
     };
