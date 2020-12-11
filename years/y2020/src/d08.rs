@@ -2,14 +2,31 @@ use std::collections::HashSet;
 
 pub fn p1(s: &str) -> i32 {
   let instrs = get_instrs(s);
+  let res = simulate(&instrs);
+  assert!(matches!(res.kind, ResKind::Loop));
+  res.acc
+}
+
+fn simulate(instrs: &[Instr]) -> Res {
   let mut visited = HashSet::new();
   let mut acc = 0;
   let mut idx = 0;
   loop {
     if !visited.insert(idx) {
-      return acc;
+      return Res {
+        acc,
+        kind: ResKind::Loop,
+      };
     }
-    let instr = instrs[idx];
+    let instr = match instrs.get(idx) {
+      Some(&x) => x,
+      None => {
+        return Res {
+          acc,
+          kind: ResKind::Terminate,
+        }
+      }
+    };
     match instr.kind {
       InstrKind::Acc => {
         acc += instr.num;
@@ -28,6 +45,16 @@ pub fn p1(s: &str) -> i32 {
       InstrKind::Nop => idx += 1,
     }
   }
+}
+
+struct Res {
+  acc: i32,
+  kind: ResKind,
+}
+
+enum ResKind {
+  Loop,
+  Terminate,
 }
 
 fn get_instrs(s: &str) -> Vec<Instr> {
