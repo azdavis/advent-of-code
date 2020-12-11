@@ -25,19 +25,15 @@ fn evolve(xs: &Grid) -> Grid {
       match ret[i][j] {
         Tile::Floor => {}
         Tile::Empty => {
-          let any_occupied = adjacent(i, j)
-            .into_iter()
-            .filter_map(|(i, j)| xs.get(i)?.get(j))
-            .any(|&x| matches!(x, Tile::Occupied));
+          let any_occupied =
+            get_nearby(i, j, xs).any(|x| matches!(x, Tile::Occupied));
           if !any_occupied {
             ret[i][j] = Tile::Occupied;
           }
         }
         Tile::Occupied => {
-          let count = adjacent(i, j)
-            .into_iter()
-            .filter_map(|(i, j)| xs.get(i)?.get(j))
-            .filter(|&x| matches!(x, Tile::Occupied))
+          let count = get_nearby(i, j, xs)
+            .filter(|x| matches!(x, Tile::Occupied))
             .count();
           if count >= 4 {
             ret[i][j] = Tile::Empty;
@@ -47,6 +43,16 @@ fn evolve(xs: &Grid) -> Grid {
     }
   }
   ret
+}
+
+fn get_nearby(
+  i: usize,
+  j: usize,
+  xs: &Grid,
+) -> impl Iterator<Item = Tile> + '_ {
+  adjacent(i, j)
+    .into_iter()
+    .filter_map(move |(i, j)| Some(*xs.get(i)?.get(j)?))
 }
 
 // pretty ugly
