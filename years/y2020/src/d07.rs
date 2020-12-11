@@ -1,5 +1,28 @@
 use std::collections::{HashMap, HashSet};
 
+pub fn p1(s: &str) -> usize {
+  let graph = mk_graph(s, |a, _, b| (b, a));
+  let start = Bag {
+    adj: "shiny",
+    color: "gold",
+  };
+  let mut visited = HashSet::new();
+  let mut cur = vec![start];
+  while let Some(bag) = cur.pop() {
+    if !visited.insert(bag) {
+      continue;
+    }
+    let neighbors = match graph.get(&bag) {
+      None => continue,
+      Some(x) => x,
+    };
+    for &n in neighbors {
+      cur.push(n);
+    }
+  }
+  visited.len() - 1
+}
+
 fn mk_graph<'a, F, T>(s: &'a str, add: F) -> HashMap<Bag<'a>, HashSet<T>>
 where
   F: Fn(Bag<'a>, u32, Bag<'a>) -> (Bag<'a>, T),
@@ -45,29 +68,6 @@ where
     assert!(iter.next().is_none());
   }
   ret
-}
-
-pub fn p1(s: &str) -> usize {
-  let graph = mk_graph(s, |a, _, b| (b, a));
-  let start = Bag {
-    adj: "shiny",
-    color: "gold",
-  };
-  let mut visited = HashSet::new();
-  let mut cur = vec![start];
-  while let Some(bag) = cur.pop() {
-    if !visited.insert(bag) {
-      continue;
-    }
-    let neighbors = match graph.get(&bag) {
-      None => continue,
-      Some(x) => x,
-    };
-    for &n in neighbors {
-      cur.push(n);
-    }
-  }
-  visited.len() - 1
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
