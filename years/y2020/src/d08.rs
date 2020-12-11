@@ -13,43 +13,57 @@ pub fn p1(s: &str) -> i32 {
     if !visited.insert(idx) {
       return acc;
     }
-    match instrs[idx] {
-      Instr::Acc(n) => {
-        acc += n;
+    let instr = instrs[idx];
+    match instr.kind {
+      InstrKind::Acc => {
+        acc += instr.num;
         idx += 1;
       }
-      Instr::Jmp(n) => {
+      InstrKind::Jmp => {
         // kind of awkward lol
-        if n < 0 {
-          let neg_n = -n as usize;
+        if instr.num < 0 {
+          let neg_n = -instr.num as usize;
           assert!(idx >= neg_n);
           idx -= neg_n;
         } else {
-          idx += n as usize;
+          idx += instr.num as usize;
         }
       }
-      Instr::Nop => idx += 1,
+      InstrKind::Nop => idx += 1,
     }
   }
 }
 
-enum Instr {
-  Acc(i32),
-  Jmp(i32),
+#[derive(Debug, Clone, Copy)]
+enum InstrKind {
+  Acc,
+  Jmp,
   Nop,
+}
+
+impl InstrKind {
+  fn parse(s: &str) -> Self {
+    match s {
+      "acc" => Self::Acc,
+      "jmp" => Self::Jmp,
+      "nop" => Self::Nop,
+      bad => panic!("invalid instr kind: {}", bad),
+    }
+  }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct Instr {
+  kind: InstrKind,
+  num: i32,
 }
 
 impl Instr {
   fn parse(s: &str) -> Self {
     let mut iter = s.split(' ');
-    let kind = iter.next().unwrap();
-    let num = iter.next().unwrap();
+    let kind = InstrKind::parse(iter.next().unwrap());
+    let num: i32 = iter.next().unwrap().parse().unwrap();
     assert!(iter.next().is_none());
-    match kind {
-      "acc" => Self::Acc(num.parse().unwrap()),
-      "jmp" => Self::Jmp(num.parse().unwrap()),
-      "nop" => Self::Nop,
-      bad => panic!("invalid instr: {}", bad),
-    }
+    Instr { kind, num }
   }
 }
