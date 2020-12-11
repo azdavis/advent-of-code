@@ -62,29 +62,32 @@ where
 }
 
 fn get_nearby_p1(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
-  adjacent(i, j)
-    .into_iter()
+  FNS
+    .iter()
+    .filter_map(|(f, g)| f(i).zip(g(j)))
     .filter_map(move |(i, j)| Some(*xs.get(i)?.get(j)?))
     .collect()
 }
 
-// pretty ugly
-fn adjacent(i: usize, j: usize) -> Vec<(usize, usize)> {
-  let mut ret = vec![(i + 1, j + 1), (i + 1, j), (i, j + 1)];
-  if let Some(i_sub_1) = i.checked_sub(1) {
-    ret.push((i_sub_1, j + 1));
-    ret.push((i_sub_1, j));
-  }
-  if let Some(j_sub_1) = j.checked_sub(1) {
-    ret.push((i + 1, j_sub_1));
-    ret.push((i, j_sub_1));
-  }
-  if let Some(i_sub_1) = i.checked_sub(1) {
-    if let Some(j_sub_1) = j.checked_sub(1) {
-      ret.push((i_sub_1, j_sub_1));
-    }
-  }
-  ret
+type F = fn(usize) -> Option<usize>;
+
+const FNS: [(F, F); 8] = [
+  (inc, inc),
+  (inc, Some),
+  (inc, dec),
+  (Some, inc),
+  (Some, dec),
+  (dec, inc),
+  (dec, Some),
+  (dec, dec),
+];
+
+fn inc(n: usize) -> Option<usize> {
+  n.checked_add(1)
+}
+
+fn dec(n: usize) -> Option<usize> {
+  n.checked_sub(1)
 }
 
 fn parse(s: &str) -> Grid {
