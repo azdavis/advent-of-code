@@ -7,6 +7,28 @@ pub fn p1(s: &str) -> i32 {
   res.acc
 }
 
+pub fn p2(s: &str) -> i32 {
+  let mut instrs = get_instrs(s);
+  for idx in 0..instrs.len() {
+    instrs[idx].kind = match instrs[idx].kind {
+      InstrKind::Acc => continue,
+      InstrKind::Jmp => InstrKind::Nop,
+      InstrKind::Nop => InstrKind::Jmp,
+    };
+    let res = simulate(&instrs);
+    match res.kind {
+      ResKind::Terminate => return res.acc,
+      ResKind::Loop => {}
+    }
+    instrs[idx].kind = match instrs[idx].kind {
+      InstrKind::Acc => InstrKind::Acc,
+      InstrKind::Jmp => InstrKind::Nop,
+      InstrKind::Nop => InstrKind::Jmp,
+    };
+  }
+  panic!()
+}
+
 fn simulate(instrs: &[Instr]) -> Res {
   let mut visited = HashSet::new();
   let mut acc = 0;
