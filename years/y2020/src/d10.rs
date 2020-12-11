@@ -26,8 +26,7 @@ pub fn p2(s: &str) -> usize {
   for &n in nums.iter() {
     let ans: usize = [1, 2, 3]
       .iter()
-      .filter_map(|&gap| n.checked_sub(gap))
-      .filter_map(|k| dp.get(&k))
+      .filter_map(|&gap| dp.get(&n.checked_sub(gap)?))
       .sum();
     dp.insert(n, ans);
   }
