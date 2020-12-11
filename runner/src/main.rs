@@ -1,7 +1,4 @@
-use std::io::{stdin, Read as _};
-
 fn main() {
-  let mut inp = String::new();
-  stdin().read_to_string(&mut inp).unwrap();
+  let inp = std::fs::read_to_string("input/input.txt").unwrap();
   println!("{}", y2020::d10::p1(&inp));
 }
