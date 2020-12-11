@@ -91,9 +91,9 @@ fn get_nearby_p2(i: usize, j: usize, xs: &Grid) -> Vec<Tile> {
     .collect()
 }
 
-type F = fn(usize) -> Option<usize>;
+type ChangeFn = fn(usize) -> Option<usize>;
 
-const FNS: [(F, F); 8] = [
+const FNS: [(ChangeFn, ChangeFn); 8] = [
   (inc, inc),
   (inc, Some),
   (inc, dec),
