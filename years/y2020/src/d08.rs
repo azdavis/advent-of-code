@@ -1,11 +1,7 @@
 use std::collections::HashSet;
 
 pub fn p1(s: &str) -> i32 {
-  let instrs: Vec<_> = s
-    .split('\n')
-    .filter(|x| !x.is_empty())
-    .map(Instr::parse)
-    .collect();
+  let instrs = get_instrs(s);
   let mut visited = HashSet::new();
   let mut acc = 0;
   let mut idx = 0;
@@ -32,6 +28,13 @@ pub fn p1(s: &str) -> i32 {
       InstrKind::Nop => idx += 1,
     }
   }
+}
+
+fn get_instrs(s: &str) -> Vec<Instr> {
+  s.split('\n')
+    .filter(|x| !x.is_empty())
+    .map(Instr::parse)
+    .collect()
 }
 
 #[derive(Debug, Clone, Copy)]
