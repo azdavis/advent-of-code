@@ -2,18 +2,18 @@
 #![allow(clippy::ptr_arg)]
 
 pub fn p1(s: &str) -> usize {
-  evolve_loop(s, |grid| evolve_with(grid, get_nearby_p1))
+  evolve_loop(s, get_nearby_p1)
 }
 
 type Grid = Vec<Vec<Tile>>;
 
-fn evolve_loop<F>(s: &str, evolve: F) -> usize
+fn evolve_loop<F>(s: &str, get_nearby: F) -> usize
 where
-  F: Fn(&Grid) -> Grid,
+  F: Fn(usize, usize, &Grid) -> Vec<Tile> + Copy,
 {
   let mut prev = parse(s);
   loop {
-    let cur = evolve(&prev);
+    let cur = evolve_with(&prev, get_nearby);
     if cur == prev {
       return cur
         .iter()
