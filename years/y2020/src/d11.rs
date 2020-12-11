@@ -5,6 +5,8 @@ pub fn p1(s: &str) -> usize {
   evolve_loop(s, |grid| evolve_with(grid, get_nearby_p1))
 }
 
+type Grid = Vec<Vec<Tile>>;
+
 fn evolve_loop<F>(s: &str, evolve: F) -> usize
 where
   F: Fn(&Grid) -> Grid,
@@ -22,8 +24,6 @@ where
     prev = cur;
   }
 }
-
-type Grid = Vec<Vec<Tile>>;
 
 fn evolve_with<'a, F, I>(xs: &'a Grid, get_nearby: F) -> Grid
 where
