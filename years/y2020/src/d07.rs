@@ -36,12 +36,10 @@ fn rec<'a, 'b>(
   cur: Bag<'a>,
   graph: &HashMap<Bag<'b>, HashSet<Edge<'a>>>,
 ) -> usize {
-  let neighbors = match graph.get(&cur) {
-    None => return 1,
-    Some(xs) => xs,
-  };
-  neighbors
-    .iter()
+  graph
+    .get(&cur)
+    .into_iter()
+    .flatten()
     .fold(1, |ac, edge| ac + (edge.num * rec(edge.bag, graph)))
 }
 
