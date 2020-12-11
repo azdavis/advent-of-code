@@ -4,7 +4,7 @@
 pub fn p1(s: &str) -> usize {
   let mut prev = parse(s);
   loop {
-    let cur = evolve(&prev);
+    let cur = evolve(&prev, get_nearby_p1);
     if cur == prev {
       return cur
         .iter()
@@ -18,7 +18,11 @@ pub fn p1(s: &str) -> usize {
 
 type Grid = Vec<Vec<Tile>>;
 
-fn evolve(xs: &Grid) -> Grid {
+fn evolve<'a, F, I>(xs: &'a Grid, get_nearby: F) -> Grid
+where
+  F: Fn(usize, usize, &'a Grid) -> I,
+  I: Iterator<Item = Tile> + 'a,
+{
   let mut ret = xs.clone();
   for i in 0..ret.len() {
     for j in 0..ret[i].len() {
@@ -45,7 +49,7 @@ fn evolve(xs: &Grid) -> Grid {
   ret
 }
 
-fn get_nearby(
+fn get_nearby_p1(
   i: usize,
   j: usize,
   xs: &Grid,
