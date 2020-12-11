@@ -29,9 +29,7 @@ where
       match ret[i][j] {
         Tile::Floor => {}
         Tile::Empty => {
-          let any_occupied =
-            get_nearby(i, j, xs).any(|x| matches!(x, Tile::Occupied));
-          if !any_occupied {
+          if !get_nearby(i, j, xs).any(|x| matches!(x, Tile::Occupied)) {
             ret[i][j] = Tile::Occupied;
           }
         }
