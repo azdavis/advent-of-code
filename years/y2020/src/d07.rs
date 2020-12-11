@@ -29,26 +29,20 @@ pub fn p2(s: &str) -> usize {
     adj: "shiny",
     color: "gold",
   };
-  rec(start, &graph, &mut HashMap::new()) - 1
+  rec(start, &graph) - 1
 }
 
 fn rec<'a, 'b>(
   cur: Bag<'a>,
   graph: &HashMap<Bag<'b>, HashSet<Edge<'a>>>,
-  visited: &mut HashMap<Bag<'a>, usize>,
 ) -> usize {
-  if let Some(&x) = visited.get(&cur) {
-    return x;
-  }
   let neighbors = match graph.get(&cur) {
     None => return 1,
     Some(xs) => xs,
   };
-  let ret = neighbors.iter().fold(1, |ac, edge| {
-    ac + (edge.num * rec(edge.bag, graph, visited))
-  });
-  visited.insert(cur, ret);
-  ret
+  neighbors
+    .iter()
+    .fold(1, |ac, edge| ac + (edge.num * rec(edge.bag, graph)))
 }
 
 fn mk_graph<'a, F, T>(s: &'a str, add: F) -> HashMap<Bag<'a>, HashSet<T>>
