@@ -1,5 +1,8 @@
 pub fn p1(s: &str) -> u64 {
-  let nums = parse(s);
+  p1_help(&parse(s))
+}
+
+fn p1_help(nums: &[u64]) -> u64 {
   'outer: for (idx, &n) in nums.iter().enumerate().skip(WINDOW) {
     for &a in nums[idx - WINDOW..idx].iter() {
       for &b in nums[idx - WINDOW..idx].iter() {
