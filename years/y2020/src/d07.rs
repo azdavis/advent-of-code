@@ -2,12 +2,8 @@ use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> usize {
   let graph = mk_graph(s, |a, _, b| (b, a));
-  let start = Bag {
-    adj: "shiny",
-    color: "gold",
-  };
   let mut visited = HashSet::new();
-  let mut cur = vec![start];
+  let mut cur = vec![START];
   while let Some(bag) = cur.pop() {
     if !visited.insert(bag) {
       continue;
@@ -25,11 +21,7 @@ pub fn p1(s: &str) -> usize {
 
 pub fn p2(s: &str) -> usize {
   let graph = mk_graph(s, |a, num, bag| (a, Edge { num, bag }));
-  let start = Bag {
-    adj: "shiny",
-    color: "gold",
-  };
-  rec(start, &graph) - 1
+  rec(START, &graph) - 1
 }
 
 fn rec<'a, 'b>(
@@ -42,6 +34,11 @@ fn rec<'a, 'b>(
     .flatten()
     .fold(1, |ac, edge| ac + (edge.num * rec(edge.bag, graph)))
 }
+
+const START: Bag<'static> = Bag {
+  adj: "shiny",
+  color: "gold",
+};
 
 fn mk_graph<'a, F, T>(s: &'a str, add: F) -> HashMap<Bag<'a>, HashSet<T>>
 where
