@@ -1,6 +1,10 @@
 use std::collections::{HashMap, HashSet};
 
-pub fn p1(s: &str) -> usize {
+fn mk_graph<'a, F, T>(s: &'a str, add: F) -> HashMap<Bag<'a>, HashSet<T>>
+where
+  F: Fn(Bag<'a>, u32, Bag<'a>) -> (Bag<'a>, T),
+  T: std::hash::Hash + Eq + 'a,
+{
   let mut map = HashMap::new();
   for line in s.split('\n') {
     if line.is_empty() {
@@ -21,7 +25,7 @@ pub fn p1(s: &str) -> usize {
       continue;
     }
     loop {
-      let _: u32 = match next.parse() {
+      let num: u32 = match next.parse() {
         Ok(x) => x,
         Err(e) => panic!("error parsing {}: {}", next, e),
       };
@@ -29,7 +33,8 @@ pub fn p1(s: &str) -> usize {
         adj: iter.next().unwrap(),
         color: iter.next().unwrap(),
       };
-      map.entry(other).or_insert_with(HashSet::new).insert(this);
+      let (key, val) = add(this, num, other);
+      map.entry(key).or_insert_with(HashSet::new).insert(val);
       match iter.next().unwrap() {
         "bag," | "bags," => {}
         "bag." | "bags." => break,
@@ -39,6 +44,11 @@ pub fn p1(s: &str) -> usize {
     }
     assert!(iter.next().is_none());
   }
+  map
+}
+
+pub fn p1(s: &str) -> usize {
+  let map = mk_graph(s, |a, _, b| (b, a));
   let start = Bag {
     adj: "shiny",
     color: "gold",
