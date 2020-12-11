@@ -23,9 +23,37 @@ pub fn p1(s: &str) -> usize {
   visited.len() - 1
 }
 
+pub fn p2(s: &str) -> usize {
+  let graph = mk_graph(s, |a, num, bag| (a, Edge { num, bag }));
+  let start = Bag {
+    adj: "shiny",
+    color: "gold",
+  };
+  rec(start, &graph, &mut HashMap::new()) - 1
+}
+
+fn rec<'a, 'b>(
+  cur: Bag<'a>,
+  graph: &HashMap<Bag<'b>, HashSet<Edge<'a>>>,
+  visited: &mut HashMap<Bag<'a>, usize>,
+) -> usize {
+  if let Some(&x) = visited.get(&cur) {
+    return x;
+  }
+  let neighbors = match graph.get(&cur) {
+    None => return 1,
+    Some(xs) => xs,
+  };
+  let ret = neighbors.iter().fold(1, |ac, edge| {
+    ac + (edge.num * rec(edge.bag, graph, visited))
+  });
+  visited.insert(cur, ret);
+  ret
+}
+
 fn mk_graph<'a, F, T>(s: &'a str, add: F) -> HashMap<Bag<'a>, HashSet<T>>
 where
-  F: Fn(Bag<'a>, u32, Bag<'a>) -> (Bag<'a>, T),
+  F: Fn(Bag<'a>, usize, Bag<'a>) -> (Bag<'a>, T),
   T: std::hash::Hash + Eq + 'a,
 {
   let mut ret = HashMap::new();
@@ -48,7 +76,7 @@ where
       continue;
     }
     loop {
-      let num: u32 = match next.parse() {
+      let num: usize = match next.parse() {
         Ok(x) => x,
         Err(e) => panic!("error parsing {}: {}", next, e),
       };
@@ -74,4 +102,10 @@ where
 struct Bag<'a> {
   adj: &'a str,
   color: &'a str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+struct Edge<'a> {
+  num: usize,
+  bag: Bag<'a>,
 }
