@@ -76,3 +76,9 @@ fn t_11() {
   assert_eq!(crate::d11::p1(inp), 2238);
   assert_eq!(crate::d11::p2(inp), 2013);
 }
+
+#[test]
+fn t_12() {
+  let inp = include_str!("input/d12.txt");
+  assert_eq!(crate::d12::p1(inp), 1133);
+}
