@@ -37,29 +37,27 @@ impl StateP2 {
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
-          let dx = self.waypoint.x - self.ship.x;
-          let dy = self.waypoint.y - self.ship.y;
-          self.waypoint.x = self.ship.x - dy;
-          self.waypoint.y = self.ship.y + dx;
+          let old = self.waypoint;
+          self.waypoint = Point {
+            x: -old.y,
+            y: old.x,
+          };
         }
       }
       ActionKind::Right => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
-          let dx = self.waypoint.x - self.ship.x;
-          let dy = self.waypoint.y - self.ship.y;
-          self.waypoint.x = self.ship.x + dy;
-          self.waypoint.y = self.ship.y - dx;
+          let old = self.waypoint;
+          self.waypoint = Point {
+            x: old.y,
+            y: -old.x,
+          };
         }
       }
       ActionKind::Forward => {
         let n = i32::try_from(ac.num).unwrap();
-        let dx = self.waypoint.x - self.ship.x;
-        let dy = self.waypoint.y - self.ship.y;
-        self.ship.x += dx * n;
-        self.ship.y += dy * n;
-        self.waypoint.x += dx * n;
-        self.waypoint.y += dy * n;
+        self.ship.x += self.waypoint.x * n;
+        self.ship.y += self.waypoint.y * n;
       }
     }
   }
@@ -102,6 +100,7 @@ impl State {
   }
 }
 
+#[derive(Clone, Copy)]
 struct Point {
   x: i32,
   y: i32,
