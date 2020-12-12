@@ -5,4 +5,5 @@ authors = ["Ariel Davis <ariel.z.davis@icloud.com>"]
 edition = "2018"
 
 [dependencies]
+y2019 = { path = "../years/y2019" }
 y2020 = { path = "../years/y2020" }
