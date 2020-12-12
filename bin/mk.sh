@@ -20,7 +20,7 @@ pub fn p1(s: &str) -> u32 {
   todo!()
 }
 
-pub fn p2(s: &str) -> u32 {
+pub fn p2(_: &str) -> u32 {
   todo!()
 }
 EOF
