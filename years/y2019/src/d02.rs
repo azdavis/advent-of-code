@@ -1,7 +1,15 @@
 pub fn p1(s: &str) -> usize {
-  let mut ns = parse(s);
-  ns[1] = 12;
-  ns[2] = 2;
+  let ns = parse(s);
+  go(ns, 12, 2)
+}
+
+pub fn p2(_: &str) -> usize {
+  todo!()
+}
+
+fn go(mut ns: Vec<usize>, noun: usize, verb: usize) -> usize {
+  ns[1] = noun;
+  ns[2] = verb;
   let mut idx = 0;
   while idx < ns.len() {
     match ns[idx] {
@@ -19,10 +27,6 @@ pub fn p1(s: &str) -> usize {
     idx += 4;
   }
   ns[0]
-}
-
-pub fn p2(_: &str) -> usize {
-  todo!()
 }
 
 fn parse(s: &str) -> Vec<usize> {
