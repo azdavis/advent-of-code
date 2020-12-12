@@ -8,8 +8,61 @@ pub fn p1(s: &str) -> u32 {
   st.ship.to_origin()
 }
 
-pub fn p2(_: &str) -> u32 {
-  todo!()
+pub fn p2(s: &str) -> u32 {
+  let mut st = StateP2::new();
+  for ac in parse(s) {
+    st.evolve(ac);
+  }
+  st.ship.to_origin()
+}
+
+struct StateP2 {
+  ship: Point,
+  waypoint: Point,
+}
+
+impl StateP2 {
+  fn new() -> Self {
+    Self {
+      ship: Point { x: 0, y: 0 },
+      waypoint: Point { x: 10, y: 1 },
+    }
+  }
+
+  fn evolve(&mut self, ac: Action) {
+    match ac.kind {
+      ActionKind::Direction(d) => {
+        self.waypoint.adjust(d, i32::try_from(ac.num).unwrap())
+      }
+      ActionKind::Left => {
+        assert_eq!(ac.num % 90, 0);
+        for _ in 0..(ac.num / 90) % 4 {
+          let dx = self.waypoint.x - self.ship.x;
+          let dy = self.waypoint.y - self.ship.y;
+          self.waypoint.x = self.ship.x - dy;
+          self.waypoint.y = self.ship.y + dx;
+        }
+      }
+      ActionKind::Right => {
+        assert_eq!(ac.num % 90, 0);
+        for _ in 0..(ac.num / 90) % 4 {
+          let dx = self.waypoint.x - self.ship.x;
+          let dy = self.waypoint.y - self.ship.y;
+          self.waypoint.x = self.ship.x + dy;
+          self.waypoint.y = self.ship.y - dx;
+        }
+      }
+      ActionKind::Forward => {
+        let n = i32::try_from(ac.num).unwrap();
+        let dx = self.waypoint.x - self.ship.x;
+        let dy = self.waypoint.y - self.ship.y;
+        self.ship.x += dx * n;
+        self.ship.y += dy * n;
+        self.waypoint.x += dx * n;
+        self.waypoint.y += dy * n;
+      }
+    }
+  }
 }
 
 struct State {
