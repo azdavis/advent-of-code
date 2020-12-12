@@ -3,8 +3,16 @@ pub fn p1(s: &str) -> usize {
   go(ns, 12, 2)
 }
 
-pub fn p2(_: &str) -> usize {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  let ns = parse(s);
+  for noun in 0..=99 {
+    for verb in 0..=99 {
+      if go(ns.clone(), noun, verb) == 19690720 {
+        return 100 * noun + verb;
+      }
+    }
+  }
+  panic!()
 }
 
 fn go(mut ns: Vec<usize>, noun: usize, verb: usize) -> usize {

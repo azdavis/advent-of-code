@@ -9,4 +9,5 @@ fn d01() {
 fn d02() {
   let inp = include_str!("input/d02.txt");
   assert_eq!(crate::d02::p1(inp), 11590668);
+  assert_eq!(crate::d02::p2(inp), 2254);
 }
