@@ -1,18 +1,18 @@
 pub fn p1(s: &str) -> usize {
   let grid = parse(s);
-  help(&grid, 3, 1)
+  go(&grid, 3, 1)
 }
 
 pub fn p2(s: &str) -> usize {
   let grid = parse(s);
-  help(&grid, 1, 1)
-    * help(&grid, 3, 1)
-    * help(&grid, 5, 1)
-    * help(&grid, 7, 1)
-    * help(&grid, 1, 2)
+  go(&grid, 1, 1)
+    * go(&grid, 3, 1)
+    * go(&grid, 5, 1)
+    * go(&grid, 7, 1)
+    * go(&grid, 1, 2)
 }
 
-fn help(grid: &[&[u8]], right: usize, down: usize) -> usize {
+fn go(grid: &[&[u8]], right: usize, down: usize) -> usize {
   let mut ret = 0;
   let mut y = 0;
   let line_len = grid.first().unwrap().len();

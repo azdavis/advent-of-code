@@ -1,10 +1,10 @@
 pub fn p1(s: &str) -> u64 {
-  p1_help(&parse(s))
+  go(&parse(s))
 }
 
 pub fn p2(s: &str) -> u64 {
   let nums = parse(s);
-  let target = p1_help(&nums);
+  let target = go(&nums);
   for start in 0..(nums.len() - 1) {
     let mut acc = nums[start];
     for end in (start + 1)..(nums.len()) {
@@ -19,7 +19,7 @@ pub fn p2(s: &str) -> u64 {
   panic!()
 }
 
-fn p1_help(nums: &[u64]) -> u64 {
+fn go(nums: &[u64]) -> u64 {
   'outer: for (idx, &n) in nums.iter().enumerate().skip(WINDOW) {
     for &a in nums[idx - WINDOW..idx].iter() {
       for &b in nums[idx - WINDOW..idx].iter() {

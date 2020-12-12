@@ -3,11 +3,11 @@ use once_cell::sync::Lazy;
 use regex::Regex;
 
 pub fn p1(s: &str) -> usize {
-  help(s, |_, _| true)
+  go(s, |_, _| true)
 }
 
 pub fn p2(s: &str) -> usize {
-  help(s, is_p2_valid_key)
+  go(s, is_p2_valid_key)
 }
 
 fn is_num_in_range(val: &str, lo: u32, hi: u32) -> bool {
@@ -51,7 +51,7 @@ fn is_p2_valid_key(key: Key, val: &str) -> bool {
   }
 }
 
-fn help<F>(s: &str, f: F) -> usize
+fn go<F>(s: &str, f: F) -> usize
 where
   F: Fn(Key, &str) -> bool,
 {

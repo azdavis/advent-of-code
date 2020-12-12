@@ -2,14 +2,14 @@ use regex::Regex;
 
 #[allow(clippy::naive_bytecount)]
 pub fn p1(s: &str) -> usize {
-  help(s, |n1, n2, c, pw| {
+  go(s, |n1, n2, c, pw| {
     let count = pw.as_bytes().iter().filter(|&&b| b == c).count();
     n1 <= count && count <= n2
   })
 }
 
 pub fn p2(s: &str) -> usize {
-  help(s, |n1, n2, c, pw| {
+  go(s, |n1, n2, c, pw| {
     let bs = pw.as_bytes();
     let at_n1 = bs[n1 - 1] == c;
     let at_n2 = bs[n2 - 1] == c;
@@ -17,7 +17,7 @@ pub fn p2(s: &str) -> usize {
   })
 }
 
-fn help<F>(s: &str, f: F) -> usize
+fn go<F>(s: &str, f: F) -> usize
 where
   F: Fn(usize, usize, u8, &str) -> bool,
 {
