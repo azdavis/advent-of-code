@@ -1,6 +1,4 @@
-use std::convert::TryFrom as _;
-
-pub fn p1(s: &str) -> u32 {
+pub fn p1(s: &str) -> i32 {
   let mut st = State::new();
   for ac in parse(s) {
     st.evolve(ac);
@@ -8,7 +6,7 @@ pub fn p1(s: &str) -> u32 {
   st.ship.to_origin()
 }
 
-pub fn p2(s: &str) -> u32 {
+pub fn p2(s: &str) -> i32 {
   let mut st = StateP2::new();
   for ac in parse(s) {
     st.evolve(ac);
@@ -31,9 +29,7 @@ impl StateP2 {
 
   fn evolve(&mut self, ac: Action) {
     match ac.kind {
-      ActionKind::Direction(d) => {
-        self.waypoint.adjust(d, i32::try_from(ac.num).unwrap())
-      }
+      ActionKind::Direction(d) => self.waypoint.adjust(d, ac.num),
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
@@ -55,9 +51,8 @@ impl StateP2 {
         }
       }
       ActionKind::Forward => {
-        let n = i32::try_from(ac.num).unwrap();
-        self.ship.x += self.waypoint.x * n;
-        self.ship.y += self.waypoint.y * n;
+        self.ship.x += self.waypoint.x * ac.num;
+        self.ship.y += self.waypoint.y * ac.num;
       }
     }
   }
@@ -78,9 +73,7 @@ impl State {
 
   fn evolve(&mut self, ac: Action) {
     match ac.kind {
-      ActionKind::Direction(d) => {
-        self.ship.adjust(d, i32::try_from(ac.num).unwrap())
-      }
+      ActionKind::Direction(d) => self.ship.adjust(d, ac.num),
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
@@ -93,9 +86,7 @@ impl State {
           self.facing = self.facing.right();
         }
       }
-      ActionKind::Forward => self
-        .ship
-        .adjust(self.facing, i32::try_from(ac.num).unwrap()),
+      ActionKind::Forward => self.ship.adjust(self.facing, ac.num),
     }
   }
 }
@@ -107,8 +98,8 @@ struct Point {
 }
 
 impl Point {
-  fn to_origin(&self) -> u32 {
-    u32::try_from(self.x.abs() + self.y.abs()).unwrap()
+  fn to_origin(&self) -> i32 {
+    self.x.abs() + self.y.abs()
   }
 
   fn adjust(&mut self, d: Direction, n: i32) {
@@ -129,7 +120,7 @@ fn parse(s: &str) -> impl Iterator<Item = Action> + '_ {
 
 struct Action {
   kind: ActionKind,
-  num: u16,
+  num: i32,
 }
 
 impl Action {
