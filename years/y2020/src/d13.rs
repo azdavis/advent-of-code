@@ -4,7 +4,7 @@ pub fn p1(s: &str) -> u32 {
   let (id, wait) = inp
     .buses
     .into_iter()
-    .map(|x| (x, wait_time(start, x)))
+    .map(|(_, x)| (x, wait_time(start, x)))
     .min_by_key(|x| x.1)
     .unwrap();
   id * wait
@@ -25,7 +25,7 @@ pub fn p2(_: &str) -> u32 {
 
 struct Input {
   start: u32,
-  buses: Vec<u32>,
+  buses: Vec<(usize, u32)>,
 }
 
 fn parse(s: &str) -> Input {
@@ -36,8 +36,9 @@ fn parse(s: &str) -> Input {
       .next()
       .unwrap()
       .split(',')
-      .filter(|&x| x != "x")
-      .map(|x| x.parse().unwrap())
+      .enumerate()
+      .filter(|&(_, x)| x != "x")
+      .map(|(idx, x)| (idx, x.parse().unwrap()))
       .collect(),
   }
 }
