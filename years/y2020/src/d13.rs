@@ -10,6 +10,10 @@ pub fn p1(s: &str) -> u32 {
   id * wait
 }
 
+pub fn p2(_: &str) -> u32 {
+  todo!()
+}
+
 fn wait_time(start: u32, id: u32) -> u32 {
   let r = start % id;
   if r == 0 {
@@ -17,10 +21,6 @@ fn wait_time(start: u32, id: u32) -> u32 {
   } else {
     id - r
   }
-}
-
-pub fn p2(_: &str) -> u32 {
-  todo!()
 }
 
 struct Input {
