@@ -1,20 +1,20 @@
-pub fn p1(s: &str) -> u32 {
+pub fn p1(s: &str) -> usize {
   let inp = parse(s);
   let start = inp.start;
-  let (id, wait) = inp
+  let (wait, bus) = inp
     .buses
     .into_iter()
-    .map(|(_, x)| (x, wait_time(start, x)))
-    .min_by_key(|x| x.1)
+    .map(|bus| (wait_time(start, bus.id), bus))
+    .min_by_key(|x| x.0)
     .unwrap();
-  id * wait
+  bus.id * wait
 }
 
-pub fn p2(_: &str) -> u32 {
+pub fn p2(_: &str) -> usize {
   todo!()
 }
 
-fn wait_time(start: u32, id: u32) -> u32 {
+fn wait_time(start: usize, id: usize) -> usize {
   let r = start % id;
   if r == 0 {
     0
@@ -24,8 +24,13 @@ fn wait_time(start: u32, id: u32) -> u32 {
 }
 
 struct Input {
-  start: u32,
-  buses: Vec<(usize, u32)>,
+  start: usize,
+  buses: Vec<Bus>,
+}
+
+struct Bus {
+  idx: usize,
+  id: usize,
 }
 
 fn parse(s: &str) -> Input {
@@ -38,7 +43,10 @@ fn parse(s: &str) -> Input {
       .split(',')
       .enumerate()
       .filter(|&(_, x)| x != "x")
-      .map(|(idx, x)| (idx, x.parse().unwrap()))
+      .map(|(idx, x)| Bus {
+        idx,
+        id: x.parse().unwrap(),
+      })
       .collect(),
   }
 }
