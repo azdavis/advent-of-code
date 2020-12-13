@@ -11,8 +11,17 @@ pub fn p1(s: &str) -> i32 {
     .unwrap()
 }
 
-pub fn p2(_: &str) -> i32 {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  let (fst, snd) = parse(s);
+  let fst_map = evolve(&fst);
+  let snd_map = evolve(&snd);
+  let fst_set: HashSet<_> = fst_map.iter().map(|x| x.0).collect();
+  let snd_set: HashSet<_> = snd_map.iter().map(|x| x.0).collect();
+  fst_set
+    .intersection(&snd_set)
+    .map(|p| fst_map.get(&p).unwrap() + snd_map.get(&p).unwrap())
+    .min()
+    .unwrap()
 }
 
 fn evolve(xs: &[Action]) -> HashMap<Point, usize> {
