@@ -1,9 +1,11 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> i32 {
   let (fst, snd) = parse(s);
-  evolve(&fst)
-    .intersection(&evolve(&snd))
+  let fst_set: HashSet<_> = evolve(&fst).into_iter().map(|x| x.0).collect();
+  let snd_set: HashSet<_> = evolve(&snd).into_iter().map(|x| x.0).collect();
+  fst_set
+    .intersection(&snd_set)
     .map(|p| p.x.abs() + p.y.abs())
     .min()
     .unwrap()
@@ -13,9 +15,10 @@ pub fn p2(_: &str) -> i32 {
   todo!()
 }
 
-fn evolve(xs: &[Action]) -> HashSet<Point> {
+fn evolve(xs: &[Action]) -> HashMap<Point, usize> {
   let mut cur = Point { x: 0, y: 0 };
-  let mut ret = HashSet::new();
+  let mut ret = HashMap::new();
+  let mut idx = 0;
   for ac in xs {
     let (dx, dy) = match ac.direction {
       Direction::Up => (0, 1),
@@ -26,7 +29,8 @@ fn evolve(xs: &[Action]) -> HashSet<Point> {
     for _ in 0..ac.num {
       cur.x += dx;
       cur.y += dy;
-      ret.insert(cur);
+      idx += 1;
+      ret.entry(cur).or_insert(idx);
     }
   }
   ret
