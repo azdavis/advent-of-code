@@ -88,4 +88,5 @@ fn d12() {
 fn d13() {
   let inp = include_str!("input/d13.txt");
   assert_eq!(crate::d13::p1(inp), 333);
+  assert_eq!(crate::d13::p2(inp), 690123192779524);
 }

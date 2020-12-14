@@ -10,8 +10,48 @@ pub fn p1(s: &str) -> usize {
   bus.id * wait
 }
 
-pub fn p2(_: &str) -> usize {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  let buses = parse(s).buses;
+  let mut iter = buses.into_iter();
+  let fst = iter.next().unwrap();
+  assert_eq!(fst.idx, 0);
+  let mut overall_lcm = fst.id;
+  let mut sum = 0;
+  for bus in iter {
+    let off = wait_time(sum + bus.idx, bus.id);
+    let delta = get_delta(overall_lcm, off, bus.id);
+    sum += delta;
+    overall_lcm = lcm(overall_lcm, bus.id);
+  }
+  sum
+}
+
+/// returns the smallest number that is both:
+/// 1. an exact multiple of `a`
+/// 2. `off` more than a multiple of `b`
+fn get_delta(a: usize, off: usize, b: usize) -> usize {
+  let mut idx = 0;
+  loop {
+    let ret = a * idx;
+    if ret.checked_sub(off).map_or(false, |y| y % b == 0) {
+      return ret;
+    }
+    idx += 1;
+  }
+}
+
+fn gcd(mut a: usize, mut b: usize) -> usize {
+  assert!(a != 0 || b != 0);
+  while b != 0 {
+    let tmp = b;
+    b = a % b;
+    a = tmp;
+  }
+  a
+}
+
+fn lcm(a: usize, b: usize) -> usize {
+  a * b / gcd(a, b)
 }
 
 fn wait_time(start: usize, id: usize) -> usize {
