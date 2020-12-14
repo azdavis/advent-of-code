@@ -8,8 +8,12 @@ pub fn p1(s: &str) -> usize {
   })
 }
 
-pub fn p2(_: &str) -> usize {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  go(s, |mask, mem, addr, val| {
+    for a in gen_addr_p2(addr, mask.clone()) {
+      mem.insert(a, val);
+    }
+  })
 }
 
 type Mem = HashMap<usize, usize>;
@@ -30,6 +34,30 @@ where
   mem.values().copied().sum()
 }
 
+/// see comment on `Mask` for why this doesn't return a set (even though it
+/// logically is one).
+fn gen_addr_p2(mut addr: usize, mut mask: Mask) -> Vec<usize> {
+  let mut ret = Vec::new();
+  addr |= mask.on;
+  gen_addr_p2_impl(addr, &mut mask.floating, &mut ret);
+  ret
+}
+
+fn gen_addr_p2_impl(
+  addr: usize,
+  indices: &mut Vec<usize>,
+  ret: &mut Vec<usize>,
+) {
+  ret.push(addr);
+  if let Some(idx) = indices.pop() {
+    let mask = 1 << idx;
+    gen_addr_p2_impl(addr | mask, indices, ret);
+    gen_addr_p2_impl(addr & !mask, indices, ret);
+    // makes the recursive calls work without cloning
+    indices.push(idx);
+  }
+}
+
 fn parse(s: &str) -> Vec<Instr> {
   s.split('\n')
     .filter(|line| !line.is_empty())
@@ -41,6 +69,9 @@ fn parse(s: &str) -> Vec<Instr> {
 struct Mask {
   on: usize,
   off: usize,
+  /// logically, it's a set, but having it be a Vec makes it easier to iterate
+  /// over, and is probably a bit more space efficient.
+  floating: Vec<usize>,
 }
 
 #[derive(Debug)]
@@ -59,16 +90,19 @@ impl Instr {
       assert!(parts.next().is_none());
       let mut on = 0;
       let mut off = 0;
+      let mut floating = Vec::new();
       for (idx, c) in mask.chars().rev().enumerate() {
         match c {
-          'X' => {}
+          'X' => {
+            floating.push(idx);
+          }
           '0' => off |= 1 << idx,
           '1' => on |= 1 << idx,
           _ => panic!("bad mask char: {}", c),
         }
       }
       off = !off;
-      return Self::Mask(Mask { on, off });
+      return Self::Mask(Mask { on, off, floating });
     }
     let mut fst_parts = fst.split('[');
     assert_eq!(fst_parts.next().unwrap(), "mem");
