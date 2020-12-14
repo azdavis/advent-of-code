@@ -10,7 +10,15 @@ pub fn p1(s: &str) -> usize {
 
 pub fn p2(s: &str) -> usize {
   go(s, |mask, mem, addr, val| {
-    for a in gen_addr_p2(addr, mask.clone()) {
+    let mut addrs = vec![addr | mask.on];
+    for &idx in mask.floating.iter() {
+      let mask = 1 << idx;
+      addrs = addrs
+        .into_iter()
+        .flat_map(|a| vec![a | mask, a & !mask])
+        .collect();
+    }
+    for a in addrs {
       mem.insert(a, val);
     }
   })
@@ -32,30 +40,6 @@ where
     }
   }
   mem.values().copied().sum()
-}
-
-/// see comment on `Mask` for why this doesn't return a set (even though it
-/// logically is one).
-fn gen_addr_p2(mut addr: usize, mut mask: Mask) -> Vec<usize> {
-  let mut ret = Vec::new();
-  addr |= mask.on;
-  gen_addr_p2_impl(addr, &mut mask.floating, &mut ret);
-  ret
-}
-
-fn gen_addr_p2_impl(
-  addr: usize,
-  indices: &mut Vec<usize>,
-  ret: &mut Vec<usize>,
-) {
-  ret.push(addr);
-  if let Some(idx) = indices.pop() {
-    let mask = 1 << idx;
-    gen_addr_p2_impl(addr | mask, indices, ret);
-    gen_addr_p2_impl(addr & !mask, indices, ret);
-    // makes the recursive calls work without cloning
-    indices.push(idx);
-  }
 }
 
 fn parse(s: &str) -> Vec<Instr> {
