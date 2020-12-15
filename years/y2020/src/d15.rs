@@ -59,3 +59,9 @@ fn t_p1() {
   assert_eq!(p1("3,2,1\n"), 438);
   assert_eq!(p1("3,1,2\n"), 1836);
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d15.txt");
+  assert_eq!(p1(inp), 1696);
+}
