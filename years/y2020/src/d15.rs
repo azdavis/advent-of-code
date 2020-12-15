@@ -19,10 +19,7 @@ fn go(s: &str, target: usize) -> usize {
   let mut cur = *nums.last().unwrap();
   loop {
     let info = map.get(&cur).unwrap();
-    cur = match info.snd {
-      None => 0,
-      Some(x) => info.fst - x,
-    };
+    cur = info.snd.map_or(0, |x| info.fst - x);
     update(&mut map, cur, turn);
     if turn == target {
       return cur;
