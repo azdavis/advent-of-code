@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::hash_map::{Entry, HashMap};
 
 pub fn p1(s: &str) -> usize {
   go(s, 2020)
@@ -40,8 +40,15 @@ struct Info {
 }
 
 fn update(map: &mut Map, num: usize, fst: usize) {
-  let snd = map.get(&num).map(|x| x.fst);
-  map.insert(num, Info { fst, snd });
+  match map.entry(num) {
+    Entry::Occupied(mut occ) => {
+      let snd = Some(occ.get().fst);
+      occ.insert(Info { fst, snd });
+    }
+    Entry::Vacant(vac) => {
+      vac.insert(Info { fst, snd: None });
+    }
+  }
 }
 
 fn parse(s: &str) -> Vec<usize> {
