@@ -24,3 +24,10 @@ fn parse(s: &str) -> impl Iterator<Item = u32> + '_ {
     .filter(|line| !line.is_empty())
     .map(|line| line.parse().unwrap())
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d01.txt");
+  assert_eq!(p1(inp), 3296560);
+  assert_eq!(p2(inp), 4941976);
+}

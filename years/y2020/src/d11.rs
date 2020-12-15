@@ -129,3 +129,10 @@ impl Tile {
     }
   }
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d11.txt");
+  assert_eq!(p1(inp), 2238);
+  assert_eq!(p2(inp), 2013);
+}

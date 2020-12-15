@@ -38,3 +38,10 @@ where
   }
   ret
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d02.txt");
+  assert_eq!(p1(inp), 447);
+  assert_eq!(p2(inp), 249);
+}

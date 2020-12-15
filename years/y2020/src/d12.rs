@@ -184,3 +184,10 @@ impl ActionKind {
     }
   }
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d12.txt");
+  assert_eq!(p1(inp), 1133);
+  assert_eq!(p2(inp), 61053);
+}

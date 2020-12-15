@@ -32,3 +32,10 @@ pub fn p2(s: &str) -> u32 {
   }
   panic!()
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d01.txt");
+  assert_eq!(p1(inp), 840324);
+  assert_eq!(p2(inp), 170098110);
+}

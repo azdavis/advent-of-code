@@ -42,3 +42,10 @@ fn parse(s: &str) -> Vec<usize> {
   let fst = lines.next().unwrap();
   fst.split(',').map(|s| s.parse().unwrap()).collect()
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d02.txt");
+  assert_eq!(p1(inp), 11590668);
+  assert_eq!(p2(inp), 2254);
+}

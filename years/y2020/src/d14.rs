@@ -100,3 +100,10 @@ impl Instr {
     Self::Mem(addr, val)
   }
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d14.txt");
+  assert_eq!(p1(inp), 11179633149677);
+  assert_eq!(p2(inp), 4822600194774);
+}

@@ -95,3 +95,10 @@ impl Direction {
     }
   }
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d03.txt");
+  assert_eq!(p1(inp), 1626);
+  assert_eq!(p2(inp), 27330);
+}

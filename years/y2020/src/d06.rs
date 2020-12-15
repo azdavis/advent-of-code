@@ -29,3 +29,10 @@ pub fn p2(s: &str) -> usize {
     })
     .sum()
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d06.txt");
+  assert_eq!(p1(inp), 6585);
+  assert_eq!(p2(inp), 3276);
+}

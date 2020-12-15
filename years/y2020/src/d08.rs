@@ -119,3 +119,10 @@ impl Instr {
     Self { kind, num }
   }
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d08.txt");
+  assert_eq!(p1(inp), 1709);
+  assert_eq!(p2(inp), 1976);
+}

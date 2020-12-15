@@ -77,3 +77,10 @@ fn parse_seat(s: &str) -> Seat {
 fn seat_id(s: Seat) -> u32 {
   s.row * (MAX_COL + 1) + s.col
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d05.txt");
+  assert_eq!(p1(inp), 861);
+  assert_eq!(p2(inp), 633);
+}
