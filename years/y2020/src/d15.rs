@@ -4,8 +4,8 @@ pub fn p1(s: &str) -> usize {
   go(s, 2020)
 }
 
-pub fn p2(_: &str) -> usize {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  go(s, 30000000)
 }
 
 fn go(s: &str, target: usize) -> usize {
@@ -68,4 +68,5 @@ fn t_p1() {
 fn t() {
   let inp = include_str!("input/d15.txt");
   assert_eq!(p1(inp), 1696);
+  assert_eq!(p2(inp), 37385);
 }
