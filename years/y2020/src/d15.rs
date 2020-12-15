@@ -1,6 +1,14 @@
 use std::collections::HashMap;
 
 pub fn p1(s: &str) -> usize {
+  go(s, 2020)
+}
+
+pub fn p2(_: &str) -> usize {
+  todo!()
+}
+
+fn go(s: &str, target: usize) -> usize {
   let nums = parse(s);
   let mut turn = 1;
   let mut map = Map::new();
@@ -16,15 +24,11 @@ pub fn p1(s: &str) -> usize {
       Some(x) => info.fst - x,
     };
     update(&mut map, cur, turn);
-    if turn == 2020 {
+    if turn == target {
       return cur;
     }
     turn += 1;
   }
-}
-
-pub fn p2(_: &str) -> usize {
-  todo!()
 }
 
 type Map = HashMap<usize, Info>;
