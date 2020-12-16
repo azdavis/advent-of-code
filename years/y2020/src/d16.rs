@@ -2,24 +2,16 @@ use std::collections::HashMap;
 use std::ops::RangeInclusive;
 
 pub fn p1(s: &str) -> u32 {
-  let inp = parse(s);
-  inp
-    .nearby
+  let (fields, _, nearby) = parse(s);
+  nearby
     .iter()
     .flatten()
-    .filter(|&num| inp.fields.values().all(|ranges| !ranges.contains(num)))
+    .filter(|&num| fields.values().all(|ranges| !ranges.contains(num)))
     .sum()
 }
 
 pub fn p2(s: &str) -> u32 {
   todo!()
-}
-
-#[derive(Debug)]
-struct Input<'a> {
-  fields: HashMap<&'a str, Ranges>,
-  me: Ticket,
-  nearby: Vec<Ticket>,
 }
 
 type Ticket = Vec<u32>;
@@ -36,7 +28,7 @@ impl Ranges {
   }
 }
 
-fn parse(s: &str) -> Input {
+fn parse(s: &str) -> (HashMap<&str, Ranges>, Ticket, Vec<Ticket>) {
   let mut lines = s.split('\n');
   let mut fields = HashMap::new();
   loop {
@@ -63,7 +55,7 @@ fn parse(s: &str) -> Input {
     }
     nearby.push(parse_ticket(line));
   }
-  Input { fields, me, nearby }
+  (fields, me, nearby)
 }
 
 fn parse_ticket(s: &str) -> Ticket {
