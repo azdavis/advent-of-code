@@ -34,12 +34,12 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
         idx += 4;
       }
       3 => {
-        let a = get_pos_arg(&ns, idx + 1, modes);
+        let a = get_pos_arg(&ns, idx, 1, modes);
         ns[a] = input.next().unwrap();
         idx += 2;
       }
       4 => {
-        let a = get_arg(&ns, idx + 1, modes);
+        let a = get_arg(&ns, idx, 1, modes);
         output.push(a);
         idx += 2;
       }
@@ -49,27 +49,38 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
   }
 }
 
-fn get_arg(ns: &[i32], idx: usize, mode: i32) -> i32 {
-  let val = ns[idx];
-  match mode {
-    0 => ns[u(val)],
-    1 => val,
-    _ => panic!("invalid mode: {}", mode),
+fn get_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> i32 {
+  let val = ns[idx + off];
+  match get_mode(off, modes) {
+    Mode::Position => ns[u(val)],
+    Mode::Immediate => val,
   }
 }
 
-fn get_pos_arg(ns: &[i32], idx: usize, mode: i32) -> usize {
-  assert_eq!(mode, 0);
-  u(ns[idx])
+fn get_pos_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> usize {
+  assert!(matches!(get_mode(off, modes), Mode::Position));
+  u(ns[idx + off])
 }
 
-fn get_3_arg(ns: &[i32], idx: usize, mut modes: i32) -> (i32, i32, usize) {
-  let a = get_arg(&ns, idx + 1, modes % 10);
-  modes /= 10;
-  let b = get_arg(&ns, idx + 2, modes % 10);
-  modes /= 10;
-  let c = get_pos_arg(ns, idx + 3, modes);
+fn get_3_arg(ns: &[i32], idx: usize, modes: i32) -> (i32, i32, usize) {
+  let a = get_arg(&ns, idx, 1, modes);
+  let b = get_arg(&ns, idx, 2, modes);
+  let c = get_pos_arg(ns, idx, 3, modes);
   (a, b, c)
+}
+
+fn get_mode(off: usize, modes: i32) -> Mode {
+  let div = (1..off).fold(1, |ac, _| ac * 10);
+  match (modes / div) % 10 {
+    0 => Mode::Position,
+    1 => Mode::Immediate,
+    mode => panic!("invalid mode: {}", mode),
+  }
+}
+
+enum Mode {
+  Position,
+  Immediate,
 }
 
 fn u(n: i32) -> usize {
