@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::ops::RangeInclusive;
 
-pub fn p1(s: &str) -> u32 {
+pub fn p1(s: &str) -> u64 {
   let (fields, _, nearby) = parse(s);
   nearby
     .iter()
@@ -10,20 +10,20 @@ pub fn p1(s: &str) -> u32 {
     .sum()
 }
 
-pub fn p2(s: &str) -> u32 {
+pub fn p2(s: &str) -> u64 {
   todo!()
 }
 
-type Ticket = Vec<u32>;
+type Ticket = Vec<u64>;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 struct Ranges {
-  fst: RangeInclusive<u32>,
-  snd: RangeInclusive<u32>,
+  fst: RangeInclusive<u64>,
+  snd: RangeInclusive<u64>,
 }
 
 impl Ranges {
-  fn contains(&self, num: &u32) -> bool {
+  fn contains(&self, num: &u64) -> bool {
     self.fst.contains(num) || self.snd.contains(num)
   }
 }
@@ -66,10 +66,10 @@ fn parse_ticket(s: &str) -> Ticket {
   s.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
-fn parse_range(s: &str) -> RangeInclusive<u32> {
+fn parse_range(s: &str) -> RangeInclusive<u64> {
   let mut parts = s.split('-');
-  let fst: u32 = parts.next().unwrap().parse().unwrap();
-  let snd: u32 = parts.next().unwrap().parse().unwrap();
+  let fst: u64 = parts.next().unwrap().parse().unwrap();
+  let snd: u64 = parts.next().unwrap().parse().unwrap();
   fst..=snd
 }
 
