@@ -16,19 +16,19 @@ cd ..
 mkdir -p "years/y$YEAR/src/input"
 
 cat <<EOF > "years/y$YEAR/src/d$DAY.rs"
-pub fn p1(_: &str) -> u32 {
+pub fn p1(s: &str) -> u32 {
   todo!()
 }
 
-pub fn p2(_: &str) -> u32 {
+pub fn p2(s: &str) -> u32 {
   todo!()
 }
 
 #[test]
 fn t() {
   let inp = include_str!("input/d$DAY.txt");
-  assert_eq!(p1(inp), 123);
-  assert_eq!(p2(inp), 123);
+  // assert_eq!(p1(inp), ___);
+  // assert_eq!(p2(inp), ___);
 }
 EOF
 
