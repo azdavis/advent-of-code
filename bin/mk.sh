@@ -23,6 +23,13 @@ pub fn p1(_: &str) -> u32 {
 pub fn p2(_: &str) -> u32 {
   todo!()
 }
+
+#[test]
+fn t() {
+  let inp = include_str!("input/d$DAY.txt");
+  assert_eq!(p1(inp), 123);
+  assert_eq!(p2(inp), 123);
+}
 EOF
 
 touch "years/y$YEAR/src/input/d$DAY.txt"
