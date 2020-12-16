@@ -55,6 +55,10 @@ fn parse(s: &str) -> (HashMap<&str, Ranges>, Ticket, Vec<Ticket>) {
     }
     nearby.push(parse_ticket(line));
   }
+  for n in nearby.iter() {
+    assert_eq!(fields.len(), n.len());
+  }
+  assert_eq!(fields.len(), me.len());
   (fields, me, nearby)
 }
 
