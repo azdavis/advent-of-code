@@ -23,34 +23,34 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
     let cur = ns[idx];
     let op = cur % 100;
     let modes = cur / 100;
-    match op {
+    idx = match op {
       1 => {
         let a = arg(&ns, idx, 1, modes);
         let b = arg(&ns, idx, 2, modes);
         let c = pos_arg(&ns, idx, 3, modes);
         ns[c] = a + b;
-        idx += 4;
+        idx + 4
       }
       2 => {
         let a = arg(&ns, idx, 1, modes);
         let b = arg(&ns, idx, 2, modes);
         let c = pos_arg(&ns, idx, 3, modes);
         ns[c] = a * b;
-        idx += 4;
+        idx + 4
       }
       3 => {
         let a = pos_arg(&ns, idx, 1, modes);
         ns[a] = input.next().unwrap();
-        idx += 2;
+        idx + 2
       }
       4 => {
         let a = arg(&ns, idx, 1, modes);
         output.push(a);
-        idx += 2;
+        idx + 2
       }
       99 => break,
       _ => panic!("invalid op: {}", op),
-    }
+    };
   }
 }
 
