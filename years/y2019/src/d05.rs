@@ -2,7 +2,8 @@ use std::convert::TryInto as _;
 
 pub fn p1(s: &str) -> i32 {
   let ns = parse(s);
-  let mut output = Vec::new();
+  // we output a code and run at least one test
+  let mut output = Vec::with_capacity(2);
   go(ns, &[1], &mut output);
   let code = output.pop().unwrap();
   for x in output {
