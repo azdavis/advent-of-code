@@ -24,12 +24,16 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
     let modes = cur / 100;
     match op {
       1 => {
-        let (a, b, c) = get_3_arg(&ns, idx, modes);
+        let a = get_arg(&ns, idx, 1, modes);
+        let b = get_arg(&ns, idx, 2, modes);
+        let c = get_pos_arg(&ns, idx, 3, modes);
         ns[c] = a + b;
         idx += 4;
       }
       2 => {
-        let (a, b, c) = get_3_arg(&ns, idx, modes);
+        let a = get_arg(&ns, idx, 1, modes);
+        let b = get_arg(&ns, idx, 2, modes);
+        let c = get_pos_arg(&ns, idx, 3, modes);
         ns[c] = a * b;
         idx += 4;
       }
@@ -60,13 +64,6 @@ fn get_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> i32 {
 fn get_pos_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> usize {
   assert!(matches!(get_mode(off, modes), Mode::Position));
   u(ns[idx + off])
-}
-
-fn get_3_arg(ns: &[i32], idx: usize, modes: i32) -> (i32, i32, usize) {
-  let a = get_arg(&ns, idx, 1, modes);
-  let b = get_arg(&ns, idx, 2, modes);
-  let c = get_pos_arg(ns, idx, 3, modes);
-  (a, b, c)
 }
 
 fn get_mode(off: usize, modes: i32) -> Mode {
