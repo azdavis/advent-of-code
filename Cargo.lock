@@ -10,6 +10,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "helpers"
+version = "0.1.0"
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -71,6 +75,9 @@ dependencies = [
 [[package]]
 name = "y2019"
 version = "0.1.0"
+dependencies = [
+ "helpers",
+]
 
 [[package]]
 name = "y2020"

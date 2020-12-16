@@ -1,8 +1,5 @@
 [package]
-name = "y2019"
+name = "helpers"
 version = "0.1.0"
 authors = ["Ariel Davis <ariel.z.davis@icloud.com>"]
 edition = "2018"
-
-[dependencies]
-helpers = { path = "../../helpers" }
