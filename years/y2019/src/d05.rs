@@ -13,7 +13,13 @@ pub fn p1(s: &str) -> i32 {
 }
 
 pub fn p2(s: &str) -> i32 {
-  todo!()
+  let ns = parse(s);
+  // just output the code
+  let mut output = Vec::with_capacity(1);
+  go(ns, &[5], &mut output);
+  let code = output.pop().unwrap();
+  assert!(output.is_empty());
+  code
 }
 
 fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
@@ -47,6 +53,38 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
         let a = arg(&ns, idx, 1, modes);
         output.push(a);
         idx + 2
+      }
+      5 => {
+        let a = arg(&ns, idx, 1, modes);
+        let b = arg(&ns, idx, 2, modes);
+        if a == 0 {
+          idx + 3
+        } else {
+          u(b)
+        }
+      }
+      6 => {
+        let a = arg(&ns, idx, 1, modes);
+        let b = arg(&ns, idx, 2, modes);
+        if a == 0 {
+          u(b)
+        } else {
+          idx + 3
+        }
+      }
+      7 => {
+        let a = arg(&ns, idx, 1, modes);
+        let b = arg(&ns, idx, 2, modes);
+        let c = pos_arg(&ns, idx, 3, modes);
+        ns[c] = if a < b { 1 } else { 0 };
+        idx + 4
+      }
+      8 => {
+        let a = arg(&ns, idx, 1, modes);
+        let b = arg(&ns, idx, 2, modes);
+        let c = pos_arg(&ns, idx, 3, modes);
+        ns[c] = if a == b { 1 } else { 0 };
+        idx + 4
       }
       99 => break,
       _ => panic!("invalid op: {}", op),
@@ -98,5 +136,31 @@ fn parse(s: &str) -> Vec<i32> {
 fn t() {
   let inp = include_str!("input/d05.txt");
   assert_eq!(p1(inp), 13210611);
-  // assert_eq!(p2(inp), ___);
+  assert_eq!(p2(inp), 584126);
+}
+
+#[cfg(test)]
+mod tests {
+  use std::cmp::Ordering;
+
+  #[test]
+  fn t_p2() {
+    let large = vec![
+      3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106,
+      0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104, 999, 1105,
+      1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99,
+    ];
+    let mut output = Vec::with_capacity(1);
+    for n in 0..30 {
+      super::go(large.clone(), &[n], &mut output);
+      let want = match n.cmp(&8) {
+        Ordering::Less => 999,
+        Ordering::Equal => 1000,
+        Ordering::Greater => 1001,
+      };
+      let got = output.pop().unwrap();
+      assert!(output.is_empty());
+      assert_eq!(want, got);
+    }
+  }
 }
