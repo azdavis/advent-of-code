@@ -1,12 +1,3 @@
-const TARGET: u32 = 2020;
-
-fn parse(s: &str) -> Vec<u32> {
-  s.split_ascii_whitespace()
-    .map(str::parse)
-    .collect::<Result<_, _>>()
-    .unwrap()
-}
-
 pub fn p1(s: &str) -> u32 {
   let xs = parse(s);
   for &a in xs.iter() {
@@ -31,6 +22,15 @@ pub fn p2(s: &str) -> u32 {
     }
   }
   panic!()
+}
+
+const TARGET: u32 = 2020;
+
+fn parse(s: &str) -> Vec<u32> {
+  s.split_ascii_whitespace()
+    .map(str::parse)
+    .collect::<Result<_, _>>()
+    .unwrap()
 }
 
 #[test]
