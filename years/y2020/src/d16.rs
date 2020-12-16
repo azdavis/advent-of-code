@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ops::RangeInclusive;
 
 pub fn p1(s: &str) -> u64 {
@@ -11,7 +11,40 @@ pub fn p1(s: &str) -> u64 {
 }
 
 pub fn p2(s: &str) -> u64 {
-  todo!()
+  let (fields, me, mut nearby) = parse(s);
+  nearby.retain(|ticket| {
+    ticket
+      .iter()
+      .all(|num| fields.values().any(|ranges| ranges.contains(num)))
+  });
+  let mut candidates: Vec<_> = fields
+    .iter()
+    .map(|(&key, ranges)| {
+      let set: HashSet<_> = (0..fields.len())
+        .filter(|&idx| {
+          nearby.iter().all(|ticket| ranges.contains(&ticket[idx]))
+        })
+        .collect();
+      (key, set)
+    })
+    .collect();
+  candidates.sort_unstable_by_key(|&(key, ref set)| (set.len(), key));
+  let mut assigned = HashSet::new();
+  let mut mapping = HashMap::new();
+  for &(key, ref set) in candidates.iter() {
+    assert_eq!(assigned.len(), mapping.len());
+    assert_eq!(assigned.len() + 1, set.len());
+    let mut iter = set.difference(&assigned);
+    let got = *iter.next().unwrap();
+    assert!(iter.next().is_none());
+    assigned.insert(got);
+    mapping.insert(key, got);
+  }
+  mapping
+    .into_iter()
+    .filter(|&(key, _)| key.starts_with("departure"))
+    .map(|(_, idx)| me[idx])
+    .product()
 }
 
 type Ticket = Vec<u64>;
@@ -77,5 +110,5 @@ fn parse_range(s: &str) -> RangeInclusive<u64> {
 fn t() {
   let inp = include_str!("input/d16.txt");
   assert_eq!(p1(inp), 25984);
-  // assert_eq!(p2(inp), ___);
+  assert_eq!(p2(inp), 1265347500049);
 }
