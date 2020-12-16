@@ -24,26 +24,26 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
     let modes = cur / 100;
     match op {
       1 => {
-        let a = get_arg(&ns, idx, 1, modes);
-        let b = get_arg(&ns, idx, 2, modes);
-        let c = get_pos_arg(&ns, idx, 3, modes);
+        let a = arg(&ns, idx, 1, modes);
+        let b = arg(&ns, idx, 2, modes);
+        let c = pos_arg(&ns, idx, 3, modes);
         ns[c] = a + b;
         idx += 4;
       }
       2 => {
-        let a = get_arg(&ns, idx, 1, modes);
-        let b = get_arg(&ns, idx, 2, modes);
-        let c = get_pos_arg(&ns, idx, 3, modes);
+        let a = arg(&ns, idx, 1, modes);
+        let b = arg(&ns, idx, 2, modes);
+        let c = pos_arg(&ns, idx, 3, modes);
         ns[c] = a * b;
         idx += 4;
       }
       3 => {
-        let a = get_pos_arg(&ns, idx, 1, modes);
+        let a = pos_arg(&ns, idx, 1, modes);
         ns[a] = input.next().unwrap();
         idx += 2;
       }
       4 => {
-        let a = get_arg(&ns, idx, 1, modes);
+        let a = arg(&ns, idx, 1, modes);
         output.push(a);
         idx += 2;
       }
@@ -53,25 +53,25 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
   }
 }
 
-fn get_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> i32 {
+fn arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> i32 {
   let val = ns[idx + off];
-  match get_mode(off, modes) {
+  match mode(off, modes) {
     Mode::Position => ns[u(val)],
     Mode::Immediate => val,
   }
 }
 
-fn get_pos_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> usize {
-  assert!(matches!(get_mode(off, modes), Mode::Position));
+fn pos_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> usize {
+  assert!(matches!(mode(off, modes), Mode::Position));
   u(ns[idx + off])
 }
 
-fn get_mode(off: usize, modes: i32) -> Mode {
+fn mode(off: usize, modes: i32) -> Mode {
   let div = (1..off).fold(1, |ac, _| ac * 10);
   match (modes / div) % 10 {
     0 => Mode::Position,
     1 => Mode::Immediate,
-    mode => panic!("invalid mode: {}", mode),
+    m => panic!("invalid mode: {}", m),
   }
 }
 
