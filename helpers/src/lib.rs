@@ -7,4 +7,3 @@ pub use regex;
 
 pub mod digits;
 pub mod infinite;
-pub mod vec3;
