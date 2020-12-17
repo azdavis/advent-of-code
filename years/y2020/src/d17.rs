@@ -1,30 +1,37 @@
 use std::collections::HashSet;
 use std::convert::TryInto as _;
+use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {
-  let mut set: HashSet<_> = parse(s).map(|(a, b)| (a, b, 0)).collect();
+  let inp: HashSet<_> = parse(s).map(|(a, b)| (a, b, 0)).collect();
+  go(inp, neighbors_vec3)
+}
+
+pub fn p2(s: &str) -> usize {
+  todo!()
+}
+
+fn go<T, F>(mut set: HashSet<T>, neighbors: F) -> usize
+where
+  F: Fn(T) -> Vec<T>,
+  T: Hash + Eq + Copy,
+{
   for _ in 0..6 {
     set = set
       .iter()
       .flat_map(|&v| {
-        let mut ret = neighbors_vec3(v);
+        let mut ret = neighbors(v);
         ret.push(v);
         ret
       })
       .filter(|&v| {
-        let ns_on = neighbors_vec3(v)
-          .into_iter()
-          .filter(|n| set.contains(n))
-          .count();
+        let ns_on =
+          neighbors(v).into_iter().filter(|n| set.contains(n)).count();
         matches!((set.contains(&v), ns_on), (true, 2) | (_, 3))
       })
       .collect();
   }
   set.len()
-}
-
-pub fn p2(s: &str) -> usize {
-  todo!()
 }
 
 type Vec3 = (i32, i32, i32);
