@@ -1,3 +1,6 @@
+//! Iterating over digits.
+
+/// Returns an iterator over the decimal digits of `n` from left to right.
 pub fn digits(n: u32) -> Digits {
   let mut div = 1;
   loop {
@@ -9,6 +12,7 @@ pub fn digits(n: u32) -> Digits {
   }
 }
 
+/// An iterator the decimal digits of a number from left to right.
 pub struct Digits {
   div: u32,
   n: u32,
