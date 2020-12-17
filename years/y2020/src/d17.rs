@@ -2,9 +2,9 @@ use std::collections::HashSet;
 use std::convert::TryInto as _;
 
 pub fn p1(s: &str) -> usize {
-  let mut map: HashSet<_> = parse(s).map(|(a, b)| (a, b, 0)).collect();
+  let mut set: HashSet<_> = parse(s).map(|(a, b)| (a, b, 0)).collect();
   for _ in 0..6 {
-    map = map
+    set = set
       .iter()
       .flat_map(|&v| {
         let mut ret = neighbors_vec3(v);
@@ -14,13 +14,13 @@ pub fn p1(s: &str) -> usize {
       .filter(|&v| {
         let ns_on = neighbors_vec3(v)
           .into_iter()
-          .filter(|n| map.contains(n))
+          .filter(|n| set.contains(n))
           .count();
-        matches!((map.contains(&v), ns_on), (true, 2) | (_, 3))
+        matches!((set.contains(&v), ns_on), (true, 2) | (_, 3))
       })
       .collect();
   }
-  map.len()
+  set.len()
 }
 
 pub fn p2(s: &str) -> usize {
