@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use std::convert::TryInto as _;
 
 pub fn p1(s: &str) -> usize {
-  let mut map = parse(s);
+  let mut map: HashSet<_> = parse(s).map(|(a, b)| (a, b, 0)).collect();
   for _ in 0..6 {
     map = map
       .iter()
@@ -52,18 +52,17 @@ fn to_i32(n: usize) -> i32 {
   n.try_into().unwrap()
 }
 
-fn parse(s: &str) -> HashSet<Vec3> {
+fn parse(s: &str) -> impl Iterator<Item = (i32, i32)> + '_ {
   s.split('\n')
     .filter(|line| !line.is_empty())
     .enumerate()
     .flat_map(|(x, line)| {
       line.chars().enumerate().filter_map(move |(y, c)| match c {
-        '#' => Some((to_i32(x), to_i32(y), 0)),
+        '#' => Some((to_i32(x), to_i32(y))),
         '.' => None,
         _ => panic!("bad char: {}", c),
       })
     })
-    .collect()
 }
 
 #[test]
