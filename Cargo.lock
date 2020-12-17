@@ -12,6 +12,11 @@ dependencies = [
 [[package]]
 name = "helpers"
 version = "0.1.0"
+dependencies = [
+ "maplit",
+ "once_cell",
+ "regex",
+]
 
 [[package]]
 name = "lazy_static"
@@ -83,7 +88,5 @@ dependencies = [
 name = "y2020"
 version = "0.1.0"
 dependencies = [
- "maplit",
- "once_cell",
- "regex",
+ "helpers",
 ]

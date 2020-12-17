@@ -1,4 +1,4 @@
-use maplit::hashmap;
+use helpers::maplit::hashmap;
 
 pub fn p1(s: &str) -> usize {
   let mut nums = parse(s);

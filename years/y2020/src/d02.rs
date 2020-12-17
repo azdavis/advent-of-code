@@ -1,4 +1,4 @@
-use regex::Regex;
+use helpers::regex::Regex;
 
 #[allow(clippy::naive_bytecount)]
 pub fn p1(s: &str) -> usize {

@@ -1,6 +1,6 @@
-use maplit::hashset;
-use once_cell::sync::Lazy;
-use regex::Regex;
+use helpers::maplit::hashset;
+use helpers::once_cell::sync::Lazy;
+use helpers::regex::Regex;
 
 pub fn p1(s: &str) -> usize {
   go(s, |_, _| true)
