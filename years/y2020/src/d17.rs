@@ -7,13 +7,15 @@ pub fn p1(s: &str) -> usize {
     map = map
       .iter()
       .flat_map(|&v| {
-        let mut ret = neighbors(v);
+        let mut ret = neighbors_vec3(v);
         ret.push(v);
         ret
       })
       .filter(|&v| {
-        let ns_on =
-          neighbors(v).into_iter().filter(|n| map.contains(n)).count();
+        let ns_on = neighbors_vec3(v)
+          .into_iter()
+          .filter(|n| map.contains(n))
+          .count();
         matches!((map.contains(&v), ns_on), (true, 2) | (_, 3))
       })
       .collect();
@@ -27,7 +29,7 @@ pub fn p2(s: &str) -> usize {
 
 type Vec3 = (i32, i32, i32);
 
-fn neighbors(v: Vec3) -> Vec<Vec3> {
+fn neighbors_vec3(v: Vec3) -> Vec<Vec3> {
   const LEN: usize = (3 * 3 * 3) - 1;
   let (x, y, z) = v;
   let mut ret = Vec::with_capacity(LEN);
