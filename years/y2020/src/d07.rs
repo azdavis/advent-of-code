@@ -45,7 +45,7 @@ where
   F: Fn(Bag<'a>, usize, Bag<'a>) -> (Bag<'a>, T),
   T: std::hash::Hash + Eq + 'a,
 {
-  let mut ret = HashMap::new();
+  let mut ret = HashMap::<_, HashSet<_>>::new();
   for line in s.split('\n') {
     if line.is_empty() {
       continue;
@@ -74,7 +74,7 @@ where
         color: iter.next().unwrap(),
       };
       let (key, val) = add(container, num, contained);
-      ret.entry(key).or_insert_with(HashSet::new).insert(val);
+      ret.entry(key).or_default().insert(val);
       match iter.next().unwrap() {
         "bag," | "bags," => {}
         "bag." | "bags." => break,
