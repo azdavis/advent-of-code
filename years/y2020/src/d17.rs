@@ -8,7 +8,8 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> usize {
-  todo!()
+  let inp: HashSet<_> = parse(s).map(|(a, b)| (a, b, 0, 0)).collect();
+  go(inp, neighbors_vec4)
 }
 
 fn go<T, F>(mut set: HashSet<T>, neighbors: F) -> usize
@@ -55,6 +56,30 @@ fn neighbors_vec3(v: Vec3) -> Vec<Vec3> {
   ret
 }
 
+type Vec4 = (i32, i32, i32, i32);
+
+#[allow(clippy::many_single_char_names)]
+fn neighbors_vec4(v: Vec4) -> Vec<Vec4> {
+  const LEN: usize = (3 * 3 * 3 * 3) - 1;
+  let (w, x, y, z) = v;
+  let mut ret = Vec::with_capacity(LEN);
+  for dw in -1..=1 {
+    for dx in -1..=1 {
+      for dy in -1..=1 {
+        for dz in -1..=1 {
+          let add = (w + dw, x + dx, y + dy, z + dz);
+          if add == v {
+            continue;
+          }
+          ret.push(add)
+        }
+      }
+    }
+  }
+  assert_eq!(ret.len(), LEN);
+  ret
+}
+
 fn to_i32(n: usize) -> i32 {
   n.try_into().unwrap()
 }
@@ -76,5 +101,5 @@ fn parse(s: &str) -> impl Iterator<Item = (i32, i32)> + '_ {
 fn t() {
   let inp = include_str!("input/d17.txt");
   assert_eq!(p1(inp), 271);
-  // assert_eq!(p2(inp), ___);
+  assert_eq!(p2(inp), 2064);
 }
