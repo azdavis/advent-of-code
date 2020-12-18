@@ -68,7 +68,7 @@ where
     ];
     for field in passport.split_ascii_whitespace() {
       let mut iter = field.split(':');
-      let key = Key::parse(iter.next().unwrap()).unwrap();
+      let key = Key::parse(iter.next().unwrap());
       let val = iter.next().unwrap();
       assert!(iter.next().is_none());
       if !f(key, val) {
@@ -96,17 +96,17 @@ enum Key {
 }
 
 impl Key {
-  fn parse(s: &str) -> Option<Self> {
+  fn parse(s: &str) -> Self {
     match s {
-      "byr" => Some(Self::BirthYear),
-      "iyr" => Some(Self::IssueYear),
-      "eyr" => Some(Self::ExpirationYear),
-      "hgt" => Some(Self::Height),
-      "hcl" => Some(Self::HairColor),
-      "ecl" => Some(Self::EyeColor),
-      "pid" => Some(Self::PassportID),
-      "cid" => Some(Self::CountryID),
-      _ => None,
+      "byr" => Self::BirthYear,
+      "iyr" => Self::IssueYear,
+      "eyr" => Self::ExpirationYear,
+      "hgt" => Self::Height,
+      "hcl" => Self::HairColor,
+      "ecl" => Self::EyeColor,
+      "pid" => Self::PassportID,
+      "cid" => Self::CountryID,
+      _ => panic!("bad key: {}", s),
     }
   }
 }

@@ -65,10 +65,7 @@ where
       continue;
     }
     loop {
-      let num: usize = match next.parse() {
-        Ok(x) => x,
-        Err(e) => panic!("error parsing {}: {}", next, e),
-      };
+      let num: usize = next.parse().unwrap();
       let contained = Bag {
         adj: iter.next().unwrap(),
         color: iter.next().unwrap(),

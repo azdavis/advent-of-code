@@ -99,7 +99,7 @@ impl InstrKind {
       "acc" => Self::Acc,
       "jmp" => Self::Jmp,
       "nop" => Self::Nop,
-      bad => panic!("invalid instr kind: {}", bad),
+      _ => panic!("bad instr kind: {}", s),
     }
   }
 }

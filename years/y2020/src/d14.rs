@@ -82,7 +82,7 @@ impl Instr {
           }
           '0' => off |= 1 << idx,
           '1' => on |= 1 << idx,
-          _ => panic!("bad mask char: {}", c),
+          _ => panic!("bad mask: {}", c),
         }
       }
       off = !off;

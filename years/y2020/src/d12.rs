@@ -124,9 +124,9 @@ struct Action {
 }
 
 impl Action {
-  fn parse(s: &str) -> Action {
+  fn parse(s: &str) -> Self {
     let mut chars = s.chars();
-    Action {
+    Self {
       kind: ActionKind::parse(chars.next().unwrap()),
       // as_str on Chars is nifty!
       num: chars.as_str().parse().unwrap(),
