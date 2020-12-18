@@ -1,4 +1,4 @@
-use crate::intcode::run;
+use crate::intcode::{parse, run};
 
 pub fn p1(s: &str) -> i32 {
   go(parse(s), 12, 2)
@@ -23,12 +23,6 @@ fn go(mut ns: Vec<i32>, noun: i32, verb: i32) -> i32 {
   run(&mut ns, &[], &mut output);
   assert!(output.is_empty());
   ns[0]
-}
-
-fn parse(s: &str) -> Vec<i32> {
-  let mut lines = s.split('\n');
-  let fst = lines.next().unwrap();
-  fst.split(',').map(|s| s.parse().unwrap()).collect()
 }
 
 #[test]

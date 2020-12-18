@@ -1,5 +1,14 @@
 use std::convert::TryInto as _;
 
+pub fn parse(s: &str) -> Vec<i32> {
+  s.split('\n')
+    .next()
+    .unwrap()
+    .split(',')
+    .map(|x| x.parse().unwrap())
+    .collect()
+}
+
 pub fn run(ns: &mut Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
   let mut input = input.iter().copied();
   let mut idx = 0;
