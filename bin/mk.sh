@@ -9,13 +9,14 @@ fi
 
 YEAR="$1"
 DAY="$2"
+SRC="years/y$YEAR/src"
 
 cd "$(dirname "$0")"
 cd ..
 
-mkdir -p "years/y$YEAR/src/input"
+mkdir -p "$SRC/input"
 
-cat <<EOF > "years/y$YEAR/src/d$DAY.rs"
+cat <<EOF > "$SRC/d$DAY.rs"
 pub fn p1(s: &str) -> u32 {
   todo!()
 }
@@ -32,16 +33,16 @@ fn t() {
 }
 EOF
 
-touch "years/y$YEAR/src/input/d$DAY.txt"
+touch "$SRC/input/d$DAY.txt"
 
-echo "pub mod d$DAY;" >> "years/y$YEAR/src/lib.rs"
-sort -o "years/y$YEAR/src/lib.rs" "years/y$YEAR/src/lib.rs"
+echo "pub mod d$DAY;" >> "$SRC/lib.rs"
+sort -o "$SRC/lib.rs" "$SRC/lib.rs"
 
 cat <<EOF > runner/src/main.rs
 fn main() {
-  let inp = include_str!("../../years/y$YEAR/src/input/d$DAY.txt");
+  let inp = include_str!("../../$SRC/input/d$DAY.txt");
   println!("{}", y$YEAR::d$DAY::p1(&inp));
 }
 EOF
 
-"$EDITOR" "years/y$YEAR/src/input/d$DAY.txt" "years/y$YEAR/src/d$DAY.rs"
+"$EDITOR" "$SRC/input/d$DAY.txt" "$SRC/d$DAY.rs"
