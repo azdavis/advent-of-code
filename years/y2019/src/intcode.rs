@@ -121,30 +121,32 @@ impl Intcode {
 
   fn arg(&self, off: usize, modes: i32) -> i32 {
     let val = self.inner[self.idx + off];
-    match mode(off, modes) {
+    match Mode::get(off, modes) {
       Mode::Position => self.inner[u(val)],
       Mode::Immediate => val,
     }
   }
 
   fn pos_arg(&self, off: usize, modes: i32) -> usize {
-    assert!(matches!(mode(off, modes), Mode::Position));
+    assert!(matches!(Mode::get(off, modes), Mode::Position));
     u(self.inner[self.idx + off])
-  }
-}
-
-fn mode(off: usize, modes: i32) -> Mode {
-  let div = (1..off).fold(1, |ac, _| ac * 10);
-  match (modes / div) % 10 {
-    0 => Mode::Position,
-    1 => Mode::Immediate,
-    m => panic!("bad mode: {}", m),
   }
 }
 
 enum Mode {
   Position,
   Immediate,
+}
+
+impl Mode {
+  fn get(off: usize, modes: i32) -> Self {
+    let div = (1..off).fold(1, |ac, _| ac * 10);
+    match (modes / div) % 10 {
+      0 => Self::Position,
+      1 => Self::Immediate,
+      m => panic!("bad mode: {}", m),
+    }
+  }
 }
 
 fn u(n: i32) -> usize {
