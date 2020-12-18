@@ -1,14 +1,14 @@
-use crate::intcode::{parse, run};
+use crate::intcode::{parse, Intcode};
 
 pub fn p1(s: &str) -> i32 {
   go(parse(s), 12, 2)
 }
 
 pub fn p2(s: &str) -> i32 {
-  let ns = parse(s);
+  let p = parse(s);
   for noun in 0..=99 {
     for verb in 0..=99 {
-      if go(ns.clone(), noun, verb) == 19690720 {
+      if go(p.clone(), noun, verb) == 19690720 {
         return 100 * noun + verb;
       }
     }
@@ -19,10 +19,11 @@ pub fn p2(s: &str) -> i32 {
 fn go(mut ns: Vec<i32>, noun: i32, verb: i32) -> i32 {
   ns[1] = noun;
   ns[2] = verb;
+  let mut p = Intcode::new(ns);
   let mut output = Vec::new();
-  run(&mut ns, &[], &mut output);
+  p.run(&[], &mut output);
   assert!(output.is_empty());
-  ns[0]
+  *p.into_inner().first().unwrap()
 }
 
 #[test]

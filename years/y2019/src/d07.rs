@@ -1,14 +1,14 @@
-use crate::intcode::{parse, run};
+use crate::intcode::{parse, Intcode};
 use helpers::permute::permute;
 
 pub fn p1(s: &str) -> i32 {
-  let ns = parse(s);
+  let p = Intcode::new(parse(s));
   let mut output = Vec::with_capacity(1);
   permute(0..=4)
     .into_iter()
     .map(|candidate| {
       candidate.into_iter().fold(0, |inp, phase| {
-        run(&mut ns.clone(), &[phase, inp], &mut output);
+        p.clone().run(&[phase, inp], &mut output);
         let out = output.pop().unwrap();
         assert!(output.is_empty());
         out

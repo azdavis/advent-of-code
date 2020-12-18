@@ -9,87 +9,102 @@ pub fn parse(s: &str) -> Vec<i32> {
     .collect()
 }
 
-pub fn run(ns: &mut Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
-  let mut input = input.iter().copied();
-  let mut idx = 0;
-  loop {
-    let cur = ns[idx];
-    let op = cur % 100;
-    let modes = cur / 100;
-    idx = match op {
-      1 => {
-        let a = arg(&ns, idx, 1, modes);
-        let b = arg(&ns, idx, 2, modes);
-        let c = pos_arg(&ns, idx, 3, modes);
-        ns[c] = a + b;
-        idx + 4
-      }
-      2 => {
-        let a = arg(&ns, idx, 1, modes);
-        let b = arg(&ns, idx, 2, modes);
-        let c = pos_arg(&ns, idx, 3, modes);
-        ns[c] = a * b;
-        idx + 4
-      }
-      3 => {
-        let a = pos_arg(&ns, idx, 1, modes);
-        ns[a] = input.next().unwrap();
-        idx + 2
-      }
-      4 => {
-        let a = arg(&ns, idx, 1, modes);
-        output.push(a);
-        idx + 2
-      }
-      5 => {
-        let a = arg(&ns, idx, 1, modes);
-        let b = arg(&ns, idx, 2, modes);
-        if a == 0 {
-          idx + 3
-        } else {
-          u(b)
-        }
-      }
-      6 => {
-        let a = arg(&ns, idx, 1, modes);
-        let b = arg(&ns, idx, 2, modes);
-        if a == 0 {
-          u(b)
-        } else {
-          idx + 3
-        }
-      }
-      7 => {
-        let a = arg(&ns, idx, 1, modes);
-        let b = arg(&ns, idx, 2, modes);
-        let c = pos_arg(&ns, idx, 3, modes);
-        ns[c] = if a < b { 1 } else { 0 };
-        idx + 4
-      }
-      8 => {
-        let a = arg(&ns, idx, 1, modes);
-        let b = arg(&ns, idx, 2, modes);
-        let c = pos_arg(&ns, idx, 3, modes);
-        ns[c] = if a == b { 1 } else { 0 };
-        idx + 4
-      }
-      99 => break,
-      _ => panic!("bad op: {}", op),
-    };
-  }
+#[derive(Debug, Clone)]
+pub struct Intcode {
+  inner: Vec<i32>,
 }
 
-fn arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> i32 {
-  let val = ns[idx + off];
-  match mode(off, modes) {
-    Mode::Position => ns[u(val)],
-    Mode::Immediate => val,
+impl Intcode {
+  pub fn new(inner: Vec<i32>) -> Self {
+    Self { inner }
   }
-}
 
-fn pos_arg(ns: &[i32], idx: usize, off: usize, modes: i32) -> usize {
-  assert!(matches!(mode(off, modes), Mode::Position));
-  u(ns[idx + off])
+  pub fn into_inner(self) -> Vec<i32> {
+    self.inner
+  }
+
+  pub fn run(&mut self, input: &[i32], output: &mut Vec<i32>) {
+    let mut input = input.iter().copied();
+    let mut idx = 0;
+    loop {
+      let cur = self.inner[idx];
+      let op = cur % 100;
+      let modes = cur / 100;
+      idx = match op {
+        1 => {
+          let a = self.arg(idx, 1, modes);
+          let b = self.arg(idx, 2, modes);
+          let c = self.pos_arg(idx, 3, modes);
+          self.inner[c] = a + b;
+          idx + 4
+        }
+        2 => {
+          let a = self.arg(idx, 1, modes);
+          let b = self.arg(idx, 2, modes);
+          let c = self.pos_arg(idx, 3, modes);
+          self.inner[c] = a * b;
+          idx + 4
+        }
+        3 => {
+          let a = self.pos_arg(idx, 1, modes);
+          self.inner[a] = input.next().unwrap();
+          idx + 2
+        }
+        4 => {
+          let a = self.arg(idx, 1, modes);
+          output.push(a);
+          idx + 2
+        }
+        5 => {
+          let a = self.arg(idx, 1, modes);
+          let b = self.arg(idx, 2, modes);
+          if a == 0 {
+            idx + 3
+          } else {
+            u(b)
+          }
+        }
+        6 => {
+          let a = self.arg(idx, 1, modes);
+          let b = self.arg(idx, 2, modes);
+          if a == 0 {
+            u(b)
+          } else {
+            idx + 3
+          }
+        }
+        7 => {
+          let a = self.arg(idx, 1, modes);
+          let b = self.arg(idx, 2, modes);
+          let c = self.pos_arg(idx, 3, modes);
+          self.inner[c] = if a < b { 1 } else { 0 };
+          idx + 4
+        }
+        8 => {
+          let a = self.arg(idx, 1, modes);
+          let b = self.arg(idx, 2, modes);
+          let c = self.pos_arg(idx, 3, modes);
+          self.inner[c] = if a == b { 1 } else { 0 };
+          idx + 4
+        }
+        99 => break,
+        _ => panic!("bad op: {}", op),
+      };
+    }
+  }
+
+  fn arg(&self, idx: usize, off: usize, modes: i32) -> i32 {
+    let val = self.inner[idx + off];
+    match mode(off, modes) {
+      Mode::Position => self.inner[u(val)],
+      Mode::Immediate => val,
+    }
+  }
+
+  fn pos_arg(&self, idx: usize, off: usize, modes: i32) -> usize {
+    assert!(matches!(mode(off, modes), Mode::Position));
+    u(self.inner[idx + off])
+  }
 }
 
 fn mode(off: usize, modes: i32) -> Mode {
@@ -116,14 +131,14 @@ mod tests {
 
   #[test]
   fn cmp_8() {
-    let large = vec![
+    let mut large = super::Intcode::new(vec![
       3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106,
       0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104, 999, 1105,
       1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99,
-    ];
+    ]);
     let mut output = Vec::with_capacity(1);
     for n in 0..30 {
-      super::run(&mut large.clone(), &[n], &mut output);
+      large.run(&[n], &mut output);
       let want = match n.cmp(&8) {
         Ordering::Less => 999,
         Ordering::Equal => 1000,
