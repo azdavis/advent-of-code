@@ -120,12 +120,12 @@ fn tokenize(s: &str) -> Vec<Token> {
   'outer: while let Some(&b) = bs.get(i) {
     if b.is_ascii_whitespace() {
       i += 1;
-      continue;
+      continue 'outer;
     }
     for &(tok_b, tok) in PUNCTUATION.iter() {
       if b == tok_b {
-        ret.push(tok);
         i += 1;
+        ret.push(tok);
         continue 'outer;
       }
     }
@@ -144,7 +144,7 @@ fn tokenize(s: &str) -> Vec<Token> {
       ret.push(Token::Num(n));
       continue 'outer;
     }
-    panic!("invalid byte: {}", b);
+    panic!("bad byte: {}", b);
   }
   ret
 }
