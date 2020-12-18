@@ -62,7 +62,15 @@ fn parse_expr_prec<F>(tokens: &mut Vec<Token>, min_prec: usize, f: F) -> Expr
 where
   F: Fn(BinOp) -> usize + Copy,
 {
-  let mut ret = parse_expr_atom(tokens, f);
+  let mut ret = match tokens.pop().unwrap() {
+    Token::Num(n) => Expr::Num(n),
+    Token::LRound => {
+      let e = parse_expr_prec(tokens, 0, f);
+      assert_eq!(tokens.pop().unwrap(), Token::RRound);
+      e
+    }
+    tok => panic!("expected number or `(`, found {:?}", tok),
+  };
   loop {
     let op = match tokens.last() {
       Some(&Token::Plus) => BinOp::Add,
@@ -80,21 +88,6 @@ where
     ret = Expr::BinOp(ret.into(), op, rhs.into());
   }
   ret
-}
-
-fn parse_expr_atom<F>(tokens: &mut Vec<Token>, f: F) -> Expr
-where
-  F: Fn(BinOp) -> usize + Copy,
-{
-  match tokens.pop().unwrap() {
-    Token::Num(n) => Expr::Num(n),
-    Token::LRound => {
-      let e = parse_expr_prec(tokens, 0, f);
-      assert_eq!(tokens.pop().unwrap(), Token::RRound);
-      e
-    }
-    tok => panic!("expected number or `(`, found {:?}", tok),
-  }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
