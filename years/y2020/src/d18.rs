@@ -1,9 +1,24 @@
 pub fn p1(s: &str) -> u64 {
-  parse(s).map(eval).sum()
+  go(s, go_p1)
 }
 
 pub fn p2(s: &str) -> u64 {
-  todo!()
+  go(s, go_p2)
+}
+
+fn go<F>(s: &str, f: F) -> u64
+where
+  F: Fn(&str) -> u64,
+{
+  s.split('\n').filter(|line| !line.is_empty()).map(f).sum()
+}
+
+fn go_p1(s: &str) -> u64 {
+  eval(parse_expr(s, prec_p1))
+}
+
+fn go_p2(s: &str) -> u64 {
+  eval(parse_expr(s, prec_p2))
 }
 
 #[derive(Debug)]
@@ -12,10 +27,24 @@ enum Expr {
   BinOp(Box<Expr>, BinOp, Box<Expr>),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum BinOp {
   Add,
   Mul,
+}
+
+fn prec_p1(b: BinOp) -> usize {
+  match b {
+    BinOp::Add => 1,
+    BinOp::Mul => 1,
+  }
+}
+
+fn prec_p2(b: BinOp) -> usize {
+  match b {
+    BinOp::Add => 2,
+    BinOp::Mul => 1,
+  }
 }
 
 fn eval(e: Expr) -> u64 {
@@ -28,37 +57,47 @@ fn eval(e: Expr) -> u64 {
   }
 }
 
-fn parse(s: &str) -> impl Iterator<Item = Expr> + '_ {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
-    .map(parse_expr)
-}
-
-fn parse_expr(s: &str) -> Expr {
+fn parse_expr<F>(s: &str, f: F) -> Expr
+where
+  F: Fn(BinOp) -> usize + Copy,
+{
   let mut tokens = tokenize(s);
   tokens.reverse();
-  parse_expr_impl(&mut tokens)
+  parse_expr_prec(&mut tokens, 0, f)
 }
 
-fn parse_expr_impl(tokens: &mut Vec<Token>) -> Expr {
-  let mut ret = parse_expr_atom(tokens);
+fn parse_expr_prec<F>(tokens: &mut Vec<Token>, min_prec: usize, f: F) -> Expr
+where
+  F: Fn(BinOp) -> usize + Copy,
+{
+  let mut ret = parse_expr_atom(tokens, f);
   loop {
     let op = match tokens.last() {
       Some(&Token::Plus) => BinOp::Add,
       Some(&Token::Star) => BinOp::Mul,
-      _ => return ret,
+      _ => break,
     };
+    let prec = f(op);
+    if prec < min_prec {
+      break;
+    }
     tokens.pop().unwrap();
-    let rhs = parse_expr_atom(tokens);
+    // the combo of `<` above (not `<=`) and `prec + 1` makes every operator
+    // left associative.
+    let rhs = parse_expr_prec(tokens, prec + 1, f);
     ret = Expr::BinOp(ret.into(), op, rhs.into());
   }
+  ret
 }
 
-fn parse_expr_atom(tokens: &mut Vec<Token>) -> Expr {
+fn parse_expr_atom<F>(tokens: &mut Vec<Token>, f: F) -> Expr
+where
+  F: Fn(BinOp) -> usize + Copy,
+{
   match tokens.pop().unwrap() {
     Token::Num(n) => Expr::Num(n),
     Token::LRound => {
-      let e = parse_expr_impl(tokens);
+      let e = parse_expr_prec(tokens, 0, f);
       assert_eq!(tokens.pop().unwrap(), Token::RRound);
       e
     }
@@ -118,22 +157,33 @@ fn tokenize(s: &str) -> Vec<Token> {
   ret
 }
 
-#[cfg(test)]
-fn e(s: &str) -> u64 {
-  eval(parse_expr(s))
+#[test]
+fn t_p1() {
+  assert_eq!(go_p1("2 * 2 + 3"), 7);
+  assert_eq!(go_p1("2 * 3 + (4 * 5)"), 26);
+  assert_eq!(go_p1("5 + (8 * 3 + 9 + 3 * 4 * 3)"), 437);
+  assert_eq!(go_p1("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"), 12240);
+  assert_eq!(
+    go_p1("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"),
+    13632
+  );
 }
 
 #[test]
-fn t_p1() {
-  assert_eq!(e("2 * 3 + (4 * 5)"), 26);
-  assert_eq!(e("5 + (8 * 3 + 9 + 3 * 4 * 3)"), 437);
-  assert_eq!(e("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"), 12240);
-  assert_eq!(e("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"), 13632);
+fn t_p2() {
+  assert_eq!(go_p2("1 + (2 * 3) + (4 * (5 + 6))"), 51);
+  assert_eq!(go_p2("2 * 3 + (4 * 5)"), 46);
+  assert_eq!(go_p2("5 + (8 * 3 + 9 + 3 * 4 * 3)"), 1445);
+  assert_eq!(go_p2("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"), 669060);
+  assert_eq!(
+    go_p2("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"),
+    23340
+  );
 }
 
 #[test]
 fn t() {
   let inp = include_str!("input/d18.txt");
   assert_eq!(p1(inp), 3159145843816);
-  // assert_eq!(p2(inp), ___);
+  assert_eq!(p2(inp), 55699621957369);
 }
