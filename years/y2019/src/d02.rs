@@ -1,9 +1,10 @@
-pub fn p1(s: &str) -> usize {
-  let ns = parse(s);
-  go(ns, 12, 2)
+use crate::intcode::run;
+
+pub fn p1(s: &str) -> i32 {
+  go(parse(s), 12, 2)
 }
 
-pub fn p2(s: &str) -> usize {
+pub fn p2(s: &str) -> i32 {
   let ns = parse(s);
   for noun in 0..=99 {
     for verb in 0..=99 {
@@ -15,29 +16,16 @@ pub fn p2(s: &str) -> usize {
   panic!("no answer exists")
 }
 
-fn go(mut ns: Vec<usize>, noun: usize, verb: usize) -> usize {
+fn go(mut ns: Vec<i32>, noun: i32, verb: i32) -> i32 {
   ns[1] = noun;
   ns[2] = verb;
-  let mut idx = 0;
-  while idx < ns.len() {
-    match ns[idx] {
-      1 => {
-        let res = ns[idx + 3];
-        ns[res] = ns[ns[idx + 1]] + ns[ns[idx + 2]];
-      }
-      2 => {
-        let res = ns[idx + 3];
-        ns[res] = ns[ns[idx + 1]] * ns[ns[idx + 2]];
-      }
-      99 => break,
-      n => panic!("bad num: {}", n),
-    }
-    idx += 4;
-  }
+  let mut output = Vec::new();
+  run(&mut ns, &[], &mut output);
+  assert!(output.is_empty());
   ns[0]
 }
 
-fn parse(s: &str) -> Vec<usize> {
+fn parse(s: &str) -> Vec<i32> {
   let mut lines = s.split('\n');
   let fst = lines.next().unwrap();
   fst.split(',').map(|s| s.parse().unwrap()).collect()
