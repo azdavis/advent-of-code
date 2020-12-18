@@ -21,7 +21,7 @@ fn go(mut ns: Vec<i32>, noun: i32, verb: i32) -> i32 {
   ns[2] = verb;
   let mut p = Intcode::new(ns);
   let mut output = Vec::new();
-  p.run(&mut output);
+  assert!(p.run(&mut output).is_done());
   assert!(output.is_empty());
   *p.into_inner().first().unwrap()
 }

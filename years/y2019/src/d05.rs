@@ -4,7 +4,7 @@ pub fn p1(s: &str) -> i32 {
   let mut p = Intcode::new(parse(s));
   let mut output = Vec::with_capacity(2);
   p.input(1);
-  p.run(&mut output);
+  assert!(p.run(&mut output).is_done());
   let code = output.pop().unwrap();
   for x in output {
     assert_eq!(x, 0);
@@ -16,7 +16,7 @@ pub fn p2(s: &str) -> i32 {
   let mut p = Intcode::new(parse(s));
   let mut output = Vec::with_capacity(1);
   p.input(5);
-  p.run(&mut output);
+  assert!(p.run(&mut output).is_done());
   let code = output.pop().unwrap();
   assert!(output.is_empty());
   code

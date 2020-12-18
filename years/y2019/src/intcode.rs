@@ -16,6 +16,12 @@ pub enum Res {
   Done,
 }
 
+impl Res {
+  pub fn is_done(&self) -> bool {
+    matches!(self, Self::Done)
+  }
+}
+
 #[derive(Debug, Clone)]
 pub struct Intcode {
   inner: Vec<i32>,
@@ -40,6 +46,7 @@ impl Intcode {
     self.input.push_back(inp);
   }
 
+  #[must_use = "the program may not be done running"]
   pub fn run(&mut self, output: &mut Vec<i32>) -> Res {
     loop {
       let cur = self.inner[self.idx];
@@ -159,7 +166,7 @@ mod tests {
     for n in 0..30 {
       let mut large = large.clone();
       large.input(n);
-      large.run(&mut output);
+      assert!(large.run(&mut output).is_done());
       let want = match n.cmp(&8) {
         Ordering::Less => 999,
         Ordering::Equal => 1000,

@@ -11,7 +11,7 @@ pub fn p1(s: &str) -> i32 {
         let mut p = p.clone();
         p.input(phase);
         p.input(inp);
-        p.run(&mut output);
+        assert!(p.run(&mut output).is_done());
         let out = output.pop().unwrap();
         assert!(output.is_empty());
         out
