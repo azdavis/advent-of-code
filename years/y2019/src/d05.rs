@@ -1,10 +1,10 @@
 use crate::intcode::run;
 
 pub fn p1(s: &str) -> i32 {
-  let ns = parse(s);
+  let mut ns = parse(s);
   // we output a code and run at least one test
   let mut output = Vec::with_capacity(2);
-  run(ns, &[1], &mut output);
+  run(&mut ns, &[1], &mut output);
   let code = output.pop().unwrap();
   for x in output {
     assert_eq!(x, 0);
@@ -13,10 +13,10 @@ pub fn p1(s: &str) -> i32 {
 }
 
 pub fn p2(s: &str) -> i32 {
-  let ns = parse(s);
+  let mut ns = parse(s);
   // just output the code
   let mut output = Vec::with_capacity(1);
-  run(ns, &[5], &mut output);
+  run(&mut ns, &[5], &mut output);
   let code = output.pop().unwrap();
   assert!(output.is_empty());
   code

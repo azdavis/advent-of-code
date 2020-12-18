@@ -1,6 +1,6 @@
 use std::convert::TryInto as _;
 
-pub fn run(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
+pub fn run(ns: &mut Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
   let mut input = input.iter().copied();
   let mut idx = 0;
   loop {
@@ -114,7 +114,7 @@ mod tests {
     ];
     let mut output = Vec::with_capacity(1);
     for n in 0..30 {
-      super::run(large.clone(), &[n], &mut output);
+      super::run(&mut large.clone(), &[n], &mut output);
       let want = match n.cmp(&8) {
         Ordering::Less => 999,
         Ordering::Equal => 1000,
