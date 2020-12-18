@@ -10,18 +10,6 @@ pub fn parse(s: &str) -> Vec<i32> {
     .collect()
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Res {
-  NeedInput,
-  Done,
-}
-
-impl Res {
-  pub fn is_done(&self) -> bool {
-    matches!(*self, Self::Done)
-  }
-}
-
 #[derive(Debug, Clone)]
 pub struct Intcode {
   inner: Vec<i32>,
@@ -130,6 +118,18 @@ impl Intcode {
   fn pos_arg(&self, off: usize, modes: i32) -> usize {
     assert!(matches!(Mode::get(off, modes), Mode::Position));
     u(self.inner[self.idx + off])
+  }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Res {
+  NeedInput,
+  Done,
+}
+
+impl Res {
+  pub fn is_done(&self) -> bool {
+    matches!(*self, Self::Done)
   }
 }
 
