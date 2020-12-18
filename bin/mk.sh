@@ -35,6 +35,7 @@ EOF
 touch "years/y$YEAR/src/input/d$DAY.txt"
 
 echo "pub mod d$DAY;" >> "years/y$YEAR/src/lib.rs"
+sort -o "years/y$YEAR/src/lib.rs" "years/y$YEAR/src/lib.rs"
 
 cat <<EOF > runner/src/main.rs
 fn main() {
