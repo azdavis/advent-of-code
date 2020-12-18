@@ -1,2 +1,6 @@
 [workspace]
-members = ["./years/*", "./runner", "./helpers"]
+members = [
+  "helpers",
+  "runner",
+  "years/*",
+]
