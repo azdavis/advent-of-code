@@ -18,7 +18,7 @@ pub enum Res {
 
 impl Res {
   pub fn is_done(&self) -> bool {
-    matches!(self, Self::Done)
+    matches!(*self, Self::Done)
   }
 }
 
