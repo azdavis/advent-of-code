@@ -36,7 +36,7 @@ EOF
 touch "$SRC/input/d$DAY.txt"
 
 echo "pub mod d$DAY;" >> "$SRC/lib.rs"
-sort -o "$SRC/lib.rs" "$SRC/lib.rs"
+rustfmt "$SRC/lib.rs"
 
 cat <<EOF > runner/src/main.rs
 fn main() {
