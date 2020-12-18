@@ -14,11 +14,17 @@ where
 }
 
 fn go_p1(s: &str) -> u64 {
-  eval(parse_expr(s, prec_p1))
+  eval(parse_expr(s, |b| match b {
+    BinOp::Add => 1,
+    BinOp::Mul => 1,
+  }))
 }
 
 fn go_p2(s: &str) -> u64 {
-  eval(parse_expr(s, prec_p2))
+  eval(parse_expr(s, |b| match b {
+    BinOp::Add => 2,
+    BinOp::Mul => 1,
+  }))
 }
 
 #[derive(Debug)]
@@ -31,20 +37,6 @@ enum Expr {
 enum BinOp {
   Add,
   Mul,
-}
-
-fn prec_p1(b: BinOp) -> usize {
-  match b {
-    BinOp::Add => 1,
-    BinOp::Mul => 1,
-  }
-}
-
-fn prec_p2(b: BinOp) -> usize {
-  match b {
-    BinOp::Add => 2,
-    BinOp::Mul => 1,
-  }
 }
 
 fn eval(e: Expr) -> u64 {
