@@ -10,7 +10,7 @@ pub fn parse(s: &str) -> Vec<i32> {
     .collect()
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Res {
   NeedInput,
   Done,
