@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::convert::TryInto as _;
 
 pub fn parse(s: &str) -> Vec<i32> {
@@ -9,23 +10,37 @@ pub fn parse(s: &str) -> Vec<i32> {
     .collect()
 }
 
+#[derive(Debug, Clone, Copy)]
+pub enum Res {
+  NeedInput,
+  Done,
+}
+
 #[derive(Debug, Clone)]
 pub struct Intcode {
   inner: Vec<i32>,
   idx: usize,
+  input: VecDeque<i32>,
 }
 
 impl Intcode {
   pub fn new(inner: Vec<i32>) -> Self {
-    Self { inner, idx: 0 }
+    Self {
+      inner,
+      idx: 0,
+      input: VecDeque::new(),
+    }
   }
 
   pub fn into_inner(self) -> Vec<i32> {
     self.inner
   }
 
-  pub fn run(&mut self, input: &[i32], output: &mut Vec<i32>) {
-    let mut input = input.iter().copied();
+  pub fn input(&mut self, inp: i32) {
+    self.input.push_back(inp);
+  }
+
+  pub fn run(&mut self, output: &mut Vec<i32>) -> Res {
     loop {
       let cur = self.inner[self.idx];
       let op = cur % 100;
@@ -46,8 +61,12 @@ impl Intcode {
           self.idx + 4
         }
         3 => {
+          let inp = match self.input.pop_front() {
+            Some(x) => x,
+            None => return Res::NeedInput,
+          };
           let a = self.pos_arg(1, modes);
-          self.inner[a] = input.next().unwrap();
+          self.inner[a] = inp;
           self.idx + 2
         }
         4 => {
@@ -87,7 +106,7 @@ impl Intcode {
           self.inner[c] = if a == b { 1 } else { 0 };
           self.idx + 4
         }
-        99 => break,
+        99 => return Res::Done,
         _ => panic!("bad op: {}", op),
       };
     }
@@ -138,7 +157,9 @@ mod tests {
     ]);
     let mut output = Vec::with_capacity(1);
     for n in 0..30 {
-      large.clone().run(&[n], &mut output);
+      let mut large = large.clone();
+      large.input(n);
+      large.run(&mut output);
       let want = match n.cmp(&8) {
         Ordering::Less => 999,
         Ordering::Equal => 1000,

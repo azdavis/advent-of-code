@@ -8,7 +8,10 @@ pub fn p1(s: &str) -> i32 {
     .into_iter()
     .map(|candidate| {
       candidate.into_iter().fold(0, |inp, phase| {
-        p.clone().run(&[phase, inp], &mut output);
+        let mut p = p.clone();
+        p.input(phase);
+        p.input(inp);
+        p.run(&mut output);
         let out = output.pop().unwrap();
         assert!(output.is_empty());
         out
