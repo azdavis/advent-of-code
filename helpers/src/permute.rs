@@ -1,8 +1,9 @@
 //! Permutations.
 
 /// Returns the permutations of `xs` in an arbitrary order.
-pub fn permute<T>(xs: Vec<T>) -> Vec<Vec<T>>
+pub fn permute<I, T>(xs: I) -> Vec<Vec<T>>
 where
+  I: IntoIterator<Item = T>,
   T: Clone,
 {
   let mut ret = vec![vec![]];
