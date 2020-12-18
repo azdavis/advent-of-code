@@ -16,7 +16,7 @@ pub fn p2(s: &str) -> u64 {
       }
     }
   }
-  panic!()
+  panic!("no answer exists")
 }
 
 fn go(nums: &[u64]) -> u64 {
@@ -30,7 +30,7 @@ fn go(nums: &[u64]) -> u64 {
     }
     return n;
   }
-  panic!()
+  panic!("no answer exists")
 }
 
 const WINDOW: usize = 25;

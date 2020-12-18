@@ -12,7 +12,7 @@ pub fn p2(s: &str) -> usize {
       }
     }
   }
-  panic!()
+  panic!("no answer exists")
 }
 
 fn go(mut ns: Vec<usize>, noun: usize, verb: usize) -> usize {

@@ -87,7 +87,7 @@ fn go(mut ns: Vec<i32>, input: &[i32], output: &mut Vec<i32>) {
         idx + 4
       }
       99 => break,
-      _ => panic!("invalid op: {}", op),
+      _ => panic!("bad op: {}", op),
     };
   }
 }
@@ -110,7 +110,7 @@ fn mode(off: usize, modes: i32) -> Mode {
   match (modes / div) % 10 {
     0 => Mode::Position,
     1 => Mode::Immediate,
-    m => panic!("invalid mode: {}", m),
+    m => panic!("bad mode: {}", m),
   }
 }
 

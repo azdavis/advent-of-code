@@ -22,7 +22,7 @@ pub fn p2(s: &str) -> u32 {
       return id;
     }
   }
-  panic!()
+  panic!("no answer exists")
 }
 
 fn seat_ids(s: &str) -> impl Iterator<Item = u32> + '_ {
@@ -53,7 +53,7 @@ fn parse_seat(s: &str) -> Seat {
     match bs[idx] {
       b'F' => hi = mid,
       b'B' => lo = mid + 1,
-      _ => panic!(),
+      seat => panic!("bad seat: {}", seat),
     }
     idx += 1;
   }
@@ -66,7 +66,7 @@ fn parse_seat(s: &str) -> Seat {
     match bs[idx] {
       b'L' => hi = mid,
       b'R' => lo = mid + 1,
-      _ => panic!(),
+      seat => panic!("bad seat: {}", seat),
     }
     idx += 1;
   }
