@@ -1,4 +1,4 @@
 fn main() {
-  let inp = include_str!("../../years/y2019/src/input/d09.txt");
-  println!("{}", y2019::d09::p2(&inp));
+  let inp = include_str!("../../years/y2020/src/input/d19.txt");
+  println!("{}", y2020::d19::p1(&inp));
 }
