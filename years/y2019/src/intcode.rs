@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 use std::convert::TryInto as _;
 
-pub mod mem;
+mod mem;
 
 pub fn parse(s: &str) -> Vec<i32> {
   s.split('\n')
@@ -28,8 +28,9 @@ impl Intcode {
     }
   }
 
-  pub fn into_mem(self) -> mem::Mem<i32> {
-    self.mem
+  // for day 2
+  pub fn read_zeroth(self) -> i32 {
+    self.mem.read(0)
   }
 
   pub fn input(&mut self, inp: i32) {

@@ -23,7 +23,7 @@ fn go(mut ns: Vec<i32>, noun: i32, verb: i32) -> i32 {
   let mut output = Vec::new();
   assert!(p.run(&mut output).is_done());
   assert!(output.is_empty());
-  p.into_mem().read(0)
+  p.read_zeroth()
 }
 
 #[test]
