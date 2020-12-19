@@ -6,9 +6,12 @@ pub struct Mem<T> {
 }
 
 impl<T> Mem<T> {
-  pub fn new(vec: Vec<T>) -> Self {
+  pub fn new<I>(iter: I) -> Self
+  where
+    I: IntoIterator<Item = T>,
+  {
     Self {
-      inner: vec.into_iter().enumerate().collect(),
+      inner: iter.into_iter().enumerate().collect(),
     }
   }
 

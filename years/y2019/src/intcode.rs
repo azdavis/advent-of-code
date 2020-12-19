@@ -3,13 +3,12 @@ use std::convert::TryInto as _;
 
 mod mem;
 
-pub fn parse(s: &str) -> Vec<i64> {
+pub fn parse(s: &str) -> impl Iterator<Item = i64> + '_ {
   s.split('\n')
     .next()
     .unwrap()
     .split(',')
     .map(|x| x.parse().unwrap())
-    .collect()
 }
 
 #[derive(Debug, Clone)]
@@ -21,9 +20,12 @@ pub struct Intcode {
 }
 
 impl Intcode {
-  pub fn new(vec: Vec<i64>) -> Self {
+  pub fn new<I>(iter: I) -> Self
+  where
+    I: IntoIterator<Item = i64>,
+  {
     Self {
-      mem: mem::Mem::new(vec),
+      mem: mem::Mem::new(iter),
       cur_addr: 0,
       relative_base: 0,
       input: VecDeque::new(),

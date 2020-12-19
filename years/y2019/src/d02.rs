@@ -1,11 +1,11 @@
 use crate::intcode::{parse, Intcode};
 
 pub fn p1(s: &str) -> i64 {
-  go(parse(s), 12, 2)
+  go(parse(s).collect(), 12, 2)
 }
 
 pub fn p2(s: &str) -> i64 {
-  let p = parse(s);
+  let p: Vec<_> = parse(s).collect();
   for noun in 0..=99 {
     for verb in 0..=99 {
       if go(p.clone(), noun, verb) == 19690720 {
