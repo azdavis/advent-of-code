@@ -1,7 +1,7 @@
 use crate::intcode::{parse, Intcode};
 use helpers::permute::permute;
 
-pub fn p1(s: &str) -> i32 {
+pub fn p1(s: &str) -> i64 {
   let p = Intcode::new(parse(s));
   let mut output = Vec::with_capacity(1);
   permute(0..=4)
@@ -21,7 +21,7 @@ pub fn p1(s: &str) -> i32 {
     .unwrap()
 }
 
-pub fn p2(s: &str) -> i32 {
+pub fn p2(s: &str) -> i64 {
   let p = Intcode::new(parse(s));
   let mut output = Vec::with_capacity(1);
   permute(5..=9)

@@ -1,6 +1,6 @@
 use crate::intcode::{parse, Intcode};
 
-pub fn p1(s: &str) -> i32 {
+pub fn p1(s: &str) -> i64 {
   let mut p = Intcode::new(parse(s));
   let mut output = Vec::with_capacity(2);
   p.input(1);
@@ -12,7 +12,7 @@ pub fn p1(s: &str) -> i32 {
   code
 }
 
-pub fn p2(s: &str) -> i32 {
+pub fn p2(s: &str) -> i64 {
   let mut p = Intcode::new(parse(s));
   let mut output = Vec::with_capacity(1);
   p.input(5);

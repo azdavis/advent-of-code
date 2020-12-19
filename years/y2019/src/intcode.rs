@@ -3,7 +3,7 @@ use std::convert::TryInto as _;
 
 mod mem;
 
-pub fn parse(s: &str) -> Vec<i32> {
+pub fn parse(s: &str) -> Vec<i64> {
   s.split('\n')
     .next()
     .unwrap()
@@ -14,14 +14,14 @@ pub fn parse(s: &str) -> Vec<i32> {
 
 #[derive(Debug, Clone)]
 pub struct Intcode {
-  mem: mem::Mem<i32>,
+  mem: mem::Mem<i64>,
   cur_addr: usize,
-  relative_base: i32,
-  input: VecDeque<i32>,
+  relative_base: i64,
+  input: VecDeque<i64>,
 }
 
 impl Intcode {
-  pub fn new(vec: Vec<i32>) -> Self {
+  pub fn new(vec: Vec<i64>) -> Self {
     Self {
       mem: mem::Mem::new(vec),
       cur_addr: 0,
@@ -31,16 +31,16 @@ impl Intcode {
   }
 
   // for day 2
-  pub fn read_zeroth(self) -> i32 {
+  pub fn read_zeroth(self) -> i64 {
     self.mem.read(0)
   }
 
-  pub fn input(&mut self, inp: i32) {
+  pub fn input(&mut self, inp: i64) {
     self.input.push_back(inp);
   }
 
   #[must_use = "the program may not be done running"]
-  pub fn run(&mut self, output: &mut Vec<i32>) -> Res {
+  pub fn run(&mut self, output: &mut Vec<i64>) -> Res {
     loop {
       let cur = self.mem.read(self.cur_addr);
       let op = cur % 100;
@@ -117,7 +117,7 @@ impl Intcode {
     }
   }
 
-  fn arg(&self, off: usize, modes: i32) -> i32 {
+  fn arg(&self, off: usize, modes: i64) -> i64 {
     let val = self.mem.read(self.cur_addr + off);
     match Mode::get(off, modes) {
       Mode::Position => self.mem.read(u(val)),
@@ -126,7 +126,7 @@ impl Intcode {
     }
   }
 
-  fn pos_arg(&self, off: usize, modes: i32) -> usize {
+  fn pos_arg(&self, off: usize, modes: i64) -> usize {
     let val = self.mem.read(self.cur_addr + off);
     match Mode::get(off, modes) {
       Mode::Position => u(val),
@@ -155,7 +155,7 @@ enum Mode {
 }
 
 impl Mode {
-  fn get(off: usize, modes: i32) -> Self {
+  fn get(off: usize, modes: i64) -> Self {
     let div = (1..off).fold(1, |ac, _| ac * 10);
     match (modes / div) % 10 {
       0 => Self::Position,
@@ -166,7 +166,7 @@ impl Mode {
   }
 }
 
-fn u(n: i32) -> usize {
+fn u(n: i64) -> usize {
   n.try_into().unwrap()
 }
 

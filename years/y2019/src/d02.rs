@@ -1,10 +1,10 @@
 use crate::intcode::{parse, Intcode};
 
-pub fn p1(s: &str) -> i32 {
+pub fn p1(s: &str) -> i64 {
   go(parse(s), 12, 2)
 }
 
-pub fn p2(s: &str) -> i32 {
+pub fn p2(s: &str) -> i64 {
   let p = parse(s);
   for noun in 0..=99 {
     for verb in 0..=99 {
@@ -16,7 +16,7 @@ pub fn p2(s: &str) -> i32 {
   panic!("no answer exists")
 }
 
-fn go(mut ns: Vec<i32>, noun: i32, verb: i32) -> i32 {
+fn go(mut ns: Vec<i64>, noun: i64, verb: i64) -> i64 {
   ns[1] = noun;
   ns[2] = verb;
   let mut p = Intcode::new(ns);
