@@ -16,6 +16,7 @@ pub fn parse(s: &str) -> Vec<i32> {
 pub struct Intcode {
   mem: mem::Mem<i32>,
   cur_addr: usize,
+  relative_base: i32,
   input: VecDeque<i32>,
 }
 
@@ -24,6 +25,7 @@ impl Intcode {
     Self {
       mem: mem::Mem::new(vec),
       cur_addr: 0,
+      relative_base: 0,
       input: VecDeque::new(),
     }
   }
@@ -104,6 +106,11 @@ impl Intcode {
           self.mem.write(c, if a == b { 1 } else { 0 });
           self.cur_addr + 4
         }
+        9 => {
+          let a = self.arg(1, modes);
+          self.relative_base += a;
+          self.cur_addr + 2
+        }
         99 => return Res::Done,
         _ => panic!("bad op: {}", op),
       };
@@ -115,12 +122,17 @@ impl Intcode {
     match Mode::get(off, modes) {
       Mode::Position => self.mem.read(u(val)),
       Mode::Immediate => val,
+      Mode::Relative => self.mem.read(u(self.relative_base + val)),
     }
   }
 
   fn pos_arg(&self, off: usize, modes: i32) -> usize {
-    assert!(matches!(Mode::get(off, modes), Mode::Position));
-    u(self.mem.read(self.cur_addr + off))
+    let val = self.mem.read(self.cur_addr + off);
+    match Mode::get(off, modes) {
+      Mode::Position => u(val),
+      Mode::Immediate => panic!("immediate mode for positional arg"),
+      Mode::Relative => u(self.relative_base + val),
+    }
   }
 }
 
@@ -139,6 +151,7 @@ impl Res {
 enum Mode {
   Position,
   Immediate,
+  Relative,
 }
 
 impl Mode {
@@ -147,6 +160,7 @@ impl Mode {
     match (modes / div) % 10 {
       0 => Self::Position,
       1 => Self::Immediate,
+      2 => Self::Relative,
       m => panic!("bad mode: {}", m),
     }
   }
