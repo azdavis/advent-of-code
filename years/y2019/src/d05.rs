@@ -1,7 +1,7 @@
-use crate::intcode::{parse, Intcode};
+use crate::intcode::Intcode;
 
 pub fn p1(s: &str) -> i64 {
-  let mut p = Intcode::new(parse(s));
+  let mut p = Intcode::parse(s);
   let mut output = Vec::with_capacity(2);
   p.input(1);
   assert!(p.run(&mut output).is_done());
@@ -13,7 +13,7 @@ pub fn p1(s: &str) -> i64 {
 }
 
 pub fn p2(s: &str) -> i64 {
-  let mut p = Intcode::new(parse(s));
+  let mut p = Intcode::parse(s);
   let mut output = Vec::with_capacity(1);
   p.input(5);
   assert!(p.run(&mut output).is_done());

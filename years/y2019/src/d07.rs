@@ -1,8 +1,8 @@
-use crate::intcode::{parse, Intcode};
+use crate::intcode::Intcode;
 use helpers::permute::permute;
 
 pub fn p1(s: &str) -> i64 {
-  let p = Intcode::new(parse(s));
+  let p = Intcode::parse(s);
   let mut output = Vec::with_capacity(1);
   permute(0..=4)
     .into_iter()
@@ -22,7 +22,7 @@ pub fn p1(s: &str) -> i64 {
 }
 
 pub fn p2(s: &str) -> i64 {
-  let p = Intcode::new(parse(s));
+  let p = Intcode::parse(s);
   let mut output = Vec::with_capacity(1);
   permute(5..=9)
     .into_iter()

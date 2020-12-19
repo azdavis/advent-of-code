@@ -20,6 +20,10 @@ pub struct Intcode {
 }
 
 impl Intcode {
+  pub fn parse(s: &str) -> Self {
+    Self::new(parse(s))
+  }
+
   pub fn new<I>(iter: I) -> Self
   where
     I: IntoIterator<Item = i64>,
