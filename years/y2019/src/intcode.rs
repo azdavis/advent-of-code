@@ -12,22 +12,22 @@ pub fn parse(s: &str) -> Vec<i32> {
 
 #[derive(Debug, Clone)]
 pub struct Intcode {
-  inner: Vec<i32>,
+  mem: Vec<i32>,
   idx: usize,
   input: VecDeque<i32>,
 }
 
 impl Intcode {
-  pub fn new(inner: Vec<i32>) -> Self {
+  pub fn new(mem: Vec<i32>) -> Self {
     Self {
-      inner,
+      mem,
       idx: 0,
       input: VecDeque::new(),
     }
   }
 
-  pub fn into_inner(self) -> Vec<i32> {
-    self.inner
+  pub fn into_mem(self) -> Vec<i32> {
+    self.mem
   }
 
   pub fn input(&mut self, inp: i32) {
@@ -37,7 +37,7 @@ impl Intcode {
   #[must_use = "the program may not be done running"]
   pub fn run(&mut self, output: &mut Vec<i32>) -> Res {
     loop {
-      let cur = self.inner[self.idx];
+      let cur = self.mem[self.idx];
       let op = cur % 100;
       let modes = cur / 100;
       self.idx = match op {
@@ -45,14 +45,14 @@ impl Intcode {
           let a = self.arg(1, modes);
           let b = self.arg(2, modes);
           let c = self.pos_arg(3, modes);
-          self.inner[c] = a + b;
+          self.mem[c] = a + b;
           self.idx + 4
         }
         2 => {
           let a = self.arg(1, modes);
           let b = self.arg(2, modes);
           let c = self.pos_arg(3, modes);
-          self.inner[c] = a * b;
+          self.mem[c] = a * b;
           self.idx + 4
         }
         3 => {
@@ -61,7 +61,7 @@ impl Intcode {
             None => return Res::NeedInput,
           };
           let a = self.pos_arg(1, modes);
-          self.inner[a] = inp;
+          self.mem[a] = inp;
           self.idx + 2
         }
         4 => {
@@ -91,14 +91,14 @@ impl Intcode {
           let a = self.arg(1, modes);
           let b = self.arg(2, modes);
           let c = self.pos_arg(3, modes);
-          self.inner[c] = if a < b { 1 } else { 0 };
+          self.mem[c] = if a < b { 1 } else { 0 };
           self.idx + 4
         }
         8 => {
           let a = self.arg(1, modes);
           let b = self.arg(2, modes);
           let c = self.pos_arg(3, modes);
-          self.inner[c] = if a == b { 1 } else { 0 };
+          self.mem[c] = if a == b { 1 } else { 0 };
           self.idx + 4
         }
         99 => return Res::Done,
@@ -108,16 +108,16 @@ impl Intcode {
   }
 
   fn arg(&self, off: usize, modes: i32) -> i32 {
-    let val = self.inner[self.idx + off];
+    let val = self.mem[self.idx + off];
     match Mode::get(off, modes) {
-      Mode::Position => self.inner[u(val)],
+      Mode::Position => self.mem[u(val)],
       Mode::Immediate => val,
     }
   }
 
   fn pos_arg(&self, off: usize, modes: i32) -> usize {
     assert!(matches!(Mode::get(off, modes), Mode::Position));
-    u(self.inner[self.idx + off])
+    u(self.mem[self.idx + off])
   }
 }
 
