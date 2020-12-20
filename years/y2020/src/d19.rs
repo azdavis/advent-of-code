@@ -3,6 +3,14 @@ use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> usize {
   let (rules, messages) = parse(s);
+  go(rules, messages)
+}
+
+pub fn p2(s: &str) -> usize {
+  todo!()
+}
+
+fn go(rules: Vec<Rule>, messages: Vec<Msg>) -> usize {
   let mut ret = 0;
   for mut m in messages {
     // don't use filter + count since we mutate
@@ -14,10 +22,6 @@ pub fn p1(s: &str) -> usize {
     }
   }
   ret
-}
-
-pub fn p2(s: &str) -> usize {
-  todo!()
 }
 
 /// the messages are in reverse, and idx is an index into rules.
