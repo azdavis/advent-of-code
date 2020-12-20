@@ -11,7 +11,7 @@ pub fn p1(s: &str) -> u64 {
     .into_iter()
     .map(|(n, t0)| (n, get_all_tiles(t0)))
     .collect();
-  let mut edges = HashMap::<(Vec<Pixel>, Dir), HashSet<(u64, usize)>>::new();
+  let mut edges = Edges::new();
   for (&id_a, tile_variants) in tiles.iter() {
     for (id_b, tile) in tile_variants.iter().enumerate() {
       for &(f, dir) in FNS.iter() {
@@ -44,33 +44,7 @@ pub fn p1(s: &str) -> u64 {
         }
         candidates = candidates
           .into_iter()
-          .flat_map(|(board, tiles)| {
-            assert_eq!(board.len(), row + 1);
-            assert_eq!(board[row].len(), col);
-            let top = row.checked_sub(1).map(|row| {
-              edges.get(&(bot(&board[row][col].1), Dir::Top)).unwrap()
-            });
-            let left = col.checked_sub(1).map(|col| {
-              edges.get(&(right(&board[row][col].1), Dir::Left)).unwrap()
-            });
-            let tile_ids = match (top, left) {
-              (Some(top), Some(left)) => {
-                top.intersection(left).copied().collect()
-              }
-              (Some(a), None) | (None, Some(a)) => a.clone(),
-              (None, None) => HashSet::new(),
-            };
-            tile_ids.into_iter().filter_map(move |(id_a, id_b)| {
-              if !tiles.contains_key(&id_a) {
-                return None;
-              }
-              let mut tiles = tiles.clone();
-              let tile = tiles.remove(&id_a).unwrap().remove(id_b);
-              let mut board = board.clone();
-              board.last_mut().unwrap().push((id_a, tile));
-              Some((board, tiles))
-            })
-          })
+          .flat_map(|(board, tiles)| expand(&edges, board, tiles, row, col))
           .collect();
       }
     }
@@ -93,6 +67,7 @@ pub fn p2(s: &str) -> u32 {
 type Tile = Vec<Vec<Pixel>>;
 type Tiles = HashMap<u64, Vec<Tile>>;
 type Board = Vec<Vec<(u64, Tile)>>;
+type Edges = HashMap<(Vec<Pixel>, Dir), HashSet<(u64, usize)>>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Pixel {
@@ -125,6 +100,38 @@ fn sqrt(n: usize) -> usize {
       Ordering::Greater => panic!("no exact square root for {}", n),
     }
   }
+}
+
+fn expand(
+  edges: &Edges,
+  board: Board,
+  tiles: Tiles,
+  row: usize,
+  col: usize,
+) -> impl Iterator<Item = (Board, Tiles)> {
+  assert_eq!(board.len(), row + 1);
+  assert_eq!(board[row].len(), col);
+  let top = row
+    .checked_sub(1)
+    .map(|row| edges.get(&(bot(&board[row][col].1), Dir::Top)).unwrap());
+  let left = col
+    .checked_sub(1)
+    .map(|col| edges.get(&(right(&board[row][col].1), Dir::Left)).unwrap());
+  let tile_ids = match (top, left) {
+    (Some(top), Some(left)) => top.intersection(left).copied().collect(),
+    (Some(a), None) | (None, Some(a)) => a.clone(),
+    (None, None) => HashSet::new(),
+  };
+  tile_ids.into_iter().filter_map(move |(id_a, id_b)| {
+    if !tiles.contains_key(&id_a) {
+      return None;
+    }
+    let mut tiles = tiles.clone();
+    let tile = tiles.remove(&id_a).unwrap().remove(id_b);
+    let mut board = board.clone();
+    board.last_mut().unwrap().push((id_a, tile));
+    Some((board, tiles))
+  })
 }
 
 fn get_all_tiles(t0: Tile) -> Vec<Tile> {
