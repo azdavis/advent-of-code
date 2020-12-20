@@ -7,7 +7,10 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> usize {
-  todo!()
+  let (mut rules, messages) = parse(s);
+  rules.insert(8, Rule::Alt(vec![42], vec![42, 8]));
+  rules.insert(11, Rule::Alt(vec![42, 31], vec![42, 11, 31]));
+  go(rules, messages)
 }
 
 fn go(rules: Rules, messages: Vec<Msg>) -> usize {
@@ -26,6 +29,9 @@ fn go(rules: Rules, messages: Vec<Msg>) -> usize {
 
 /// the messages are in reverse, and idx is an index into rules.
 fn match_prefix(ms: &mut HashSet<Msg>, rules: &Rules, idx: usize) {
+  if ms.is_empty() {
+    return;
+  }
   match *rules.get(&idx).unwrap() {
     Rule::Char(c) => {
       *ms = ms
@@ -130,5 +136,5 @@ fn parse_rule(s: &str) -> Rule {
 fn t() {
   let inp = include_str!("input/d19.txt");
   assert_eq!(p1(inp), 144);
-  // assert_eq!(p2(inp), ___);
+  assert_eq!(p2(inp), 260);
 }
