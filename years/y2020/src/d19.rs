@@ -10,7 +10,7 @@ pub fn p2(s: &str) -> usize {
   todo!()
 }
 
-fn go(rules: Vec<Rule>, messages: Vec<Msg>) -> usize {
+fn go(rules: Rules, messages: Vec<Msg>) -> usize {
   let mut ret = 0;
   for mut m in messages {
     // don't use filter + count since we mutate
@@ -25,8 +25,8 @@ fn go(rules: Vec<Rule>, messages: Vec<Msg>) -> usize {
 }
 
 /// the messages are in reverse, and idx is an index into rules.
-fn match_prefix(ms: &mut HashSet<Msg>, rules: &[Rule], idx: usize) {
-  match rules[idx] {
+fn match_prefix(ms: &mut HashSet<Msg>, rules: &Rules, idx: usize) {
+  match *rules.get(&idx).unwrap() {
     Rule::Char(c) => {
       *ms = ms
         .drain()
@@ -49,11 +49,13 @@ fn match_prefix(ms: &mut HashSet<Msg>, rules: &[Rule], idx: usize) {
   }
 }
 
-fn match_prefix_seq(ms: &mut HashSet<Msg>, rules: &[Rule], seq: &[usize]) {
+fn match_prefix_seq(ms: &mut HashSet<Msg>, rules: &Rules, seq: &[usize]) {
   for &idx in seq {
     match_prefix(ms, rules, idx);
   }
 }
+
+type Rules = HashMap<usize, Rule>;
 
 enum Rule {
   Char(Char),
@@ -69,9 +71,9 @@ enum Char {
 
 type Msg = Vec<Char>;
 
-fn parse(s: &str) -> (Vec<Rule>, Vec<Msg>) {
+fn parse(s: &str) -> (Rules, Vec<Msg>) {
   let mut lines = s.split('\n');
-  let mut map = HashMap::new();
+  let mut rules = HashMap::new();
   loop {
     let line = lines.next().unwrap();
     if line.is_empty() {
@@ -81,12 +83,7 @@ fn parse(s: &str) -> (Vec<Rule>, Vec<Msg>) {
     let num: usize = parts.next().unwrap().parse().unwrap();
     let rule = parse_rule(parts.next().unwrap());
     assert!(parts.next().is_none());
-    map.insert(num, rule);
-  }
-  let mut rules = Vec::with_capacity(map.len());
-  for i in 0..map.len() {
-    let rule = map.remove(&i).unwrap();
-    rules.push(rule);
+    rules.insert(num, rule);
   }
   let messages = lines
     .filter(|line| !line.is_empty())
