@@ -71,8 +71,7 @@ pub fn p2(s: &str) -> usize {
           board
             .get(y + sm_y)
             .and_then(|row| row.get(x + sm_x))
-            .map(|&px| matches!(px, Pixel::B))
-            .unwrap_or_default()
+            .map_or(false, Pixel::is_black)
         });
         if all_hit {
           let ret = sea_monster
@@ -89,7 +88,7 @@ pub fn p2(s: &str) -> usize {
     if !deleted.is_empty() {
       let black_count = board
         .iter()
-        .flat_map(|row| row.iter().filter(|&px| matches!(px, Pixel::B)))
+        .flat_map(|row| row.iter().filter(|px| px.is_black()))
         .count();
       return black_count - deleted.len();
     }
@@ -118,8 +117,14 @@ type Edges = HashMap<(Vec<Pixel>, Dir), HashSet<(u64, usize)>>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Pixel {
-  B,
-  W,
+  Black,
+  White,
+}
+
+impl Pixel {
+  fn is_black(&self) -> bool {
+    matches!(*self, Self::Black)
+  }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -284,8 +289,8 @@ fn parse_one(s: &str) -> (u64, Tile) {
       line
         .chars()
         .map(|c| match c {
-          '#' => Pixel::B,
-          '.' => Pixel::W,
+          '#' => Pixel::Black,
+          '.' => Pixel::White,
           _ => panic!("bad pixel: {}", c),
         })
         .collect()
