@@ -86,10 +86,8 @@ pub fn p2(s: &str) -> usize {
       .collect();
     // if we found at least one sea monster, this orientation is the one.
     if !deleted.is_empty() {
-      let black_count = board
-        .iter()
-        .flat_map(|row| row.iter().filter(|px| px.is_black()))
-        .count();
+      let black_count =
+        board.iter().flatten().filter(|px| px.is_black()).count();
       return black_count - deleted.len();
     }
   }
