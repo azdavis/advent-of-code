@@ -5,7 +5,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> u64 {
-  let (board, _) = go(s);
+  let board = go(s);
   let top = board.first().unwrap();
   let bot = board.last().unwrap();
   top.first().unwrap().0
@@ -15,7 +15,7 @@ pub fn p1(s: &str) -> u64 {
 }
 
 pub fn p2(s: &str) -> usize {
-  let (mut board, n) = go(s);
+  let mut board = go(s);
   for row in board.iter_mut() {
     for (_, tile) in row.iter_mut() {
       tile.pop().unwrap();
@@ -27,19 +27,20 @@ pub fn p2(s: &str) -> usize {
     }
   }
   let tile_dim = board.first().unwrap().first().unwrap().1.len();
-  let mut constructed: Tile = Vec::with_capacity(n * tile_dim);
-  for mut row in board {
-    let mut new_rows = Vec::with_capacity(tile_dim);
-    for _ in 0..tile_dim {
-      new_rows.push(
-        row
-          .iter_mut()
-          .flat_map(|(_, tile)| tile.pop().unwrap())
-          .collect(),
-      );
-    }
-    constructed.extend(new_rows.into_iter().rev());
-  }
+  let constructed: Tile = board
+    .into_iter()
+    .flat_map(|mut row| {
+      let new_rows: Vec<_> = (0..tile_dim)
+        .map(|_| {
+          row
+            .iter_mut()
+            .flat_map(|(_, tile)| tile.pop().unwrap())
+            .collect()
+        })
+        .collect();
+      new_rows.into_iter().rev()
+    })
+    .collect();
   let sea_monster: HashSet<_> = include_str!("input/d20_sea_monster.txt")
     .split('\n')
     .filter(|line| !line.is_empty())
@@ -88,7 +89,7 @@ pub fn p2(s: &str) -> usize {
   panic!("no solution")
 }
 
-fn go(s: &str) -> (Board, usize) {
+fn go(s: &str) -> Board {
   let tiles = parse(s);
   let n = sqrt(tiles.len());
   let tiles: Tiles = tiles
@@ -133,7 +134,7 @@ fn go(s: &str) -> (Board, usize) {
       }
     }
     if let Some((board, _)) = candidates.pop() {
-      return (board, n);
+      return board;
     }
   }
   panic!("no solution")
