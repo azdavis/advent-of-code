@@ -5,6 +5,20 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> u64 {
+  let board = go(s);
+  let top = board.first().unwrap();
+  let bot = board.last().unwrap();
+  top.first().unwrap().0
+    * top.last().unwrap().0
+    * bot.first().unwrap().0
+    * bot.last().unwrap().0
+}
+
+pub fn p2(s: &str) -> u32 {
+  todo!()
+}
+
+fn go(s: &str) -> Board {
   let tiles = parse(s);
   let n = sqrt(tiles.len());
   let tiles: Tiles = tiles
@@ -49,19 +63,10 @@ pub fn p1(s: &str) -> u64 {
       }
     }
     if let Some((board, _)) = candidates.pop() {
-      let top = board.first().unwrap();
-      let bot = board.last().unwrap();
-      return top.first().unwrap().0
-        * top.last().unwrap().0
-        * bot.first().unwrap().0
-        * bot.last().unwrap().0;
+      return board;
     }
   }
   panic!("no solution")
-}
-
-pub fn p2(s: &str) -> u32 {
-  todo!()
 }
 
 type Tile = Vec<Vec<Pixel>>;
