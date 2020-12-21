@@ -5,7 +5,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> u64 {
-  let board = go(s);
+  let (board, _) = go(s);
   let top = board.first().unwrap();
   let bot = board.last().unwrap();
   top.first().unwrap().0
@@ -14,11 +14,81 @@ pub fn p1(s: &str) -> u64 {
     * bot.last().unwrap().0
 }
 
-pub fn p2(s: &str) -> u32 {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  let (mut board, n) = go(s);
+  for row in board.iter_mut() {
+    for (_, tile) in row.iter_mut() {
+      tile.pop().unwrap();
+      tile.remove(0);
+      for tile_row in tile.iter_mut() {
+        tile_row.pop().unwrap();
+        tile_row.remove(0);
+      }
+    }
+  }
+  let tile_dim = board.first().unwrap().first().unwrap().1.len();
+  let mut constructed: Tile = Vec::with_capacity(n * tile_dim);
+  for mut row in board {
+    let mut new_rows = Vec::with_capacity(tile_dim);
+    for _ in 0..tile_dim {
+      new_rows.push(
+        row
+          .iter_mut()
+          .flat_map(|(_, tile)| tile.pop().unwrap())
+          .collect(),
+      );
+    }
+    constructed.extend(new_rows.into_iter().rev());
+  }
+  let sea_monster: HashSet<_> = include_str!("input/d20_sea_monster.txt")
+    .split('\n')
+    .filter(|line| !line.is_empty())
+    .rev()
+    .enumerate()
+    .flat_map(|(y, line)| {
+      line.chars().enumerate().filter_map(move |(x, c)| match c {
+        '#' => Some((y, x)),
+        ' ' => None,
+        _ => panic!("bad char: {}", c),
+      })
+    })
+    .collect();
+  for board in get_all_translations(constructed) {
+    let deleted: HashSet<_> = board
+      .iter()
+      .enumerate()
+      .flat_map(|(y, row)| row.iter().enumerate().map(move |(x, _)| (y, x)))
+      .filter_map(|(y, x)| {
+        let all_hit = sea_monster.iter().all(|&(sm_y, sm_x)| {
+          board
+            .get(y + sm_y)
+            .and_then(|row| row.get(x + sm_x))
+            .map(|&px| matches!(px, Pixel::B))
+            .unwrap_or_default()
+        });
+        if all_hit {
+          let ret = sea_monster
+            .iter()
+            .map(move |&(sm_y, sm_x)| (sm_y + y, sm_x + x));
+          Some(ret)
+        } else {
+          None
+        }
+      })
+      .flatten()
+      .collect();
+    if !deleted.is_empty() {
+      let black_count = board
+        .iter()
+        .flat_map(|row| row.iter().filter(|&px| matches!(px, Pixel::B)))
+        .count();
+      return black_count - deleted.len();
+    }
+  }
+  panic!("no solution")
 }
 
-fn go(s: &str) -> Board {
+fn go(s: &str) -> (Board, usize) {
   let tiles = parse(s);
   let n = sqrt(tiles.len());
   let tiles: Tiles = tiles
@@ -63,7 +133,7 @@ fn go(s: &str) -> Board {
       }
     }
     if let Some((board, _)) = candidates.pop() {
-      return board;
+      return (board, n);
     }
   }
   panic!("no solution")
@@ -184,5 +254,5 @@ fn parse_one(s: &str) -> (u64, Tile) {
 fn t() {
   let inp = include_str!("input/d20.txt");
   assert_eq!(p1(inp), 12519494280967);
-  // assert_eq!(p2(inp), ___);
+  assert_eq!(p2(inp), 2442);
 }
