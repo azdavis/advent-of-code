@@ -23,7 +23,7 @@ fn go(s: &str) -> Board {
   let n = sqrt(tiles.len());
   let tiles: Tiles = tiles
     .into_iter()
-    .map(|(n, t0)| (n, get_all_tiles(t0)))
+    .map(|(n, t0)| (n, get_all_translations(t0)))
     .collect();
   let mut edges = Edges::new();
   for (&id_a, tile_variants) in tiles.iter() {
@@ -139,7 +139,10 @@ fn expand(
   })
 }
 
-fn get_all_tiles(t0: Tile) -> Vec<Tile> {
+fn get_all_translations<T>(t0: Vec<Vec<T>>) -> Vec<Vec<Vec<T>>>
+where
+  T: Copy,
+{
   let t1 = rotate_left(&t0);
   let t2 = rotate_left(&t1);
   let t3 = rotate_left(&t2);
