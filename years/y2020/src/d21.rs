@@ -7,7 +7,7 @@ pub fn p1(s: &str) -> usize {
     .flat_map(|r| r.ingredients.iter())
     .copied()
     .collect();
-  let cannot_be_allergen: HashSet<_> = ingredients
+  let inert: HashSet<_> = ingredients
     .iter()
     .filter(|&&ing| {
       // the set of possible allergens that a given ingredient might be is the
@@ -33,7 +33,7 @@ pub fn p1(s: &str) -> usize {
   recipes
     .iter()
     .flat_map(|r| r.ingredients.iter())
-    .filter(|&&ing| cannot_be_allergen.contains(ing))
+    .filter(|&&ing| inert.contains(ing))
     .count()
 }
 
