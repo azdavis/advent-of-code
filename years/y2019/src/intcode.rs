@@ -1,7 +1,7 @@
+mod mem;
+
 use std::collections::VecDeque;
 use std::convert::TryInto as _;
-
-mod mem;
 
 pub fn parse(s: &str) -> impl Iterator<Item = i64> + '_ {
   s.split('\n')
