@@ -16,6 +16,7 @@ pub fn p1(s: &str) -> u64 {
 
 pub fn p2(s: &str) -> usize {
   let mut board = go(s);
+  // delete the edges of each tile
   for row in board.iter_mut() {
     for (_, tile) in row.iter_mut() {
       tile.pop().unwrap();
@@ -26,6 +27,7 @@ pub fn p2(s: &str) -> usize {
       }
     }
   }
+  // merge the tiles together into one big tile
   let tile_dim = board.first().unwrap().first().unwrap().1.len();
   let constructed: Tile = board
     .into_iter()
@@ -41,6 +43,7 @@ pub fn p2(s: &str) -> usize {
       new_rows.into_iter().rev()
     })
     .collect();
+  // collect the set of sea monster points
   let sea_monster: HashSet<_> = include_str!("input/d20_sea_monster.txt")
     .split('\n')
     .filter(|line| !line.is_empty())
@@ -54,7 +57,11 @@ pub fn p2(s: &str) -> usize {
       })
     })
     .collect();
+  // consider all translations of the big board
   for board in get_all_translations(constructed) {
+    // consider each position on the board; if, starting from that position, it
+    // is a sea monster, then note all sea monster points. collect all such
+    // points into a set
     let deleted: HashSet<_> = board
       .iter()
       .enumerate()
@@ -78,6 +85,7 @@ pub fn p2(s: &str) -> usize {
       })
       .flatten()
       .collect();
+    // if we found at least one sea monster, this orientation is the one.
     if !deleted.is_empty() {
       let black_count = board
         .iter()
@@ -89,60 +97,23 @@ pub fn p2(s: &str) -> usize {
   panic!("no solution")
 }
 
-fn go(s: &str) -> Board {
-  let tiles = parse(s);
-  let n = sqrt(tiles.len());
-  let tiles: Tiles = tiles
-    .into_iter()
-    .map(|(n, t0)| (n, get_all_translations(t0)))
-    .collect();
-  let mut edges = Edges::new();
-  for (&id_a, tile_variants) in tiles.iter() {
-    for (id_b, tile) in tile_variants.iter().enumerate() {
-      for &(f, dir) in FNS.iter() {
-        edges
-          .entry((f(&tile), dir))
-          .or_default()
-          .insert((id_a, id_b));
-      }
-    }
-  }
-  // no more mutation
-  let edges = edges;
-  for &id_a in tiles.keys() {
-    let mut tiles = tiles.clone();
-    let mut candidates: Vec<(Board, Tiles)> = tiles
-      .remove(&id_a)
-      .unwrap()
-      .into_iter()
-      .map(|tile| (vec![vec![(id_a, tile)]], tiles.clone()))
-      .collect();
-    for row in 0..n {
-      if row != 0 {
-        for (board, _) in candidates.iter_mut() {
-          board.push(vec![]);
-        }
-      }
-      for col in 0..n {
-        if row == 0 && col == 0 {
-          continue;
-        }
-        candidates = candidates
-          .into_iter()
-          .flat_map(|(board, tiles)| expand(&edges, board, tiles, row, col))
-          .collect();
-      }
-    }
-    if let Some((board, _)) = candidates.pop() {
-      return board;
-    }
-  }
-  panic!("no solution")
-}
-
+/// a 2d array of pixels
 type Tile = Vec<Vec<Pixel>>;
+
+/// a map from tile ID to the translations of each tile
 type Tiles = HashMap<u64, Vec<Tile>>;
+
+/// a 2d array of (tile id, tile)
 type Board = Vec<Vec<(u64, Tile)>>;
+
+/// a map from (sequence of pixels, direction) to a set of (tile id, translation
+/// index).
+///
+/// we use this to answer the question 'what tiles, translated in what way, have
+/// an edge, facing in a given direction, equal to the given sequence of
+/// pixels'?
+///
+/// this can be derived from a `Tiles`.
 type Edges = HashMap<(Vec<Pixel>, Dir), HashSet<(u64, usize)>>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -159,6 +130,66 @@ enum Dir {
   Right,
 }
 
+fn go(s: &str) -> Board {
+  let tiles = parse(s);
+  // there must be a square number of tiles
+  let n = sqrt(tiles.len());
+  // for each tile, get all of its translations
+  let tiles: Tiles = tiles
+    .into_iter()
+    .map(|(n, t0)| (n, get_all_translations(t0)))
+    .collect();
+  let edges = mk_edges(&tiles);
+  // try each tile as the starting (upper-left corner) tile
+  for &id_a in tiles.keys() {
+    // try each translation of the tile
+    let mut tiles = tiles.clone();
+    let mut candidates: Vec<(Board, Tiles)> = tiles
+      .remove(&id_a)
+      .unwrap()
+      .into_iter()
+      .map(|tile| (vec![vec![(id_a, tile)]], tiles.clone()))
+      .collect();
+    // try building the entire board, tile by tile
+    for row in 0..n {
+      // need to add an empty row each time we start a new row, except the first
+      // time
+      if row != 0 {
+        for (board, _) in candidates.iter_mut() {
+          board.push(vec![]);
+        }
+      }
+      for col in 0..n {
+        // already put in the starting tile
+        if row == 0 && col == 0 {
+          continue;
+        }
+        candidates = candidates
+          .into_iter()
+          .flat_map(|(board, tiles)| expand(&edges, board, tiles))
+          .collect();
+      }
+    }
+    if let Some((board, _)) = candidates.pop() {
+      // candidates might not be empty; it might contain translations of `board`
+      return board;
+    }
+  }
+  panic!("no solution")
+}
+
+fn mk_edges(tiles: &Tiles) -> Edges {
+  let mut ret = Edges::new();
+  for (&id_a, tile_translations) in tiles.iter() {
+    for (id_b, tile) in tile_translations.iter().enumerate() {
+      for &(f, dir) in FNS.iter() {
+        ret.entry((f(&tile), dir)).or_default().insert((id_a, id_b));
+      }
+    }
+  }
+  ret
+}
+
 #[allow(clippy::type_complexity)]
 const FNS: [(for<'a> fn(&'a [Vec<Pixel>]) -> Vec<Pixel>, Dir); 4] = [
   (top, Dir::Top),
@@ -167,6 +198,7 @@ const FNS: [(for<'a> fn(&'a [Vec<Pixel>]) -> Vec<Pixel>, Dir); 4] = [
   (right, Dir::Right),
 ];
 
+/// returns the exact square root of `n` if there is one.
 fn sqrt(n: usize) -> usize {
   let mut ret = 1;
   loop {
@@ -178,30 +210,38 @@ fn sqrt(n: usize) -> usize {
   }
 }
 
+/// given a `board` under construction, a set of unused `tiles`, and the `Edges`
+/// from the original set of tiles, returns an iterator of the possible pairs of
+/// (new board, remaining unused tiles).
 fn expand(
   edges: &Edges,
   board: Board,
   tiles: Tiles,
-  row: usize,
-  col: usize,
 ) -> impl Iterator<Item = (Board, Tiles)> {
-  assert_eq!(board.len(), row + 1);
-  assert_eq!(board[row].len(), col);
+  let row = board.len() - 1;
+  let col = board[row].len();
+  // get the sets of possible tile IDs, based on the restrictions from the tile
+  // already above and to the left of the location we're trying to put a tile.
   let top = row
     .checked_sub(1)
     .map(|row| edges.get(&(bot(&board[row][col].1), Dir::Top)).unwrap());
   let left = col
     .checked_sub(1)
     .map(|col| edges.get(&(right(&board[row][col].1), Dir::Left)).unwrap());
+  // combine these to get the overall set of possible tile IDs.
   let tile_ids = match (top, left) {
+    // if there were restrictions from both the top and left, the valid IDs to
+    // try must be in both sets.
     (Some(top), Some(left)) => top.intersection(left).copied().collect(),
     (Some(a), None) | (None, Some(a)) => a.clone(),
     (None, None) => HashSet::new(),
   };
   tile_ids.into_iter().filter_map(move |(id_a, id_b)| {
+    // if we've already used a tile, we can't use it again.
     if !tiles.contains_key(&id_a) {
       return None;
     }
+    // remove that tile and add it to the board with the given translation.
     let mut tiles = tiles.clone();
     let tile = tiles.remove(&id_a).unwrap().remove(id_b);
     let mut board = board.clone();
@@ -210,6 +250,9 @@ fn expand(
   })
 }
 
+/// returns all translations of the matrix possible by flipping and rotating.
+/// the return value will always have length 8, but it's still annoying to work
+/// with arrays in many ways, so we use a vec.
 fn get_all_translations<T>(t0: Vec<Vec<T>>) -> Vec<Vec<Vec<T>>>
 where
   T: Copy,
