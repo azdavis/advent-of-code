@@ -16,7 +16,7 @@ pub fn p1(s: &str) -> u64 {
 
 pub fn p2(s: &str) -> usize {
   let mut board = go(s);
-  // delete the edges of each tile
+  // delete the edges of each tile.
   for row in board.iter_mut() {
     for (_, tile) in row.iter_mut() {
       tile.pop().unwrap();
@@ -27,7 +27,7 @@ pub fn p2(s: &str) -> usize {
       }
     }
   }
-  // merge the tiles together into one big tile
+  // merge the tiles together into one big tile.
   let tile_dim = board.first().unwrap().first().unwrap().1.len();
   let constructed: Tile = board
     .into_iter()
@@ -43,7 +43,7 @@ pub fn p2(s: &str) -> usize {
       new_rows.into_iter().rev()
     })
     .collect();
-  // collect the set of sea monster points
+  // collect the set of sea monster points.
   let sea_monster: HashSet<_> = include_str!("input/d20_sea_monster.txt")
     .split('\n')
     .filter(|line| !line.is_empty())
@@ -57,11 +57,11 @@ pub fn p2(s: &str) -> usize {
       })
     })
     .collect();
-  // consider all translations of the big board
+  // consider all translations of the big board.
   for board in get_all_translations(constructed) {
     // consider each position on the board; if, starting from that position, it
     // is a sea monster, then note all sea monster points. collect all such
-    // points into a set
+    // points into a set.
     let deleted: HashSet<_> = board
       .iter()
       .enumerate()
@@ -94,13 +94,13 @@ pub fn p2(s: &str) -> usize {
   panic!("no solution")
 }
 
-/// a 2d array of pixels
+/// a 2d array of pixels.
 type Tile = Vec<Vec<Pixel>>;
 
-/// a map from tile ID to the translations of each tile
+/// a map from tile ID to the translations of each tile.
 type Tiles = HashMap<u64, Vec<Tile>>;
 
-/// a 2d array of (tile id, tile)
+/// a 2d array of (tile id, tile).
 type Board = Vec<Vec<(u64, Tile)>>;
 
 /// a map from (sequence of pixels, direction) to a set of (tile id, translation
@@ -135,17 +135,17 @@ enum Dir {
 
 fn go(s: &str) -> Board {
   let tiles = parse(s);
-  // there must be a square number of tiles
+  // there must be a square number of tiles.
   let n = sqrt(tiles.len());
-  // for each tile, get all of its translations
+  // for each tile, get all of its translations.
   let tiles: Tiles = tiles
     .into_iter()
     .map(|(n, t0)| (n, get_all_translations(t0)))
     .collect();
   let edges = mk_edges(&tiles);
-  // try each tile as the starting (upper-left corner) tile
+  // try each tile as the starting (upper-left corner) tile.
   for &id_a in tiles.keys() {
-    // try each translation of the tile
+    // try each translation of the tile.
     let mut tiles = tiles.clone();
     let mut candidates: Vec<(Board, Tiles)> = tiles
       .remove(&id_a)
@@ -153,17 +153,16 @@ fn go(s: &str) -> Board {
       .into_iter()
       .map(|tile| (vec![vec![(id_a, tile)]], tiles.clone()))
       .collect();
-    // try building the entire board, tile by tile
+    // try building the entire board, tile by tile.
     for row in 0..n {
-      // need to add an empty row each time we start a new row, except the first
-      // time
+      // need to add an empty row each time we start a new row.
       if row != 0 {
         for (board, _) in candidates.iter_mut() {
           board.push(vec![]);
         }
       }
       for col in 0..n {
-        // already put in the starting tile
+        // already put in the starting tile.
         if row == 0 && col == 0 {
           continue;
         }
@@ -174,7 +173,7 @@ fn go(s: &str) -> Board {
       }
     }
     if let Some((board, _)) = candidates.pop() {
-      // candidates might not be empty; it might contain translations of `board`
+      // candidates might still contain translations of `board`, but that's ok.
       return board;
     }
   }
@@ -213,7 +212,7 @@ fn sqrt(n: usize) -> usize {
   }
 }
 
-/// given a `board` under construction, a set of unused `tiles`, and the `Edges`
+/// given a `board` under construction, a set of unused `tiles`, and the `edges`
 /// from the original set of tiles, returns an iterator of the possible pairs of
 /// (new board, remaining unused tiles).
 fn expand(
