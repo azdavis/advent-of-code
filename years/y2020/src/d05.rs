@@ -22,7 +22,7 @@ pub fn p2(s: &str) -> u32 {
       return id;
     }
   }
-  panic!("no answer exists")
+  panic!("no solution")
 }
 
 fn seat_ids(s: &str) -> impl Iterator<Item = u32> + '_ {

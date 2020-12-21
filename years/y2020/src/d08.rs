@@ -26,7 +26,7 @@ pub fn p2(s: &str) -> i32 {
       InstrKind::Nop => InstrKind::Jmp,
     };
   }
-  panic!("no answer exists")
+  panic!("no solution")
 }
 
 fn simulate(instrs: &[Instr]) -> Res {

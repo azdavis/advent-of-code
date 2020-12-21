@@ -13,7 +13,7 @@ pub fn p2(s: &str) -> i64 {
       }
     }
   }
-  panic!("no answer exists")
+  panic!("no solution")
 }
 
 fn go(mut ns: Vec<i64>, noun: i64, verb: i64) -> i64 {

@@ -7,7 +7,7 @@ pub fn p1(s: &str) -> u32 {
       }
     }
   }
-  panic!("no answer exists")
+  panic!("no solution")
 }
 
 pub fn p2(s: &str) -> u32 {
@@ -21,7 +21,7 @@ pub fn p2(s: &str) -> u32 {
       }
     }
   }
-  panic!("no answer exists")
+  panic!("no solution")
 }
 
 const TARGET: u32 = 2020;
