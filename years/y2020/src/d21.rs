@@ -2,6 +2,62 @@ use std::collections::HashSet;
 
 pub fn p1(s: &str) -> usize {
   let recipes = parse(s);
+  let (_, inert) = go(&recipes);
+  recipes
+    .iter()
+    .flat_map(|r| r.ingredients.iter())
+    .filter(|&&ing| inert.contains(ing))
+    .count()
+}
+
+pub fn p2(s: &str) -> String {
+  let recipes = parse(s);
+  let (mut ingredients, inert) = go(&recipes);
+  ingredients.retain(|&ing| !inert.contains(ing));
+  let mut allergens: HashSet<_> = recipes
+    .iter()
+    .flat_map(|r| r.allergens.iter())
+    .copied()
+    .collect();
+  let mut assignment = Vec::new();
+  while !ingredients.is_empty() {
+    assert_eq!(ingredients.len(), allergens.len());
+    let (ing, a) = ingredients
+      .iter()
+      .find_map(|&ing| {
+        let possible_allergens: HashSet<_> = recipes
+          .iter()
+          .filter(|r| r.ingredients.contains(ing))
+          .flat_map(|r| r.allergens.iter())
+          .filter(|&&a| {
+            allergens.contains(a)
+              && recipes.iter().all(|r| {
+                !r.allergens.contains(a) || r.ingredients.contains(ing)
+              })
+          })
+          .copied()
+          .collect();
+        assert!(!possible_allergens.is_empty());
+        if possible_allergens.len() == 1 {
+          let mut iter = possible_allergens.into_iter();
+          let a = iter.next().unwrap();
+          assert!(iter.next().is_none());
+          Some((ing, a))
+        } else {
+          None
+        }
+      })
+      .unwrap();
+    assert!(ingredients.remove(ing));
+    assert!(allergens.remove(a));
+    assignment.push((a, ing));
+  }
+  assignment.sort_unstable();
+  let strings: Vec<_> = assignment.into_iter().map(|(_, ing)| ing).collect();
+  strings.join(",")
+}
+
+fn go<'a>(recipes: &[Recipe<'a>]) -> (HashSet<&'a str>, HashSet<&'a str>) {
   let ingredients: HashSet<_> = recipes
     .iter()
     .flat_map(|r| r.ingredients.iter())
@@ -30,15 +86,7 @@ pub fn p1(s: &str) -> usize {
     })
     .copied()
     .collect();
-  recipes
-    .iter()
-    .flat_map(|r| r.ingredients.iter())
-    .filter(|&&ing| inert.contains(ing))
-    .count()
-}
-
-pub fn p2(s: &str) -> u32 {
-  todo!()
+  (ingredients, inert)
 }
 
 fn parse(s: &str) -> Vec<Recipe<'_>> {
@@ -81,5 +129,8 @@ fn parse_recipe(s: &str) -> Recipe<'_> {
 fn t() {
   let inp = include_str!("input/d21.txt");
   assert_eq!(p1(inp), 1977);
-  // assert_eq!(p2(inp), ___);
+  assert_eq!(
+    p2(inp),
+    "dpkvsdk,xmmpt,cxjqxbt,drbq,zmzq,mnrjrf,kjgl,rkcpxs"
+  );
 }
