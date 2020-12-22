@@ -3,17 +3,7 @@ use std::collections::HashSet;
 use std::convert::TryInto as _;
 
 pub fn p1(s: &str) -> usize {
-  let asteroids: HashSet<Point> = s
-    .lines()
-    .enumerate()
-    .flat_map(|(y, line)| {
-      line.chars().enumerate().filter_map(move |(x, c)| match c {
-        '.' => None,
-        '#' => Some((to_i32(x), to_i32(y))),
-        _ => panic!("bad tile: {}", c),
-      })
-    })
-    .collect();
+  let asteroids = parse(s);
   asteroids
     .iter()
     .map(|&a| {
@@ -31,6 +21,19 @@ pub fn p2(s: &str) -> u32 {
 }
 
 type Point = (i32, i32);
+
+fn parse(s: &str) -> HashSet<Point> {
+  s.lines()
+    .enumerate()
+    .flat_map(|(y, line)| {
+      line.chars().enumerate().filter_map(move |(x, c)| match c {
+        '.' => None,
+        '#' => Some((to_i32(x), to_i32(y))),
+        _ => panic!("bad tile: {}", c),
+      })
+    })
+    .collect()
+}
 
 fn diff_gcd(a: Point, b: Point) -> (i32, i32) {
   let (ax, ay) = a;
