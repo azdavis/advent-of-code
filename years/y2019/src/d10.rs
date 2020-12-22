@@ -4,11 +4,8 @@ use std::convert::TryInto as _;
 
 pub fn p1(s: &str) -> usize {
   let points = parse(s);
-  points
-    .iter()
-    .map(|&a| points.iter().filter(|&&b| can_see(a, b, &points)).count())
-    .max()
-    .unwrap()
+  let (_, count) = get_best(&points);
+  count
 }
 
 pub fn p2(s: &str) -> u32 {
@@ -16,6 +13,17 @@ pub fn p2(s: &str) -> u32 {
 }
 
 type Point = (i32, i32);
+
+fn get_best(points: &HashSet<Point>) -> (Point, usize) {
+  points
+    .iter()
+    .map(|&a| {
+      let count = points.iter().filter(|&&b| can_see(a, b, &points)).count();
+      (a, count)
+    })
+    .max_by_key(|&(_, count)| count)
+    .unwrap()
+}
 
 fn parse(s: &str) -> HashSet<Point> {
   s.lines()
