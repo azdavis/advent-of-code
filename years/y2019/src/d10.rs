@@ -3,15 +3,10 @@ use std::collections::HashSet;
 use std::convert::TryInto as _;
 
 pub fn p1(s: &str) -> usize {
-  let asteroids = parse(s);
-  asteroids
+  let points = parse(s);
+  points
     .iter()
-    .map(|&a| {
-      asteroids
-        .iter()
-        .filter(|&&b| can_see(a, b, &asteroids))
-        .count()
-    })
+    .map(|&a| points.iter().filter(|&&b| can_see(a, b, &points)).count())
     .max()
     .unwrap()
 }
