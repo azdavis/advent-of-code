@@ -7,6 +7,7 @@ pub mod infinite;
 pub mod matrix;
 pub mod permute;
 
+pub use float_ord;
 pub use maplit;
 pub use once_cell;
 pub use regex;
