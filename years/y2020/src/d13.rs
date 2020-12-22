@@ -74,7 +74,7 @@ struct Bus {
 }
 
 fn parse(s: &str) -> Input {
-  let mut lines = s.split('\n');
+  let mut lines = s.lines();
   Input {
     start: lines.next().unwrap().parse().unwrap(),
     buses: lines

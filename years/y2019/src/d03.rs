@@ -52,7 +52,7 @@ struct Point {
 }
 
 fn parse(s: &str) -> (Vec<Action>, Vec<Action>) {
-  let mut lines = s.split('\n');
+  let mut lines = s.lines();
   let fst = parse_line(lines.next().unwrap());
   let snd = parse_line(lines.next().unwrap());
   (fst, snd)

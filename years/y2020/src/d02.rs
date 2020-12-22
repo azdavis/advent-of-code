@@ -23,10 +23,7 @@ where
 {
   let r = Regex::new(r"(\d+)-(\d+) (\w): (\w+)").unwrap();
   let mut ret = 0;
-  for line in s.split('\n') {
-    if line.is_empty() {
-      continue;
-    }
+  for line in s.lines() {
     let caps = r.captures(line).unwrap();
     let n1: usize = caps[1].parse().unwrap();
     let n2: usize = caps[2].parse().unwrap();

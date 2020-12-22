@@ -49,9 +49,7 @@ fn update(map: &mut Map, num: usize, fst: usize) {
 }
 
 fn parse(s: &str) -> Vec<usize> {
-  s.split('\n')
-    .next()
-    .unwrap()
+  s.trim_end()
     .split(',')
     .map(|x| x.parse().unwrap())
     .collect()

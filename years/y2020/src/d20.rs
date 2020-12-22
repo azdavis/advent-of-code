@@ -45,8 +45,7 @@ pub fn p2(s: &str) -> usize {
     .collect();
   // collect the set of sea monster points.
   let sea_monster: HashSet<_> = include_str!("input/d20_sea_monster.txt")
-    .split('\n')
-    .filter(|line| !line.is_empty())
+    .lines()
     .rev()
     .enumerate()
     .flat_map(|(y, line)| {
@@ -276,12 +275,11 @@ fn parse(s: &str) -> Vec<(u64, Tile)> {
 static TILE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^Tile (\d+):$").unwrap());
 
 fn parse_one(s: &str) -> (u64, Tile) {
-  let mut lines = s.split('\n');
+  let mut lines = s.lines();
   let fst = lines.next().unwrap();
   let fst_caps = TILE.captures(fst).unwrap();
   let num: u64 = fst_caps[1].parse().unwrap();
   let tile: Tile = lines
-    .filter(|line| !line.is_empty())
     .map(|line| {
       line
         .chars()

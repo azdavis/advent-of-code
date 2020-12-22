@@ -26,13 +26,7 @@ pub fn p2(s: &str) -> u32 {
 }
 
 fn seat_ids(s: &str) -> impl Iterator<Item = u32> + '_ {
-  s.split('\n').filter_map(|s| {
-    if s.is_empty() {
-      None
-    } else {
-      Some(seat_id(parse_seat(s)))
-    }
-  })
+  s.lines().map(|s| seat_id(parse_seat(s)))
 }
 
 const MAX_ROW: u32 = 127;

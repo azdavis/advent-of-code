@@ -10,7 +10,7 @@ fn go<F>(s: &str, f: F) -> u64
 where
   F: Fn(&str) -> u64,
 {
-  s.split('\n').filter(|line| !line.is_empty()).map(f).sum()
+  s.lines().map(f).sum()
 }
 
 fn go_p1(s: &str) -> u64 {

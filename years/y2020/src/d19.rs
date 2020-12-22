@@ -78,7 +78,7 @@ enum Char {
 type Msg = Vec<Char>;
 
 fn parse(s: &str) -> (Rules, Vec<Msg>) {
-  let mut lines = s.split('\n');
+  let mut lines = s.lines();
   let mut rules = HashMap::new();
   loop {
     let line = lines.next().unwrap();
@@ -92,7 +92,6 @@ fn parse(s: &str) -> (Rules, Vec<Msg>) {
     rules.insert(num, rule);
   }
   let messages = lines
-    .filter(|line| !line.is_empty())
     .map(|line| {
       line
         .chars()

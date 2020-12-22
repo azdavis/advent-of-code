@@ -62,7 +62,7 @@ enum Run {
 }
 
 fn parse(s: &str) -> (u32, u32) {
-  let mut parts = s.split('\n').next().unwrap().split('-');
+  let mut parts = s.trim_end().split('-');
   let lo: u32 = parts.next().unwrap().parse().unwrap();
   let hi: u32 = parts.next().unwrap().parse().unwrap();
   (lo, hi)

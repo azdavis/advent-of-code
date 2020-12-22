@@ -31,10 +31,7 @@ fn go(grid: &[&[u8]], right: usize, down: usize) -> usize {
 }
 
 fn parse(s: &str) -> Vec<&[u8]> {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
-    .map(|line| line.as_bytes())
-    .collect()
+  s.lines().map(str::as_bytes).collect()
 }
 
 #[test]

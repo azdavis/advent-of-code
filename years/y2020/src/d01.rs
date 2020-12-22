@@ -27,10 +27,7 @@ pub fn p2(s: &str) -> u32 {
 const TARGET: u32 = 2020;
 
 fn parse(s: &str) -> Vec<u32> {
-  s.split_ascii_whitespace()
-    .map(str::parse)
-    .collect::<Result<_, _>>()
-    .unwrap()
+  s.lines().map(str::parse).collect::<Result<_, _>>().unwrap()
 }
 
 #[test]

@@ -4,11 +4,7 @@ use std::collections::VecDeque;
 use std::convert::TryInto as _;
 
 pub fn parse(s: &str) -> impl Iterator<Item = i64> + '_ {
-  s.split('\n')
-    .next()
-    .unwrap()
-    .split(',')
-    .map(|x| x.parse().unwrap())
+  s.trim_end().split(',').map(|x| x.parse().unwrap())
 }
 
 #[derive(Debug, Clone)]

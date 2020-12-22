@@ -80,10 +80,7 @@ enum ResKind {
 }
 
 fn get_instrs(s: &str) -> Vec<Instr> {
-  s.split('\n')
-    .filter(|x| !x.is_empty())
-    .map(Instr::parse)
-    .collect()
+  s.lines().map(Instr::parse).collect()
 }
 
 #[derive(Debug, Clone, Copy)]

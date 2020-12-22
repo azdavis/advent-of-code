@@ -43,10 +43,7 @@ where
 }
 
 fn parse(s: &str) -> Vec<Instr> {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
-    .map(Instr::parse)
-    .collect()
+  s.lines().map(Instr::parse).collect()
 }
 
 #[derive(Debug, Default, Clone)]

@@ -85,16 +85,13 @@ fn to_i32(n: usize) -> i32 {
 }
 
 fn parse(s: &str) -> impl Iterator<Item = (i32, i32)> + '_ {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
-    .enumerate()
-    .flat_map(|(x, line)| {
-      line.chars().enumerate().filter_map(move |(y, c)| match c {
-        '#' => Some((to_i32(x), to_i32(y))),
-        '.' => None,
-        _ => panic!("bad char: {}", c),
-      })
+  s.lines().enumerate().flat_map(|(x, line)| {
+    line.chars().enumerate().filter_map(move |(y, c)| match c {
+      '#' => Some((to_i32(x), to_i32(y))),
+      '.' => None,
+      _ => panic!("bad char: {}", c),
     })
+  })
 }
 
 #[test]

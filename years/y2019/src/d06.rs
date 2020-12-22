@@ -101,10 +101,7 @@ where
   F: for<'a> Fn(&mut Input<'a>, &'a str, &'a str),
 {
   let mut ret = Input::new();
-  for line in s.split('\n') {
-    if line.is_empty() {
-      continue;
-    }
+  for line in s.lines() {
     let mut parts = line.split(')');
     let center = parts.next().unwrap();
     let orbiter = parts.next().unwrap();

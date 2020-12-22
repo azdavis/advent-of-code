@@ -4,8 +4,8 @@ pub fn p1(s: &str) -> usize {
   s.split("\n\n")
     .map(|group| {
       group
-        .split('\n')
-        .flat_map(|line| line.chars())
+        .lines()
+        .flat_map(str::chars)
         .collect::<HashSet<_>>()
         .len()
     })
@@ -13,15 +13,12 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> usize {
-  s.split("\n\n")
+  s.trim_end()
+    .split("\n\n")
     .map(|group| {
-      let mut sets = group.split('\n').filter_map(|line| {
-        if line.is_empty() {
-          None
-        } else {
-          Some(line.chars().collect::<HashSet<_>>())
-        }
-      });
+      let mut sets = group
+        .lines()
+        .map(|line| line.chars().collect::<HashSet<_>>());
       let fst = sets.next().unwrap();
       sets
         .fold(fst, |ac, x| ac.intersection(&x).copied().collect())

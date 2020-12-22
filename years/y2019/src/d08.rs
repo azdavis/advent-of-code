@@ -70,12 +70,7 @@ const WIDTH: usize = 25;
 const HEIGHT: usize = 6;
 
 fn parse(s: &str) -> Vec<Pixel> {
-  s.split('\n')
-    .next()
-    .unwrap()
-    .chars()
-    .map(Pixel::parse)
-    .collect()
+  s.trim_end().chars().map(Pixel::parse).collect()
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -90,10 +90,7 @@ fn go<'a>(recipes: &[Recipe<'a>]) -> (HashSet<&'a str>, HashSet<&'a str>) {
 }
 
 fn parse(s: &str) -> Vec<Recipe<'_>> {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
-    .map(parse_recipe)
-    .collect()
+  s.lines().map(parse_recipe).collect()
 }
 
 struct Recipe<'a> {

@@ -36,15 +36,7 @@ fn go(nums: &[u64]) -> u64 {
 const WINDOW: usize = 25;
 
 fn parse(s: &str) -> Vec<u64> {
-  s.split('\n')
-    .filter_map(|x| {
-      if x.is_empty() {
-        None
-      } else {
-        Some(x.parse().unwrap())
-      }
-    })
-    .collect()
+  s.lines().map(|x| x.parse().unwrap()).collect()
 }
 
 #[test]

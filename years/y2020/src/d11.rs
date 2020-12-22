@@ -106,8 +106,7 @@ fn dec(n: usize) -> Option<usize> {
 }
 
 fn parse(s: &str) -> Grid {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
+  s.lines()
     .map(|line| line.chars().map(Tile::parse).collect())
     .collect()
 }

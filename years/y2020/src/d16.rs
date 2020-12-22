@@ -62,7 +62,7 @@ impl Ranges {
 }
 
 fn parse(s: &str) -> (HashMap<&str, Ranges>, Ticket, Vec<Ticket>) {
-  let mut lines = s.split('\n');
+  let mut lines = s.lines();
   let mut fields = HashMap::new();
   loop {
     let line = lines.next().unwrap();
@@ -80,14 +80,7 @@ fn parse(s: &str) -> (HashMap<&str, Ranges>, Ticket, Vec<Ticket>) {
   let me = parse_ticket(lines.next().unwrap());
   assert!(lines.next().unwrap().is_empty());
   assert_eq!(lines.next().unwrap(), "nearby tickets:");
-  let mut nearby = Vec::new();
-  loop {
-    let line = lines.next().unwrap();
-    if line.is_empty() {
-      break;
-    }
-    nearby.push(parse_ticket(line));
-  }
+  let nearby: Vec<_> = lines.map(parse_ticket).collect();
   for n in nearby.iter() {
     assert_eq!(fields.len(), n.len());
   }

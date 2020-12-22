@@ -46,10 +46,7 @@ where
   T: std::hash::Hash + Eq + 'a,
 {
   let mut ret = HashMap::<_, HashSet<_>>::new();
-  for line in s.split('\n') {
-    if line.is_empty() {
-      continue;
-    }
+  for line in s.lines() {
     let mut iter = line.split_ascii_whitespace();
     let container = Bag {
       adj: iter.next().unwrap(),

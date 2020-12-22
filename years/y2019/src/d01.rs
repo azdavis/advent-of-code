@@ -20,9 +20,7 @@ fn p2_one(mut n: u32) -> u32 {
 }
 
 fn parse(s: &str) -> impl Iterator<Item = u32> + '_ {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
-    .map(|line| line.parse().unwrap())
+  s.lines().map(|line| line.parse().unwrap())
 }
 
 #[test]

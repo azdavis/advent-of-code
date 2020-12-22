@@ -113,9 +113,7 @@ impl Point {
 }
 
 fn parse(s: &str) -> impl Iterator<Item = Action> + '_ {
-  s.split('\n')
-    .filter(|line| !line.is_empty())
-    .map(Action::parse)
+  s.lines().map(Action::parse)
 }
 
 struct Action {
