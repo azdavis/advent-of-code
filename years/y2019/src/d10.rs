@@ -32,23 +32,25 @@ pub fn p2(s: &str) -> u32 {
 
 type Point = (i32, i32);
 
-/// returns whether `a` has a line of sight to `b` based on `points`
-fn can_see(a: Point, b: Point, points: &HashSet<Point>) -> bool {
-  if a == b {
-    // special-case this
-    return false;
-  }
-  let (mut ax, mut ay) = a;
+fn diff_gcd(a: Point, b: Point) -> (i32, i32) {
+  let (ax, ay) = a;
   let (bx, by) = b;
   let dx = bx - ax;
   let dy = by - ay;
   let g = to_i32(gcd(to_usize(dx.abs()), to_usize(dy.abs())));
-  let dx = dx / g;
-  let dy = dy / g;
+  (dx / g, dy / g)
+}
+
+/// returns whether `a` has a line of sight to `b` based on `points`
+fn can_see(mut a: Point, b: Point, points: &HashSet<Point>) -> bool {
+  if a == b {
+    // special-case this
+    return false;
+  }
+  let (dx, dy) = diff_gcd(a, b);
   loop {
-    ax += dx;
-    ay += dy;
-    let a = (ax, ay);
+    a.0 += dx;
+    a.1 += dy;
     if a == b {
       return true;
     }
