@@ -2,6 +2,7 @@
 //! problems, as well as re-exports of dependencies.
 
 pub mod digits;
+pub mod gcd;
 pub mod infinite;
 pub mod matrix;
 pub mod permute;

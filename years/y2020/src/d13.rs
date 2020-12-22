@@ -1,3 +1,5 @@
+use helpers::gcd::gcd;
+
 pub fn p1(s: &str) -> usize {
   let inp = parse(s);
   let start = inp.start;
@@ -38,16 +40,6 @@ fn get_delta(a: usize, off: usize, b: usize) -> usize {
     }
     idx += 1;
   }
-}
-
-fn gcd(mut a: usize, mut b: usize) -> usize {
-  assert!(a != 0 || b != 0);
-  while b != 0 {
-    let tmp = b;
-    b = a % b;
-    a = tmp;
-  }
-  a
 }
 
 fn lcm(a: usize, b: usize) -> usize {
