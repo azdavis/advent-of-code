@@ -2,8 +2,23 @@ pub fn p1(s: &str) -> String {
   p1_help(s, 100)
 }
 
-pub fn p2(s: &str) -> u32 {
-  todo!()
+pub fn p2(s: &str) -> u64 {
+  let mut cups = parse(s);
+  let max_cup = *cups.iter().max().unwrap();
+  cups.extend((max_cup + 1)..=1_000_000);
+  go(&mut cups, 10_000_000);
+  let mut idx = cups.iter().position(|&c| c == 1).unwrap();
+  idx += 1;
+  if idx >= cups.len() {
+    idx = 0;
+  }
+  let n1 = u64::from(cups[idx]);
+  idx += 1;
+  if idx >= cups.len() {
+    idx = 0;
+  }
+  let n2 = u64::from(cups[idx]);
+  n1 * n2
 }
 
 fn p1_help(s: &str, rounds: usize) -> String {
@@ -32,7 +47,7 @@ fn p1_help(s: &str, rounds: usize) -> String {
       9 => '9',
       n => panic!("not a digit: {}", n),
     };
-    ret.push(c)
+    ret.push(c);
   }
 }
 
@@ -89,4 +104,9 @@ fn t() {
 fn t_p1() {
   assert_eq!(p1_help("389125467", 10), "92658374");
   assert_eq!(p1_help("389125467", 100), "67384529");
+}
+
+#[test]
+fn t_p2() {
+  assert_eq!(p2("389125467"), 149245887792);
 }
