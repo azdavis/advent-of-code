@@ -116,7 +116,8 @@ fn t() {
 
 #[test]
 fn t_p2_infinite() {
-  recursive(Deck::from(vec![43, 19]), Deck::from(vec![2, 29, 14]));
+  let (p, _) = recursive(Deck::from(vec![43, 19]), Deck::from(vec![2, 29, 14]));
+  assert_eq!(p, Player::P1);
 }
 
 #[test]
