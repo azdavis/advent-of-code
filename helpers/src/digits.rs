@@ -33,6 +33,24 @@ impl Iterator for Digits {
   }
 }
 
+/// Returns the char corresponding to the digit `n`. Panics if `n` is not a
+/// digit (i.e. if n >= 10).
+pub fn to_char(n: u32) -> char {
+  match n {
+    0 => '0',
+    1 => '1',
+    2 => '2',
+    3 => '3',
+    4 => '4',
+    5 => '5',
+    6 => '6',
+    7 => '7',
+    8 => '8',
+    9 => '9',
+    _ => panic!("not a digit: {}", n),
+  }
+}
+
 #[cfg(test)]
 mod tests {
   fn go(n: u32) -> Vec<u32> {

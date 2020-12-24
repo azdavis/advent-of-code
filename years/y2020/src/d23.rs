@@ -1,3 +1,4 @@
+use helpers::digits::to_char;
 use std::collections::HashMap;
 
 pub fn p1(s: &str) -> String {
@@ -12,28 +13,13 @@ pub fn p2(s: &str) -> u64 {
   u64::from(n1) * u64::from(n2)
 }
 
-const MAX_ELEM_P2: u32 = 1_000_000;
-
 fn go_p1(s: &str, rounds: usize) -> String {
   let (mut cups, first) = mk_map_p1(s);
   go(&mut cups, first, rounds);
   let mut ret = String::with_capacity(cups.len() - 1);
   let mut cur = cups[&1];
   while cur != 1 {
-    let c = match cur {
-      0 => '0',
-      1 => '1',
-      2 => '2',
-      3 => '3',
-      4 => '4',
-      5 => '5',
-      6 => '6',
-      7 => '7',
-      8 => '8',
-      9 => '9',
-      n => panic!("not a digit: {}", n),
-    };
-    ret.push(c);
+    ret.push(to_char(cur));
     cur = cups[&cur];
   }
   ret
@@ -50,6 +36,8 @@ fn mk_map_p1(s: &str) -> (HashMap<u32, u32>, u32) {
     .collect();
   (map, first)
 }
+
+const MAX_ELEM_P2: u32 = 1_000_000;
 
 fn mk_map_p2(s: &str) -> (HashMap<u32, u32>, u32) {
   let cups = parse(s);
