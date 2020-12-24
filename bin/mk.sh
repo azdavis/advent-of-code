@@ -2,19 +2,26 @@
 
 set -eu
 
-if [ "$#" -ne 2 ]; then
-  echo "usage: $0 <year> <day>"
+if [ "$#" -ne 1 ]; then
+  echo "usage: $0 <year>"
   exit 1
 fi
 
 YEAR="$1"
-DAY="$2"
 SRC="years/y$YEAR/src"
 
 cd "$(dirname "$0")"
 cd ..
 
 mkdir -p "$SRC/input"
+
+i=1
+for f in "$SRC"/d*.rs; do
+  if [ -f "$f" ]; then
+    i=$((i + 1))
+  fi
+done
+DAY="$(printf '%02d' "$i")"
 
 cat <<EOF > "$SRC/d$DAY.rs"
 pub fn p1(s: &str) -> u32 {
