@@ -1,5 +1,5 @@
 use helpers::digits::to_char;
-use std::collections::HashMap;
+use std::convert::TryInto;
 
 pub fn p1(s: &str) -> String {
   go_p1(s, 100)
@@ -8,8 +8,8 @@ pub fn p1(s: &str) -> String {
 pub fn p2(s: &str) -> u64 {
   let (mut cups, first) = mk_map_p2(s);
   go(&mut cups, first, 10_000_000);
-  let n1 = cups[&1];
-  let n2 = cups[&n1];
+  let n1 = cups[1];
+  let n2 = cups[to_usize(n1)];
   u64::from(n1) * u64::from(n2)
 }
 
@@ -17,55 +17,60 @@ fn go_p1(s: &str, rounds: usize) -> String {
   let (mut cups, first) = mk_map_p1(s);
   go(&mut cups, first, rounds);
   let mut ret = String::with_capacity(cups.len() - 1);
-  let mut cur = cups[&1];
+  let mut cur = cups[1];
   while cur != 1 {
     ret.push(to_char(cur));
-    cur = cups[&cur];
+    cur = cups[to_usize(cur)];
   }
   ret
 }
 
-fn mk_map_p1(s: &str) -> (HashMap<u32, u32>, u32) {
+fn mk_map_p1(s: &str) -> (Vec<u32>, u32) {
   let cups = parse(s);
   let first = *cups.first().unwrap();
   let last = *cups.last().unwrap();
-  let map: HashMap<_, _> = cups
-    .windows(2)
-    .map(|xs| (xs[0], xs[1]))
-    .chain(std::iter::once((last, first)))
-    .collect();
+  let max = *cups.iter().max().unwrap();
+  let mut map = vec![0; to_usize(max + 1)];
+  for xs in cups.windows(2) {
+    map[to_usize(xs[0])] = xs[1];
+  }
+  map[to_usize(last)] = first;
   (map, first)
 }
 
 const MAX_ELEM_P2: u32 = 1_000_000;
 
-fn mk_map_p2(s: &str) -> (HashMap<u32, u32>, u32) {
+fn mk_map_p2(s: &str) -> (Vec<u32>, u32) {
   let cups = parse(s);
   let first = *cups.first().unwrap();
   let last = *cups.last().unwrap();
   let max = *cups.iter().max().unwrap();
-  let map: HashMap<_, _> = cups
-    .windows(2)
-    .map(|xs| (xs[0], xs[1]))
-    .chain(std::iter::once((last, max + 1)))
-    .chain((max + 1..MAX_ELEM_P2).map(|x| (x, x + 1)))
-    .chain(std::iter::once((MAX_ELEM_P2, first)))
-    .collect();
+  let mut map = vec![0; to_usize(MAX_ELEM_P2 + 1)];
+  for xs in cups.windows(2) {
+    map[to_usize(xs[0])] = xs[1];
+  }
+  map[to_usize(last)] = max + 1;
+  for x in max + 1..MAX_ELEM_P2 {
+    map[to_usize(x)] = x + 1;
+  }
+  map[to_usize(MAX_ELEM_P2)] = first;
   (map, first)
 }
 
 // take advantage of the fact that there are no duplicate elements to avoid both
 // indexing logic and linked lists, and just map each element to its successor.
-fn go(cups: &mut HashMap<u32, u32>, mut cur: u32, rounds: usize) {
+// but use a Vec as the map with vec[0] = 0 since we also know there won't be
+// a whole lot of wasted space.
+fn go(cups: &mut Vec<u32>, mut cur: u32, rounds: usize) {
   assert!(cups.len() >= 5);
-  let min_cup = *cups.values().min().unwrap();
-  let max_cup = *cups.values().max().unwrap();
+  let min_cup = to_u32(cups.iter().position(|&c| c != 0).unwrap());
+  let max_cup = to_u32(cups.len() - 1);
   for _ in 0..rounds {
     let pick_up: Vec<_> = (0..3)
       .map(|_| {
-        let to_rm = cups[&cur];
-        let next = cups[&to_rm];
-        cups.insert(cur, next);
+        let to_rm = cups[to_usize(cur)];
+        let next = cups[to_usize(to_rm)];
+        cups[to_usize(cur)] = next;
         to_rm
       })
       .collect();
@@ -79,11 +84,13 @@ fn go(cups: &mut HashMap<u32, u32>, mut cur: u32, rounds: usize) {
       }
       dest -= 1;
     }
+    let dest = to_usize(dest);
     for n in pick_up.into_iter().rev() {
-      let next = cups.insert(dest, n).unwrap();
-      cups.insert(n, next);
+      let next = cups[dest];
+      cups[dest] = n;
+      cups[to_usize(n)] = next;
     }
-    cur = cups[&cur];
+    cur = cups[to_usize(cur)];
   }
 }
 
@@ -92,6 +99,14 @@ fn parse(s: &str) -> Vec<u32> {
     .chars()
     .map(|c| c.to_digit(10).unwrap())
     .collect()
+}
+
+fn to_usize(n: u32) -> usize {
+  n.try_into().unwrap()
+}
+
+fn to_u32(n: usize) -> u32 {
+  n.try_into().unwrap()
 }
 
 #[test]
@@ -103,8 +118,7 @@ fn t() {
 
 #[cfg(test)]
 mod tests {
-  use super::{go_p1, mk_map_p1, mk_map_p2, p2, MAX_ELEM_P2};
-  use helpers::maplit::hashmap;
+  use super::{go_p1, mk_map_p1, mk_map_p2, p2, to_usize, MAX_ELEM_P2};
 
   #[test]
   fn t_p1() {
@@ -120,13 +134,7 @@ mod tests {
   #[test]
   fn t_mk_map_p1() {
     let (map, fst) = mk_map_p1("45312");
-    let want = hashmap![
-      4 => 5,
-      5 => 3,
-      3 => 1,
-      1 => 2,
-      2 => 4,
-    ];
+    let want = vec![0, 2, 4, 1, 5, 3];
     assert_eq!(map, want);
     assert_eq!(fst, 4);
   }
@@ -134,18 +142,18 @@ mod tests {
   #[test]
   fn t_mk_map_p2() {
     let (map, fst) = mk_map_p2("3215674");
-    assert_eq!(map.len(), MAX_ELEM_P2 as usize);
-    assert_eq!(map[&3], 2);
-    assert_eq!(map[&2], 1);
-    assert_eq!(map[&1], 5);
-    assert_eq!(map[&5], 6);
-    assert_eq!(map[&6], 7);
-    assert_eq!(map[&7], 4);
-    assert_eq!(map[&4], 8);
+    assert_eq!(map.len(), to_usize(MAX_ELEM_P2 + 1));
+    assert_eq!(map[3], 2);
+    assert_eq!(map[2], 1);
+    assert_eq!(map[1], 5);
+    assert_eq!(map[5], 6);
+    assert_eq!(map[6], 7);
+    assert_eq!(map[7], 4);
+    assert_eq!(map[4], 8);
     for i in 8..MAX_ELEM_P2 {
-      assert_eq!(map[&i], i + 1);
+      assert_eq!(map[to_usize(i)], i + 1);
     }
-    assert_eq!(map[&MAX_ELEM_P2], 3);
+    assert_eq!(map[to_usize(MAX_ELEM_P2)], 3);
     assert_eq!(fst, 3);
   }
 }
