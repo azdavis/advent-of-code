@@ -12,7 +12,7 @@ pub fn p2(s: &str) -> usize {
     set = to_consider
       .into_iter()
       .filter(|&c| {
-        let n = neighbors(c).iter().filter(|n| set.contains(n)).count();
+        let n = neighbors(c).iter().filter(|&n| set.contains(n)).count();
         if set.contains(&c) {
           matches!(n, 1 | 2)
         } else {
