@@ -40,9 +40,6 @@ struct Dim {
   vel: i32,
 }
 
-static RE: Lazy<Regex> =
-  Lazy::new(|| Regex::new(r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$").unwrap());
-
 fn p1_go(s: &str, rounds: usize) -> u32 {
   let mut dims = parse(s);
   for _ in 0..rounds {
@@ -86,6 +83,9 @@ fn evolve(dim: &[Dim]) -> Vec<Dim> {
   }
   ret
 }
+
+static RE: Lazy<Regex> =
+  Lazy::new(|| Regex::new(r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$").unwrap());
 
 fn parse(s: &str) -> [Vec<Dim>; 3] {
   let mut xs = Vec::new();
