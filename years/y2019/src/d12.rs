@@ -10,16 +10,16 @@ pub fn p2(s: &str) -> u32 {
   todo!()
 }
 
-type Vec3 = [i32; 3];
-
-fn abs_sum(v: Vec3) -> u32 {
-  v.iter().map(|n| n.abs() as u32).sum()
-}
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct Moon<T> {
   pos: T,
   vel: T,
+}
+
+type Vec3 = [i32; 3];
+
+fn abs_sum(v: Vec3) -> u32 {
+  v.iter().map(|n| n.abs() as u32).sum()
 }
 
 static RE: Lazy<Regex> =
@@ -82,7 +82,7 @@ fn t() {
 }
 
 #[test]
-fn t_ex() {
+fn t_p1() {
   let inp = include_str!("input/d12_ex1.txt");
   assert_eq!(p1_go(inp, 10), 179);
   let inp = include_str!("input/d12_ex2.txt");
