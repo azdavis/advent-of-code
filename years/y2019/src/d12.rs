@@ -50,11 +50,11 @@ pub fn p2(s: &str) -> usize {
             }
           }
         }
-        moons = new_moons;
         // velocity
-        for m in moons.iter_mut() {
+        for m in new_moons.iter_mut() {
           m.pos += m.vel;
         }
+        moons = new_moons;
         // check
         if moons == orig {
           return ret;
@@ -109,11 +109,11 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
           }
         }
       }
-      *moons = new_moons;
       // velocity
-      for m in moons.iter_mut() {
+      for m in new_moons.iter_mut() {
         m.pos += m.vel;
       }
+      *moons = new_moons;
     }
   }
   let zs = moons.pop().unwrap();
