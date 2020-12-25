@@ -23,9 +23,9 @@ pub fn p2(s: &str) -> usize {
     let x: i32 = cs[1].parse().unwrap();
     let y: i32 = cs[2].parse().unwrap();
     let z: i32 = cs[3].parse().unwrap();
-    xs.push(Moon { pos: x, vel: 0 });
-    ys.push(Moon { pos: y, vel: 0 });
-    zs.push(Moon { pos: z, vel: 0 });
+    xs.push(Dim { pos: x, vel: 0 });
+    ys.push(Dim { pos: y, vel: 0 });
+    zs.push(Dim { pos: z, vel: 0 });
   }
   let mut cycles: Vec<_> = vec![xs, ys, zs]
     .into_iter()
@@ -68,9 +68,9 @@ pub fn p2(s: &str) -> usize {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-struct Moon<T> {
-  pos: T,
-  vel: T,
+struct Dim {
+  pos: i32,
+  vel: i32,
 }
 
 static RE: Lazy<Regex> =
@@ -85,9 +85,9 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
     let x: i32 = cs[1].parse().unwrap();
     let y: i32 = cs[2].parse().unwrap();
     let z: i32 = cs[3].parse().unwrap();
-    xs.push(Moon { pos: x, vel: 0 });
-    ys.push(Moon { pos: y, vel: 0 });
-    zs.push(Moon { pos: z, vel: 0 });
+    xs.push(Dim { pos: x, vel: 0 });
+    ys.push(Dim { pos: y, vel: 0 });
+    zs.push(Dim { pos: z, vel: 0 });
   }
   let mut moons = vec![xs, ys, zs];
   for _ in 0..rounds {
