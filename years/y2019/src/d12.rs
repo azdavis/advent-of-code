@@ -15,18 +15,7 @@ pub fn p1(s: &str) -> u32 {
 ///   state.
 /// - all the dimensions are independent.
 pub fn p2(s: &str) -> usize {
-  let mut xs = Vec::new();
-  let mut ys = Vec::new();
-  let mut zs = Vec::new();
-  for line in s.lines() {
-    let cs = RE.captures(line).unwrap();
-    let x: i32 = cs[1].parse().unwrap();
-    let y: i32 = cs[2].parse().unwrap();
-    let z: i32 = cs[3].parse().unwrap();
-    xs.push(Dim { pos: x, vel: 0 });
-    ys.push(Dim { pos: y, vel: 0 });
-    zs.push(Dim { pos: z, vel: 0 });
-  }
+  let [xs, ys, zs] = parse(s);
   let mut cycles: Vec<_> = vec![xs, ys, zs]
     .into_iter()
     .map(|mut moons| {
@@ -77,18 +66,7 @@ static RE: Lazy<Regex> =
   Lazy::new(|| Regex::new(r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$").unwrap());
 
 fn p1_go(s: &str, rounds: usize) -> u32 {
-  let mut xs = Vec::new();
-  let mut ys = Vec::new();
-  let mut zs = Vec::new();
-  for line in s.lines() {
-    let cs = RE.captures(line).unwrap();
-    let x: i32 = cs[1].parse().unwrap();
-    let y: i32 = cs[2].parse().unwrap();
-    let z: i32 = cs[3].parse().unwrap();
-    xs.push(Dim { pos: x, vel: 0 });
-    ys.push(Dim { pos: y, vel: 0 });
-    zs.push(Dim { pos: z, vel: 0 });
-  }
+  let [xs, ys, zs] = parse(s);
   let mut moons = vec![xs, ys, zs];
   for _ in 0..rounds {
     for moons in moons.iter_mut() {
@@ -129,6 +107,22 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
       pos * vel
     })
     .sum()
+}
+
+fn parse(s: &str) -> [Vec<Dim>; 3] {
+  let mut xs = Vec::new();
+  let mut ys = Vec::new();
+  let mut zs = Vec::new();
+  for line in s.lines() {
+    let cs = RE.captures(line).unwrap();
+    let x: i32 = cs[1].parse().unwrap();
+    let y: i32 = cs[2].parse().unwrap();
+    let z: i32 = cs[3].parse().unwrap();
+    xs.push(Dim { pos: x, vel: 0 });
+    ys.push(Dim { pos: y, vel: 0 });
+    zs.push(Dim { pos: z, vel: 0 });
+  }
+  [xs, ys, zs]
 }
 
 fn abs(n: i32) -> u32 {
