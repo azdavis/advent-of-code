@@ -7,7 +7,7 @@
 pub mod compass;
 pub mod digits;
 pub mod gcd;
-pub mod infinite;
+pub mod infinitable;
 pub mod matrix;
 pub mod permute;
 pub mod point;

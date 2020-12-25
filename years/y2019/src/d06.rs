@@ -1,4 +1,4 @@
-use helpers::infinite::Infinite;
+use helpers::infinitable::Infinitable;
 use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
 
@@ -38,8 +38,8 @@ pub fn p2(s: &str) -> usize {
 
 fn dijkstra(inp: Input<'_>, start: &str, end: &str) -> Option<usize> {
   let mut distances: HashMap<_, _> =
-    inp.keys().map(|&val| (val, Infinite::PosInf)).collect();
-  distances.insert(start, Infinite::Finite(0));
+    inp.keys().map(|&val| (val, Infinitable::PosInf)).collect();
+  distances.insert(start, Infinitable::Finite(0));
   let mut predecessors = HashMap::new();
   let mut pq: BinaryHeap<Elem<'_>> = distances
     .iter()
@@ -52,7 +52,7 @@ fn dijkstra(inp: Input<'_>, start: &str, end: &str) -> Option<usize> {
     let d_u = *distances.get(u.val).unwrap();
     if u.val == end {
       match d_u {
-        Infinite::Finite(x) => return Some(x),
+        Infinitable::Finite(x) => return Some(x),
         _ => unreachable!(),
       }
     }
@@ -77,18 +77,18 @@ fn dijkstra(inp: Input<'_>, start: &str, end: &str) -> Option<usize> {
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Elem<'a> {
-  dist: Reverse<Infinite<usize>>,
+  dist: Reverse<Infinitable<usize>>,
   val: &'a str,
 }
 
 #[test]
 fn elem_cmp() {
   let a = Elem {
-    dist: Reverse(Infinite::PosInf),
+    dist: Reverse(Infinitable::PosInf),
     val: "a",
   };
   let b = Elem {
-    dist: Reverse(Infinite::Finite(3)),
+    dist: Reverse(Infinitable::Finite(3)),
     val: "a",
   };
   assert!(a < b);
