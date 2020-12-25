@@ -1,6 +1,7 @@
 use helpers::compass::Compass;
+use helpers::point::Point;
 
-pub fn p1(s: &str) -> i32 {
+pub fn p1(s: &str) -> u32 {
   let mut st = State::new();
   for ac in parse(s) {
     st.evolve(ac);
@@ -8,7 +9,7 @@ pub fn p1(s: &str) -> i32 {
   st.ship.to_origin()
 }
 
-pub fn p2(s: &str) -> i32 {
+pub fn p2(s: &str) -> u32 {
   let mut st = StateP2::new();
   for ac in parse(s) {
     st.evolve(ac);
@@ -31,7 +32,7 @@ impl StateP2 {
 
   fn evolve(&mut self, ac: Action) {
     match ac.kind {
-      ActionKind::Compass(d) => self.waypoint.adjust(d, ac.num),
+      ActionKind::Compass(d) => adjust(&mut self.waypoint, d, ac.num),
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
@@ -75,7 +76,7 @@ impl State {
 
   fn evolve(&mut self, ac: Action) {
     match ac.kind {
-      ActionKind::Compass(d) => self.ship.adjust(d, ac.num),
+      ActionKind::Compass(d) => adjust(&mut self.ship, d, ac.num),
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
@@ -88,29 +89,17 @@ impl State {
           self.facing = self.facing.right();
         }
       }
-      ActionKind::Forward => self.ship.adjust(self.facing, ac.num),
+      ActionKind::Forward => adjust(&mut self.ship, self.facing, ac.num),
     }
   }
 }
 
-#[derive(Clone, Copy)]
-struct Point {
-  x: i32,
-  y: i32,
-}
-
-impl Point {
-  fn to_origin(&self) -> i32 {
-    self.x.abs() + self.y.abs()
-  }
-
-  fn adjust(&mut self, d: Compass, n: i32) {
-    match d {
-      Compass::North => self.y += n,
-      Compass::South => self.y -= n,
-      Compass::East => self.x += n,
-      Compass::West => self.x -= n,
-    }
+fn adjust(p: &mut Point, d: Compass, n: i32) {
+  match d {
+    Compass::North => p.y += n,
+    Compass::South => p.y -= n,
+    Compass::East => p.x += n,
+    Compass::West => p.x -= n,
   }
 }
 

@@ -7,6 +7,7 @@ pub mod gcd;
 pub mod infinite;
 pub mod matrix;
 pub mod permute;
+pub mod point;
 
 pub use float_ord;
 pub use maplit;

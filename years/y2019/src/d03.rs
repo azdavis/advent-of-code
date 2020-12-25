@@ -1,4 +1,5 @@
 use helpers::compass::Compass;
+use helpers::point::Point;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> i32 {
@@ -26,7 +27,7 @@ pub fn p2(s: &str) -> usize {
 }
 
 fn evolve(xs: &[Action]) -> HashMap<Point, usize> {
-  let mut cur = Point { x: 0, y: 0 };
+  let mut cur = Point::default();
   let mut ret = HashMap::new();
   let mut idx = 0;
   for ac in xs {
@@ -39,12 +40,6 @@ fn evolve(xs: &[Action]) -> HashMap<Point, usize> {
     }
   }
   ret
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-struct Point {
-  x: i32,
-  y: i32,
 }
 
 fn parse(s: &str) -> (Vec<Action>, Vec<Action>) {

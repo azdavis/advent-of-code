@@ -1,7 +1,7 @@
 //! Compass directions.
 
 /// A compass direction.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Compass {
   North,
   South,

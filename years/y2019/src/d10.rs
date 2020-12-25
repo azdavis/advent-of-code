@@ -1,5 +1,6 @@
 use helpers::float_ord::FloatOrd;
 use helpers::gcd::gcd;
+use helpers::point::Point;
 use std::cmp::Reverse;
 use std::collections::{HashMap, HashSet};
 use std::convert::TryInto as _;
@@ -32,9 +33,9 @@ pub fn p2(s: &str) -> u32 {
   let mut idx = 1;
   loop {
     for (_, ps) in points.iter_mut() {
-      if let Some((x, y)) = ps.pop() {
+      if let Some(p) = ps.pop() {
         if idx == 200 {
-          return to_u32((x * 100) + y);
+          return to_u32((p.x * 100) + p.y);
         } else {
           idx += 1;
         }
@@ -45,8 +46,6 @@ pub fn p2(s: &str) -> u32 {
     }
   }
 }
-
-type Point = (i32, i32);
 
 fn get_best(points: &HashSet<Point>) -> (Point, usize) {
   points
@@ -65,7 +64,7 @@ fn parse(s: &str) -> HashSet<Point> {
     .flat_map(|(y, line)| {
       line.chars().enumerate().filter_map(move |(x, c)| match c {
         '.' => None,
-        '#' => Some((to_i32(x), to_i32(y))),
+        '#' => Some(Point::new(to_i32(x), to_i32(y))),
         _ => panic!("bad tile: {}", c),
       })
     })
@@ -74,12 +73,12 @@ fn parse(s: &str) -> HashSet<Point> {
 
 /// returns the square of the distance between `a` and `b`
 fn magnitude(a: Point, b: Point) -> u32 {
-  to_u32((b.0 - a.0).pow(2) + (b.1 - a.1).pow(2))
+  to_u32((b.x - a.x).pow(2) + (b.y - a.y).pow(2))
 }
 
 fn diff_gcd(a: Point, b: Point) -> (i32, i32) {
-  let dx = b.0 - a.0;
-  let dy = b.1 - a.1;
+  let dx = b.x - a.x;
+  let dy = b.y - a.y;
   let g = to_i32(gcd(to_usize(dx.abs()), to_usize(dy.abs())));
   (dx / g, dy / g)
 }
@@ -92,8 +91,8 @@ fn can_see(mut a: Point, b: Point, points: &HashSet<Point>) -> bool {
   }
   let (dx, dy) = diff_gcd(a, b);
   loop {
-    a.0 += dx;
-    a.1 += dy;
+    a.x += dx;
+    a.y += dy;
     if a == b {
       return true;
     }
