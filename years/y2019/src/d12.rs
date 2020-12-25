@@ -22,29 +22,7 @@ pub fn p2(s: &str) -> usize {
       let orig = dim.clone();
       let mut ret: usize = 1;
       loop {
-        // gravity
-        let mut new_dim = dim.clone();
-        for i in 0..dim.len() {
-          for j in (i + 1)..dim.len() {
-            match dim[i].pos.cmp(&dim[j].pos) {
-              Ordering::Less => {
-                new_dim[i].vel += 1;
-                new_dim[j].vel -= 1;
-              }
-              Ordering::Equal => {}
-              Ordering::Greater => {
-                new_dim[i].vel -= 1;
-                new_dim[j].vel += 1;
-              }
-            }
-          }
-        }
-        // velocity
-        for m in new_dim.iter_mut() {
-          m.pos += m.vel;
-        }
-        dim = new_dim;
-        // check
+        dim = evolve(&dim);
         if dim == orig {
           return ret;
         }
@@ -70,28 +48,7 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
   let mut dims = vec![xs, ys, zs];
   for _ in 0..rounds {
     for dim in dims.iter_mut() {
-      // gravity
-      let mut new_dim = dim.clone();
-      for i in 0..dim.len() {
-        for j in (i + 1)..dim.len() {
-          match dim[i].pos.cmp(&dim[j].pos) {
-            Ordering::Less => {
-              new_dim[i].vel += 1;
-              new_dim[j].vel -= 1;
-            }
-            Ordering::Equal => {}
-            Ordering::Greater => {
-              new_dim[i].vel -= 1;
-              new_dim[j].vel += 1;
-            }
-          }
-        }
-      }
-      // velocity
-      for m in new_dim.iter_mut() {
-        m.pos += m.vel;
-      }
-      *dim = new_dim;
+      *dim = evolve(dim);
     }
   }
   let zs = dims.pop().unwrap();
@@ -107,6 +64,31 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
       pos * vel
     })
     .sum()
+}
+
+fn evolve(dim: &[Dim]) -> Vec<Dim> {
+  let mut ret = dim.to_vec();
+  // gravity
+  for i in 0..dim.len() {
+    for j in (i + 1)..dim.len() {
+      match dim[i].pos.cmp(&dim[j].pos) {
+        Ordering::Less => {
+          ret[i].vel += 1;
+          ret[j].vel -= 1;
+        }
+        Ordering::Equal => {}
+        Ordering::Greater => {
+          ret[i].vel -= 1;
+          ret[j].vel += 1;
+        }
+      }
+    }
+  }
+  // velocity
+  for m in ret.iter_mut() {
+    m.pos += m.vel;
+  }
+  ret
 }
 
 fn parse(s: &str) -> [Vec<Dim>; 3] {
