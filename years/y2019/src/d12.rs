@@ -44,17 +44,13 @@ static RE: Lazy<Regex> =
   Lazy::new(|| Regex::new(r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$").unwrap());
 
 fn p1_go(s: &str, rounds: usize) -> u32 {
-  let [xs, ys, zs] = parse(s);
-  let mut dims = vec![xs, ys, zs];
+  let mut dims = parse(s);
   for _ in 0..rounds {
     for dim in dims.iter_mut() {
       *dim = evolve(dim);
     }
   }
-  let zs = dims.pop().unwrap();
-  let ys = dims.pop().unwrap();
-  let xs = dims.pop().unwrap();
-  assert!(dims.is_empty());
+  let [xs, ys, zs] = dims;
   xs.into_iter()
     .zip(ys)
     .zip(zs)
