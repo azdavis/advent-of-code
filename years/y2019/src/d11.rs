@@ -1,7 +1,7 @@
 use crate::intcode::{Intcode, Res};
 use helpers::compass::Compass;
 use helpers::maplit::hashset;
-use helpers::point::Point;
+use helpers::vec2::Vec2;
 use std::collections::HashSet;
 
 pub fn p1(s: &str) -> usize {
@@ -9,7 +9,7 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> String {
-  let mut white = hashset![Point::default()];
+  let mut white = hashset![Vec2::default()];
   go(s, &mut white);
   let min_x = white.iter().map(|p| p.x).min().unwrap();
   let min_y = white.iter().map(|p| p.y).min().unwrap();
@@ -19,7 +19,7 @@ pub fn p2(s: &str) -> String {
   let mut ret = String::new();
   for y in (min_y..=max_y).rev() {
     for x in min_x..=max_x {
-      let c = if white.contains(&Point::new(x, y)) {
+      let c = if white.contains(&Vec2::new(x, y)) {
         '█'
       } else {
         ' '
@@ -34,10 +34,10 @@ pub fn p2(s: &str) -> String {
   ret
 }
 
-fn go(s: &str, white: &mut HashSet<Point>) -> usize {
+fn go(s: &str, white: &mut HashSet<Vec2>) -> usize {
   let mut p = Intcode::parse(s);
-  let mut did_paint = HashSet::<Point>::new();
-  let mut cur = Point::default();
+  let mut did_paint = HashSet::<Vec2>::new();
+  let mut cur = Vec2::default();
   let mut facing = Compass::North;
   let mut output = Vec::with_capacity(2);
   loop {

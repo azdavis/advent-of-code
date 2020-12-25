@@ -10,7 +10,7 @@ pub mod gcd;
 pub mod infinitable;
 pub mod matrix;
 pub mod permute;
-pub mod point;
+pub mod vec2;
 
 pub use float_ord;
 pub use maplit;

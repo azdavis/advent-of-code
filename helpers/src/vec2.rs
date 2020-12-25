@@ -1,15 +1,15 @@
-//! 2-dimensional points on a square grid.
+//! 2-dimensional integer vectors.
 
-/// A 2-D point.
+/// A 2-dimensional integer vector.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[allow(missing_docs)]
-pub struct Point {
+pub struct Vec2 {
   pub x: i32,
   pub y: i32,
 }
 
-impl Point {
-  /// Returns a new Point.
+impl Vec2 {
+  /// Returns a new Vec2.
   pub fn new(x: i32, y: i32) -> Self {
     Self { x, y }
   }

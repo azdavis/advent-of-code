@@ -1,5 +1,5 @@
 use helpers::compass::Compass;
-use helpers::point::Point;
+use helpers::vec2::Vec2;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> i32 {
@@ -26,8 +26,8 @@ pub fn p2(s: &str) -> usize {
     .unwrap()
 }
 
-fn evolve(xs: &[Action]) -> HashMap<Point, usize> {
-  let mut cur = Point::default();
+fn evolve(xs: &[Action]) -> HashMap<Vec2, usize> {
+  let mut cur = Vec2::default();
   let mut ret = HashMap::new();
   let mut idx = 0;
   for ac in xs {

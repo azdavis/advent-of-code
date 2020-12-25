@@ -1,5 +1,5 @@
 use helpers::compass::Compass;
-use helpers::point::Point;
+use helpers::vec2::Vec2;
 
 pub fn p1(s: &str) -> u32 {
   let mut st = State::new();
@@ -18,15 +18,15 @@ pub fn p2(s: &str) -> u32 {
 }
 
 struct StateP2 {
-  ship: Point,
-  waypoint: Point,
+  ship: Vec2,
+  waypoint: Vec2,
 }
 
 impl StateP2 {
   fn new() -> Self {
     Self {
-      ship: Point { x: 0, y: 0 },
-      waypoint: Point { x: 10, y: 1 },
+      ship: Vec2::new(0, 0),
+      waypoint: Vec2::new(10, 1),
     }
   }
 
@@ -37,20 +37,16 @@ impl StateP2 {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
           let old = self.waypoint;
-          self.waypoint = Point {
-            x: -old.y,
-            y: old.x,
-          };
+          self.waypoint.x = -old.y;
+          self.waypoint.y = old.x;
         }
       }
       ActionKind::Right => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
           let old = self.waypoint;
-          self.waypoint = Point {
-            x: old.y,
-            y: -old.x,
-          };
+          self.waypoint.x = old.y;
+          self.waypoint.y = -old.x;
         }
       }
       ActionKind::Forward => {
@@ -63,14 +59,14 @@ impl StateP2 {
 
 struct State {
   facing: Compass,
-  ship: Point,
+  ship: Vec2,
 }
 
 impl State {
   fn new() -> Self {
     Self {
       facing: Compass::East,
-      ship: Point { x: 0, y: 0 },
+      ship: Vec2::default(),
     }
   }
 
@@ -94,7 +90,7 @@ impl State {
   }
 }
 
-fn adjust(p: &mut Point, d: Compass, n: i32) {
+fn adjust(p: &mut Vec2, d: Compass, n: i32) {
   match d {
     Compass::North => p.y += n,
     Compass::South => p.y -= n,
