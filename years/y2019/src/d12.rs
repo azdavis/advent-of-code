@@ -16,28 +16,25 @@ pub fn p1(s: &str) -> u32 {
 /// - all the dimensions are independent.
 pub fn p2(s: &str) -> usize {
   let [xs, ys, zs] = parse(s);
-  let mut cycles: Vec<_> = vec![xs, ys, zs]
-    .into_iter()
-    .map(|mut dim| {
-      let orig = dim.clone();
-      let mut ret: usize = 1;
-      loop {
-        dim = evolve(&dim);
-        if dim == orig {
-          return ret;
-        }
-        ret += 1;
-      }
-    })
-    .collect();
-  let fst = cycles.pop().unwrap();
-  cycles.into_iter().fold(fst, lcm)
+  lcm(cycle_len(xs), lcm(cycle_len(ys), cycle_len(zs)))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct Dim {
   pos: i32,
   vel: i32,
+}
+
+fn cycle_len(mut dim: Vec<Dim>) -> usize {
+  let orig = dim.clone();
+  let mut ret: usize = 1;
+  loop {
+    dim = evolve(&dim);
+    if dim == orig {
+      return ret;
+    }
+    ret += 1;
+  }
 }
 
 fn p1_go(s: &str, rounds: usize) -> u32 {
