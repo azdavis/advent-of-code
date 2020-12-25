@@ -18,34 +18,34 @@ pub fn p2(s: &str) -> usize {
   let [xs, ys, zs] = parse(s);
   let mut cycles: Vec<_> = vec![xs, ys, zs]
     .into_iter()
-    .map(|mut moons| {
-      let orig = moons.clone();
+    .map(|mut dim| {
+      let orig = dim.clone();
       let mut ret: usize = 1;
       loop {
         // gravity
-        let mut new_moons = moons.clone();
-        for i in 0..moons.len() {
-          for j in (i + 1)..moons.len() {
-            match moons[i].pos.cmp(&moons[j].pos) {
+        let mut new_dim = dim.clone();
+        for i in 0..dim.len() {
+          for j in (i + 1)..dim.len() {
+            match dim[i].pos.cmp(&dim[j].pos) {
               Ordering::Less => {
-                new_moons[i].vel += 1;
-                new_moons[j].vel -= 1;
+                new_dim[i].vel += 1;
+                new_dim[j].vel -= 1;
               }
               Ordering::Equal => {}
               Ordering::Greater => {
-                new_moons[i].vel -= 1;
-                new_moons[j].vel += 1;
+                new_dim[i].vel -= 1;
+                new_dim[j].vel += 1;
               }
             }
           }
         }
         // velocity
-        for m in new_moons.iter_mut() {
+        for m in new_dim.iter_mut() {
           m.pos += m.vel;
         }
-        moons = new_moons;
+        dim = new_dim;
         // check
-        if moons == orig {
+        if dim == orig {
           return ret;
         }
         ret += 1;
@@ -67,37 +67,37 @@ static RE: Lazy<Regex> =
 
 fn p1_go(s: &str, rounds: usize) -> u32 {
   let [xs, ys, zs] = parse(s);
-  let mut moons = vec![xs, ys, zs];
+  let mut dims = vec![xs, ys, zs];
   for _ in 0..rounds {
-    for moons in moons.iter_mut() {
+    for dim in dims.iter_mut() {
       // gravity
-      let mut new_moons = moons.clone();
-      for i in 0..moons.len() {
-        for j in (i + 1)..moons.len() {
-          match moons[i].pos.cmp(&moons[j].pos) {
+      let mut new_dim = dim.clone();
+      for i in 0..dim.len() {
+        for j in (i + 1)..dim.len() {
+          match dim[i].pos.cmp(&dim[j].pos) {
             Ordering::Less => {
-              new_moons[i].vel += 1;
-              new_moons[j].vel -= 1;
+              new_dim[i].vel += 1;
+              new_dim[j].vel -= 1;
             }
             Ordering::Equal => {}
             Ordering::Greater => {
-              new_moons[i].vel -= 1;
-              new_moons[j].vel += 1;
+              new_dim[i].vel -= 1;
+              new_dim[j].vel += 1;
             }
           }
         }
       }
       // velocity
-      for m in new_moons.iter_mut() {
+      for m in new_dim.iter_mut() {
         m.pos += m.vel;
       }
-      *moons = new_moons;
+      *dim = new_dim;
     }
   }
-  let zs = moons.pop().unwrap();
-  let ys = moons.pop().unwrap();
-  let xs = moons.pop().unwrap();
-  assert!(moons.is_empty());
+  let zs = dims.pop().unwrap();
+  let ys = dims.pop().unwrap();
+  let xs = dims.pop().unwrap();
+  assert!(dims.is_empty());
   xs.into_iter()
     .zip(ys)
     .zip(zs)
