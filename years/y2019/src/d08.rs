@@ -1,3 +1,5 @@
+use helpers::block_char::{BLACK, WHITE};
+
 pub fn p1(s: &str) -> usize {
   let ns = parse(s);
   let least_black = ns
@@ -29,8 +31,8 @@ pub fn p2(s: &str) -> String {
         }
       };
       let c = match px {
-        Pixel::Black => '█',
-        Pixel::White => '░',
+        Pixel::Black => BLACK,
+        Pixel::White => WHITE,
         Pixel::Transparent => ' ',
       };
       ret.push(c);

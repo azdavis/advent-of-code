@@ -4,6 +4,7 @@
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
 
+pub mod block_char;
 pub mod compass;
 pub mod digits;
 pub mod gcd;

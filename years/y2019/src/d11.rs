@@ -1,4 +1,5 @@
 use crate::intcode::{Intcode, Res};
+use helpers::block_char::{BLACK, WHITE};
 use helpers::compass::Compass;
 use helpers::maplit::hashset;
 use helpers::vec2::Vec2;
@@ -15,20 +16,16 @@ pub fn p2(s: &str) -> String {
   let min_y = white.iter().map(|p| p.y).min().unwrap();
   let max_x = white.iter().map(|p| p.x).max().unwrap();
   let max_y = white.iter().map(|p| p.y).max().unwrap();
-  // too lazy to do with with_capacity calculation
   let mut ret = String::new();
   for y in (min_y..=max_y).rev() {
     for x in min_x..=max_x {
       let c = if white.contains(&Vec2::new(x, y)) {
-        '█'
+        WHITE
       } else {
-        ' '
+        BLACK
       };
       ret.push(c);
     }
-    // the | prevents deleting trailing whitespace
-    ret.push(' ');
-    ret.push('|');
     ret.push('\n');
   }
   ret
