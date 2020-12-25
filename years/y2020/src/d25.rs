@@ -5,10 +5,6 @@ pub fn p1(s: &str) -> u64 {
   transform(transform(INIT, ls1), ls2)
 }
 
-pub fn p2(s: &str) -> u64 {
-  todo!()
-}
-
 const INIT: u64 = 7;
 const MOD: u64 = 20201227;
 
@@ -44,7 +40,6 @@ fn parse(s: &str) -> [u64; 2] {
 fn t() {
   let inp = include_str!("input/d25.txt");
   assert_eq!(p1(inp), 1478097);
-  // assert_eq!(p2(inp), ___);
 }
 
 #[test]
