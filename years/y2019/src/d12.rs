@@ -10,17 +10,10 @@ pub fn p2(s: &str) -> u32 {
   todo!()
 }
 
-#[derive(Debug, Clone, Default)]
-struct Vec3 {
-  x: i32,
-  y: i32,
-  z: i32,
-}
+type Vec3 = [i32; 3];
 
-impl Vec3 {
-  fn abs_sum(&self) -> u32 {
-    (self.x.abs() as u32) + (self.y.abs() as u32) + (self.z.abs() as u32)
-  }
+fn abs_sum(v: Vec3) -> u32 {
+  v.iter().map(|n| n.abs() as u32).sum()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -30,16 +23,16 @@ struct Moon<T> {
 }
 
 macro_rules! update_vel {
-  ($old: ident, $new: ident, $i: ident, $j: ident, $dim: ident) => {
-    match $old[$i].pos.$dim.cmp(&$old[$j].pos.$dim) {
+  ($old: ident, $new: ident, $i: ident, $j: ident, $dim: expr) => {
+    match $old[$i].pos[$dim].cmp(&$old[$j].pos[$dim]) {
       Ordering::Less => {
-        $new[$i].vel.$dim += 1;
-        $new[$j].vel.$dim -= 1;
+        $new[$i].vel[$dim] += 1;
+        $new[$j].vel[$dim] -= 1;
       }
       Ordering::Equal => {}
       Ordering::Greater => {
-        $new[$i].vel.$dim -= 1;
-        $new[$j].vel.$dim += 1;
+        $new[$i].vel[$dim] -= 1;
+        $new[$j].vel[$dim] += 1;
       }
     }
   };
@@ -54,11 +47,11 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
     .map(|line| {
       let cs = RE.captures(line).unwrap();
       Moon {
-        pos: Vec3 {
-          x: cs[1].parse().unwrap(),
-          y: cs[2].parse().unwrap(),
-          z: cs[3].parse().unwrap(),
-        },
+        pos: [
+          cs[1].parse().unwrap(),
+          cs[2].parse().unwrap(),
+          cs[3].parse().unwrap(),
+        ],
         vel: Vec3::default(),
       }
     })
@@ -68,22 +61,22 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
     let mut new_moons = moons.clone();
     for i in 0..moons.len() {
       for j in (i + 1)..moons.len() {
-        update_vel!(moons, new_moons, i, j, x);
-        update_vel!(moons, new_moons, i, j, y);
-        update_vel!(moons, new_moons, i, j, z);
+        update_vel!(moons, new_moons, i, j, 0);
+        update_vel!(moons, new_moons, i, j, 1);
+        update_vel!(moons, new_moons, i, j, 2);
       }
     }
     moons = new_moons;
     // velocity
     for m in moons.iter_mut() {
-      m.pos.x += m.vel.x;
-      m.pos.y += m.vel.y;
-      m.pos.z += m.vel.z;
+      m.pos[0] += m.vel[0];
+      m.pos[1] += m.vel[1];
+      m.pos[2] += m.vel[2];
     }
   }
   moons
     .into_iter()
-    .map(|m| (m.pos.abs_sum()) * (m.vel.abs_sum()))
+    .map(|m| abs_sum(m.pos) * abs_sum(m.vel))
     .sum()
 }
 
