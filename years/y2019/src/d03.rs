@@ -1,3 +1,4 @@
+use helpers::compass::Compass;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> i32 {
@@ -29,12 +30,7 @@ fn evolve(xs: &[Action]) -> HashMap<Point, usize> {
   let mut ret = HashMap::new();
   let mut idx = 0;
   for ac in xs {
-    let (dx, dy) = match ac.direction {
-      Direction::Up => (0, 1),
-      Direction::Down => (0, -1),
-      Direction::Left => (-1, 0),
-      Direction::Right => (1, 0),
-    };
+    let (dx, dy) = ac.direction.dx_dy();
     for _ in 0..ac.num {
       cur.x += dx;
       cur.y += dy;
@@ -63,7 +59,7 @@ fn parse_line(line: &str) -> Vec<Action> {
 }
 
 struct Action {
-  direction: Direction,
+  direction: Compass,
   num: u16,
 }
 
@@ -71,28 +67,19 @@ impl Action {
   fn parse(s: &str) -> Self {
     let mut chars = s.chars();
     Action {
-      direction: Direction::parse(chars.next().unwrap()),
+      direction: parse_compass(chars.next().unwrap()),
       num: chars.as_str().parse().unwrap(),
     }
   }
 }
 
-enum Direction {
-  Up,
-  Down,
-  Left,
-  Right,
-}
-
-impl Direction {
-  fn parse(c: char) -> Self {
-    match c {
-      'U' => Self::Up,
-      'D' => Self::Down,
-      'L' => Self::Left,
-      'R' => Self::Right,
-      _ => panic!("bad char: {}", c),
-    }
+fn parse_compass(c: char) -> Compass {
+  match c {
+    'U' => Compass::North,
+    'D' => Compass::South,
+    'L' => Compass::West,
+    'R' => Compass::East,
+    _ => panic!("bad char: {}", c),
   }
 }
 

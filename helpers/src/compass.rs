@@ -42,7 +42,7 @@ impl Compass {
 
   /// Returns the change in x and y respectively that would result from moving
   /// forward 1 unit in this direction. North and East are positive.
-  pub fn dx_dy(self) -> (i8, i8) {
+  pub fn dx_dy(self) -> (i32, i32) {
     match self {
       Self::North => (0, 1),
       Self::South => (0, -1),

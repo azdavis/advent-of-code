@@ -1,3 +1,5 @@
+use helpers::compass::Compass;
+
 pub fn p1(s: &str) -> i32 {
   let mut st = State::new();
   for ac in parse(s) {
@@ -29,7 +31,7 @@ impl StateP2 {
 
   fn evolve(&mut self, ac: Action) {
     match ac.kind {
-      ActionKind::Direction(d) => self.waypoint.adjust(d, ac.num),
+      ActionKind::Compass(d) => self.waypoint.adjust(d, ac.num),
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
@@ -59,21 +61,21 @@ impl StateP2 {
 }
 
 struct State {
-  facing: Direction,
+  facing: Compass,
   ship: Point,
 }
 
 impl State {
   fn new() -> Self {
     Self {
-      facing: Direction::East,
+      facing: Compass::East,
       ship: Point { x: 0, y: 0 },
     }
   }
 
   fn evolve(&mut self, ac: Action) {
     match ac.kind {
-      ActionKind::Direction(d) => self.ship.adjust(d, ac.num),
+      ActionKind::Compass(d) => self.ship.adjust(d, ac.num),
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
@@ -102,12 +104,12 @@ impl Point {
     self.x.abs() + self.y.abs()
   }
 
-  fn adjust(&mut self, d: Direction, n: i32) {
+  fn adjust(&mut self, d: Compass, n: i32) {
     match d {
-      Direction::North => self.y += n,
-      Direction::South => self.y -= n,
-      Direction::East => self.x += n,
-      Direction::West => self.x -= n,
+      Compass::North => self.y += n,
+      Compass::South => self.y -= n,
+      Compass::East => self.x += n,
+      Compass::West => self.x -= n,
     }
   }
 }
@@ -132,37 +134,8 @@ impl Action {
   }
 }
 
-#[derive(Clone, Copy)]
-enum Direction {
-  North,
-  South,
-  East,
-  West,
-}
-
-impl Direction {
-  fn left(self) -> Self {
-    match self {
-      Self::North => Self::West,
-      Self::South => Self::East,
-      Self::East => Self::North,
-      Self::West => Self::South,
-    }
-  }
-
-  // yeah, it's just 3 lefts, but this saves some cycles.
-  fn right(self) -> Self {
-    match self {
-      Self::North => Self::East,
-      Self::South => Self::West,
-      Self::East => Self::South,
-      Self::West => Self::North,
-    }
-  }
-}
-
 enum ActionKind {
-  Direction(Direction),
+  Compass(Compass),
   Left,
   Right,
   Forward,
@@ -171,10 +144,10 @@ enum ActionKind {
 impl ActionKind {
   fn parse(c: char) -> Self {
     match c {
-      'N' => Self::Direction(Direction::North),
-      'S' => Self::Direction(Direction::South),
-      'E' => Self::Direction(Direction::East),
-      'W' => Self::Direction(Direction::West),
+      'N' => Self::Compass(Compass::North),
+      'S' => Self::Compass(Compass::South),
+      'E' => Self::Compass(Compass::East),
+      'W' => Self::Compass(Compass::West),
       'L' => Self::Left,
       'R' => Self::Right,
       'F' => Self::Forward,
