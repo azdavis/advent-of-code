@@ -5,8 +5,11 @@ use std::ops::Add;
 /// A possibly (negatively) infinite value of type `T`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Infinite<T> {
+  /// Negative infinity.
   NegInf,
+  /// A finite value `T`.
   Finite(T),
+  /// Positive infinity.
   PosInf,
 }
 

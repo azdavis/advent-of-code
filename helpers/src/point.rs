@@ -2,6 +2,7 @@
 
 /// A 2-D point.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[allow(missing_docs)]
 pub struct Point {
   pub x: i32,
   pub y: i32,

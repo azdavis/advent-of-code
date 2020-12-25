@@ -1,6 +1,9 @@
 //! Helpers that are generic enough that they may be used across various
 //! problems, as well as re-exports of dependencies.
 
+#![deny(missing_debug_implementations)]
+#![deny(missing_docs)]
+
 pub mod compass;
 pub mod digits;
 pub mod gcd;

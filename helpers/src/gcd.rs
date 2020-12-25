@@ -1,3 +1,7 @@
+//! Calculating the GCD.
+
+/// Returns the greatest common divisor of two numbers using Euclid's algorithm.
+/// If both are zero, this panics.
 pub fn gcd(mut a: usize, mut b: usize) -> usize {
   assert!(a != 0 || b != 0);
   while b != 0 {
