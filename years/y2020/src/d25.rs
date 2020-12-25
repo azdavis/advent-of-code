@@ -14,11 +14,13 @@ const MOD: u64 = 20201227;
 
 fn get_loop_size(pub_key: u64) -> u64 {
   let mut ret = 0;
+  let mut cur = 1;
   loop {
-    if transform(INIT, ret) == pub_key {
+    if cur == pub_key {
       return ret;
     }
     ret += 1;
+    cur = (cur * INIT) % MOD;
   }
 }
 
@@ -41,7 +43,7 @@ fn parse(s: &str) -> [u64; 2] {
 #[test]
 fn t() {
   let inp = include_str!("input/d25.txt");
-  // assert_eq!(p1(inp), ___);
+  assert_eq!(p1(inp), 1478097);
   // assert_eq!(p2(inp), ___);
 }
 
