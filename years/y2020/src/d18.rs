@@ -6,10 +6,7 @@ pub fn p2(s: &str) -> u64 {
   go(s, go_p2)
 }
 
-fn go<F>(s: &str, f: F) -> u64
-where
-  F: Fn(&str) -> u64,
-{
+fn go(s: &str, f: fn(&str) -> u64) -> u64 {
   s.lines().map(f).sum()
 }
 
@@ -49,19 +46,19 @@ fn eval(e: Expr) -> u64 {
   }
 }
 
-fn parse_expr<F>(s: &str, f: F) -> Expr
-where
-  F: Fn(BinOp) -> usize + Copy,
-{
+type PrecFn = fn(BinOp) -> usize;
+
+fn parse_expr(s: &str, f: PrecFn) -> Expr {
   let mut tokens = tokenize(s);
   tokens.reverse();
   parse_expr_prec(&mut tokens, 0, f)
 }
 
-fn parse_expr_prec<F>(tokens: &mut Vec<Token>, min_prec: usize, f: F) -> Expr
-where
-  F: Fn(BinOp) -> usize + Copy,
-{
+fn parse_expr_prec(
+  tokens: &mut Vec<Token>,
+  min_prec: usize,
+  f: PrecFn,
+) -> Expr {
   let mut ret = match tokens.pop().unwrap() {
     Token::Num(n) => Expr::Num(n),
     Token::LRound => {

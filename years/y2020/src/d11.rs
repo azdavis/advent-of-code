@@ -20,10 +20,9 @@ pub fn p2(s: &str) -> usize {
 
 type Grid = Vec<Vec<Tile>>;
 
-fn evolve_loop<F>(s: &str, threshold: usize, get_one_tile: F) -> usize
-where
-  F: Fn(usize, usize, ChangeFn, ChangeFn, &Grid) -> Option<Tile> + Copy,
-{
+type GetOneTile = fn(usize, usize, ChangeFn, ChangeFn, &Grid) -> Option<Tile>;
+
+fn evolve_loop(s: &str, threshold: usize, get_one_tile: GetOneTile) -> usize {
   let mut prev = parse(s);
   loop {
     let cur = evolve_with(&prev, threshold, get_one_tile);
@@ -38,10 +37,7 @@ where
   }
 }
 
-fn evolve_with<F>(xs: &Grid, threshold: usize, get_one_tile: F) -> Grid
-where
-  F: Fn(usize, usize, ChangeFn, ChangeFn, &Grid) -> Option<Tile> + Copy,
-{
+fn evolve_with(xs: &Grid, threshold: usize, get_one_tile: GetOneTile) -> Grid {
   let mut ret = xs.clone();
   for i in 0..ret.len() {
     for j in 0..ret[i].len() {
@@ -70,15 +66,12 @@ where
   ret
 }
 
-fn get_all_tiles<'a, F: 'a>(
+fn get_all_tiles<'a>(
   i: usize,
   j: usize,
   xs: &'a Grid,
-  get_one_tile: F,
-) -> impl Iterator<Item = Tile> + 'a
-where
-  F: Fn(usize, usize, ChangeFn, ChangeFn, &Grid) -> Option<Tile>,
-{
+  get_one_tile: GetOneTile,
+) -> impl Iterator<Item = Tile> + 'a {
   FNS
     .iter()
     .filter_map(move |&(f, g)| get_one_tile(i, j, f, g, xs))

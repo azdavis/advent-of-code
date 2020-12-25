@@ -26,10 +26,7 @@ pub fn p2(s: &str) -> usize {
 
 type Mem = HashMap<usize, usize>;
 
-fn go<F>(s: &str, f: F) -> usize
-where
-  F: Fn(&Mask, &mut Mem, usize, usize),
-{
+fn go(s: &str, f: fn(&Mask, &mut Mem, usize, usize)) -> usize {
   let instrs = parse(s);
   let mut mask = Mask::default();
   let mut mem = Mem::new();

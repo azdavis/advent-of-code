@@ -17,10 +17,7 @@ pub fn p2(s: &str) -> usize {
   })
 }
 
-fn go<F>(s: &str, f: F) -> usize
-where
-  F: Fn(usize, usize, u8, &str) -> bool,
-{
+fn go(s: &str, f: fn(usize, usize, u8, &str) -> bool) -> usize {
   let r = Regex::new(r"(\d+)-(\d+) (\w): (\w+)").unwrap();
   let mut ret = 0;
   for line in s.lines() {

@@ -40,9 +40,11 @@ const START: Bag<'static> = Bag {
   color: "gold",
 };
 
-fn mk_graph<'a, F, T>(s: &'a str, add: F) -> HashMap<Bag<'a>, HashSet<T>>
+fn mk_graph<'a, T>(
+  s: &'a str,
+  add: fn(Bag<'a>, usize, Bag<'a>) -> (Bag<'a>, T),
+) -> HashMap<Bag<'a>, HashSet<T>>
 where
-  F: Fn(Bag<'a>, usize, Bag<'a>) -> (Bag<'a>, T),
   T: std::hash::Hash + Eq + 'a,
 {
   let mut ret = HashMap::<_, HashSet<_>>::new();

@@ -12,9 +12,8 @@ pub fn p2(s: &str) -> usize {
   go(inp, neighbors_vec4)
 }
 
-fn go<T, F>(mut set: HashSet<T>, neighbors: F) -> usize
+fn go<T>(mut set: HashSet<T>, neighbors: fn(T) -> Vec<T>) -> usize
 where
-  F: Fn(T) -> Vec<T>,
   T: Hash + Eq + Copy,
 {
   for _ in 0..6 {

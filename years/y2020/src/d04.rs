@@ -51,10 +51,7 @@ fn is_p2_valid_key(key: Key, val: &str) -> bool {
   }
 }
 
-fn go<F>(s: &str, f: F) -> usize
-where
-  F: Fn(Key, &str) -> bool,
-{
+fn go(s: &str, f: fn(Key, &str) -> bool) -> usize {
   let mut ret = 0;
   'outer: for passport in s.split("\n\n") {
     let mut need = hashset![

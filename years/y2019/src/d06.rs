@@ -96,10 +96,10 @@ fn elem_cmp() {
 
 type Input<'a> = HashMap<&'a str, HashSet<&'a str>>;
 
-fn parse<F>(s: &str, add: F) -> Input<'_>
-where
-  F: for<'a> Fn(&mut Input<'a>, &'a str, &'a str),
-{
+fn parse(
+  s: &str,
+  add: for<'a> fn(&mut Input<'a>, &'a str, &'a str),
+) -> Input<'_> {
   let mut ret = Input::new();
   for line in s.lines() {
     let mut parts = line.split(')');
