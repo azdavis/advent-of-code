@@ -1,4 +1,4 @@
-use helpers::gcd::gcd;
+use helpers::gcd::lcm;
 
 pub fn p1(s: &str) -> usize {
   let inp = parse(s);
@@ -40,10 +40,6 @@ fn get_delta(a: usize, off: usize, b: usize) -> usize {
     }
     idx += 1;
   }
-}
-
-fn lcm(a: usize, b: usize) -> usize {
-  a * b / gcd(a, b)
 }
 
 fn wait_time(start: usize, id: usize) -> usize {
