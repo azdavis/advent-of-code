@@ -20,12 +20,12 @@ pub fn p2(s: &str) -> usize {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-struct Dim {
+struct Moon {
   pos: i32,
   vel: i32,
 }
 
-fn cycle_len(mut dim: Vec<Dim>) -> usize {
+fn cycle_len(mut dim: Vec<Moon>) -> usize {
   let orig = dim.clone();
   let mut ret: usize = 1;
   loop {
@@ -56,7 +56,7 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
     .sum()
 }
 
-fn evolve(dim: &[Dim]) -> Vec<Dim> {
+fn evolve(dim: &[Moon]) -> Vec<Moon> {
   let mut ret = dim.to_vec();
   // gravity
   for i in 0..dim.len() {
@@ -84,7 +84,7 @@ fn evolve(dim: &[Dim]) -> Vec<Dim> {
 static RE: Lazy<Regex> =
   Lazy::new(|| Regex::new(r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$").unwrap());
 
-fn parse(s: &str) -> [Vec<Dim>; 3] {
+fn parse(s: &str) -> [Vec<Moon>; 3] {
   let mut xs = Vec::new();
   let mut ys = Vec::new();
   let mut zs = Vec::new();
@@ -93,9 +93,9 @@ fn parse(s: &str) -> [Vec<Dim>; 3] {
     let x: i32 = cs[1].parse().unwrap();
     let y: i32 = cs[2].parse().unwrap();
     let z: i32 = cs[3].parse().unwrap();
-    xs.push(Dim { pos: x, vel: 0 });
-    ys.push(Dim { pos: y, vel: 0 });
-    zs.push(Dim { pos: z, vel: 0 });
+    xs.push(Moon { pos: x, vel: 0 });
+    ys.push(Moon { pos: y, vel: 0 });
+    zs.push(Moon { pos: z, vel: 0 });
   }
   [xs, ys, zs]
 }
