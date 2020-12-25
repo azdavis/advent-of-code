@@ -43,12 +43,12 @@ impl Compass {
 
   /// Returns the change in x and y respectively that would result from moving
   /// forward 1 unit in this direction. North and East are positive.
-  pub fn dx_dy(self) -> (i32, i32) {
+  pub fn dx_dy(self) -> [i32; 2] {
     match self {
-      Self::North => (0, 1),
-      Self::South => (0, -1),
-      Self::East => (1, 0),
-      Self::West => (-1, 0),
+      Self::North => [0, 1],
+      Self::South => [0, -1],
+      Self::East => [1, 0],
+      Self::West => [-1, 0],
     }
   }
 }
@@ -57,5 +57,5 @@ impl Compass {
 fn t() {
   assert_eq!(Compass::North.reverse(), Compass::South);
   assert_eq!(Compass::West.right(), Compass::North);
-  assert_eq!(Compass::East.dx_dy(), (1, 0));
+  assert_eq!(Compass::East.dx_dy(), [1, 0]);
 }

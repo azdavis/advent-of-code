@@ -3,7 +3,7 @@ use helpers::vec2::Vec2;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> i32 {
-  let (fst, snd) = parse(s);
+  let [fst, snd] = parse(s);
   let fst_set: HashSet<_> = evolve(&fst).into_iter().map(|x| x.0).collect();
   let snd_set: HashSet<_> = evolve(&snd).into_iter().map(|x| x.0).collect();
   fst_set
@@ -14,7 +14,7 @@ pub fn p1(s: &str) -> i32 {
 }
 
 pub fn p2(s: &str) -> usize {
-  let (fst, snd) = parse(s);
+  let [fst, snd] = parse(s);
   let fst_map = evolve(&fst);
   let snd_map = evolve(&snd);
   let fst_set: HashSet<_> = fst_map.iter().map(|x| x.0).collect();
@@ -31,7 +31,7 @@ fn evolve(xs: &[Action]) -> HashMap<Vec2, usize> {
   let mut ret = HashMap::new();
   let mut idx = 0;
   for ac in xs {
-    let (dx, dy) = ac.direction.dx_dy();
+    let [dx, dy] = ac.direction.dx_dy();
     for _ in 0..ac.num {
       cur.x += dx;
       cur.y += dy;
@@ -42,11 +42,11 @@ fn evolve(xs: &[Action]) -> HashMap<Vec2, usize> {
   ret
 }
 
-fn parse(s: &str) -> (Vec<Action>, Vec<Action>) {
+fn parse(s: &str) -> [Vec<Action>; 2] {
   let mut lines = s.lines();
   let fst = parse_line(lines.next().unwrap());
   let snd = parse_line(lines.next().unwrap());
-  (fst, snd)
+  [fst, snd]
 }
 
 fn parse_line(line: &str) -> Vec<Action> {

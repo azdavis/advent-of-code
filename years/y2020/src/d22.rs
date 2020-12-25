@@ -2,12 +2,12 @@ use std::cmp::Ordering;
 use std::collections::{HashSet, VecDeque};
 
 pub fn p1(s: &str) -> usize {
-  let (d1, d2) = parse(s);
+  let [d1, d2] = parse(s);
   score(regular(d1, d2))
 }
 
 pub fn p2(s: &str) -> usize {
-  let (d1, d2) = parse(s);
+  let [d1, d2] = parse(s);
   score(recursive(d1, d2).1)
 }
 
@@ -91,7 +91,7 @@ fn score(deck: Deck) -> usize {
     .sum()
 }
 
-fn parse(s: &str) -> (Deck, Deck) {
+fn parse(s: &str) -> [Deck; 2] {
   let mut lines = s.lines();
   assert_eq!(lines.next().unwrap(), "Player 1:");
   let mut d1 = Deck::new();
@@ -104,7 +104,7 @@ fn parse(s: &str) -> (Deck, Deck) {
   }
   assert_eq!(lines.next().unwrap(), "Player 2:");
   let d2: Deck = lines.map(|x| x.parse().unwrap()).collect();
-  (d1, d2)
+  [d1, d2]
 }
 
 #[test]

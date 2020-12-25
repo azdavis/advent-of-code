@@ -63,7 +63,7 @@ fn go(s: &str, white: &mut HashSet<Vec2>) -> usize {
           1 => facing.right(),
           _ => panic!("bad dir: {}", dir),
         };
-        let (dx, dy) = facing.dx_dy();
+        let [dx, dy] = facing.dx_dy();
         cur.x += dx;
         cur.y += dy;
         output.clear();

@@ -1,12 +1,12 @@
 use std::cmp::Ordering;
 
 pub fn p1(s: &str) -> usize {
-  let (lo, hi) = parse(s);
+  let [lo, hi] = parse(s);
   (lo..=hi).filter(|&n| is_valid_p1(n)).count()
 }
 
 pub fn p2(s: &str) -> usize {
-  let (lo, hi) = parse(s);
+  let [lo, hi] = parse(s);
   (lo..=hi).filter(|&n| is_valid_p2(n)).count()
 }
 
@@ -61,11 +61,11 @@ enum Run {
   Big,
 }
 
-fn parse(s: &str) -> (u32, u32) {
+fn parse(s: &str) -> [u32; 2] {
   let mut parts = s.trim_end().split('-');
   let lo: u32 = parts.next().unwrap().parse().unwrap();
   let hi: u32 = parts.next().unwrap().parse().unwrap();
-  (lo, hi)
+  [lo, hi]
 }
 
 #[test]
