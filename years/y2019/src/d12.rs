@@ -22,22 +22,6 @@ struct Moon<T> {
   vel: T,
 }
 
-macro_rules! update_vel {
-  ($old: ident, $new: ident, $i: ident, $j: ident, $dim: expr) => {
-    match $old[$i].pos[$dim].cmp(&$old[$j].pos[$dim]) {
-      Ordering::Less => {
-        $new[$i].vel[$dim] += 1;
-        $new[$j].vel[$dim] -= 1;
-      }
-      Ordering::Equal => {}
-      Ordering::Greater => {
-        $new[$i].vel[$dim] -= 1;
-        $new[$j].vel[$dim] += 1;
-      }
-    }
-  };
-}
-
 static RE: Lazy<Regex> =
   Lazy::new(|| Regex::new(r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$").unwrap());
 
@@ -61,17 +45,27 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
     let mut new_moons = moons.clone();
     for i in 0..moons.len() {
       for j in (i + 1)..moons.len() {
-        update_vel!(moons, new_moons, i, j, 0);
-        update_vel!(moons, new_moons, i, j, 1);
-        update_vel!(moons, new_moons, i, j, 2);
+        for d in 0..3 {
+          match moons[i].pos[d].cmp(&moons[j].pos[d]) {
+            Ordering::Less => {
+              new_moons[i].vel[d] += 1;
+              new_moons[j].vel[d] -= 1;
+            }
+            Ordering::Equal => {}
+            Ordering::Greater => {
+              new_moons[i].vel[d] -= 1;
+              new_moons[j].vel[d] += 1;
+            }
+          }
+        }
       }
     }
     moons = new_moons;
     // velocity
     for m in moons.iter_mut() {
-      m.pos[0] += m.vel[0];
-      m.pos[1] += m.vel[1];
-      m.pos[2] += m.vel[2];
+      for d in 0..3 {
+        m.pos[d] += m.vel[d];
+      }
     }
   }
   moons
