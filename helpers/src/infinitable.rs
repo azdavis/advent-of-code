@@ -13,6 +13,20 @@ pub enum Infinitable<T> {
   PosInf,
 }
 
+impl<T> Infinitable<T> {
+  /// Maps a function over this.
+  pub fn map<F, U>(self, f: F) -> Infinitable<U>
+  where
+    F: FnOnce(T) -> U,
+  {
+    match self {
+      Infinitable::NegInf => Infinitable::NegInf,
+      Infinitable::Finite(x) => Infinitable::Finite(f(x)),
+      Infinitable::PosInf => Infinitable::PosInf,
+    }
+  }
+}
+
 impl<T, U> Add<U> for Infinitable<T>
 where
   T: Add<U>,
@@ -20,11 +34,7 @@ where
   type Output = Infinitable<T::Output>;
 
   fn add(self, rhs: U) -> Self::Output {
-    match self {
-      Infinitable::NegInf => Infinitable::NegInf,
-      Infinitable::Finite(x) => Infinitable::Finite(x + rhs),
-      Infinitable::PosInf => Infinitable::PosInf,
-    }
+    self.map(|x| x + rhs)
   }
 }
 
