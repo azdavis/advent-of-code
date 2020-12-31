@@ -66,12 +66,12 @@ fn evolve_with(xs: &Grid, threshold: usize, get_one_tile: GetOneTile) -> Grid {
   ret
 }
 
-fn get_all_tiles<'a>(
+fn get_all_tiles(
   i: usize,
   j: usize,
-  xs: &'a Grid,
+  xs: &Grid,
   get_one_tile: GetOneTile,
-) -> impl Iterator<Item = Tile> + 'a {
+) -> impl Iterator<Item = Tile> + '_ {
   FNS
     .iter()
     .filter_map(move |&(f, g)| get_one_tile(i, j, f, g, xs))

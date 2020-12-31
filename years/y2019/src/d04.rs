@@ -11,7 +11,7 @@ pub fn p2(s: &str) -> usize {
 }
 
 fn is_valid_p1(n: u32) -> bool {
-  if n < 100000 || n > 999999 {
+  if !(100_000..1_000_000).contains(&n) {
     return false;
   }
   let mut ds = helpers::digits::digits(n);
@@ -29,7 +29,7 @@ fn is_valid_p1(n: u32) -> bool {
 }
 
 fn is_valid_p2(n: u32) -> bool {
-  if n < 100000 || n > 999999 {
+  if !(100_000..1_000_000).contains(&n) {
     return false;
   }
   let mut ds = helpers::digits::digits(n);

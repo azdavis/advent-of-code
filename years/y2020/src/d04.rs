@@ -37,8 +37,8 @@ fn is_p2_valid_key(key: Key, val: &str) -> bool {
         Err(_) => return false,
       };
       match &caps[2] {
-        "cm" => 150 <= n && n <= 193,
-        "in" => 59 <= n && n <= 76,
+        "cm" => (150..=193).contains(&n),
+        "in" => (59..=76).contains(&n),
         _ => false,
       }
     }
