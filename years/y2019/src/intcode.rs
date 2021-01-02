@@ -140,8 +140,8 @@ impl Intcode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Res {
-  NeedInput,
   Done,
+  NeedInput,
 }
 
 impl Res {
