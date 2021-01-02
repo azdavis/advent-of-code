@@ -109,9 +109,9 @@ fn parse(s: &str) -> [Deck; 2] {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d22.txt");
-  assert_eq!(p1(inp), 31957);
-  assert_eq!(p2(inp), 33212);
+  let s = include_str!("input/d22.txt");
+  assert_eq!(p1(s), 31957);
+  assert_eq!(p2(s), 33212);
 }
 
 #[test]

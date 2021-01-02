@@ -36,7 +36,7 @@ fn parse(s: &str) -> Vec<&[u8]> {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d03.txt");
-  assert_eq!(p1(inp), 289);
-  assert_eq!(p2(inp), 5522401584);
+  let s = include_str!("input/d03.txt");
+  assert_eq!(p1(s), 289);
+  assert_eq!(p2(s), 5522401584);
 }

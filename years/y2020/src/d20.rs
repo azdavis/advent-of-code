@@ -296,7 +296,7 @@ fn parse_one(s: &str) -> (u64, Tile) {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d20.txt");
-  assert_eq!(p1(inp), 12519494280967);
-  assert_eq!(p2(inp), 2442);
+  let s = include_str!("input/d20.txt");
+  assert_eq!(p1(s), 12519494280967);
+  assert_eq!(p2(s), 2442);
 }

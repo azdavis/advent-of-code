@@ -34,9 +34,9 @@ pub fn p2(_: &str) -> u32 {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d$DAY.txt");
-  // assert_eq!(p1(inp), ___);
-  // assert_eq!(p2(inp), ___);
+  let s = include_str!("input/d$DAY.txt");
+  // assert_eq!(p1(s), ___);
+  // assert_eq!(p2(s), ___);
 }
 EOF
 
@@ -47,7 +47,7 @@ rustfmt "$SRC/lib.rs"
 
 cat <<EOF > runner/src/main.rs
 fn main() {
-  let inp = include_str!("../../$SRC/input/d$DAY.txt");
+  let s = include_str!("../../$SRC/input/d$DAY.txt");
   println!("{}", y$YEAR::d$DAY::p1(&inp));
 }
 EOF

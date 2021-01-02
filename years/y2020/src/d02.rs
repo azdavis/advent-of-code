@@ -35,7 +35,7 @@ fn go(s: &str, f: fn(usize, usize, u8, &str) -> bool) -> usize {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d02.txt");
-  assert_eq!(p1(inp), 447);
-  assert_eq!(p2(inp), 249);
+  let s = include_str!("input/d02.txt");
+  assert_eq!(p1(s), 447);
+  assert_eq!(p2(s), 249);
 }

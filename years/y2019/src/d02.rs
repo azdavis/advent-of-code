@@ -28,7 +28,7 @@ fn go(mut ns: Vec<i64>, noun: i64, verb: i64) -> i64 {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d02.txt");
-  assert_eq!(p1(inp), 11590668);
-  assert_eq!(p2(inp), 2254);
+  let s = include_str!("input/d02.txt");
+  assert_eq!(p1(s), 11590668);
+  assert_eq!(p2(s), 2254);
 }

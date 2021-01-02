@@ -111,9 +111,9 @@ fn to_u32(n: usize) -> u32 {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d23.txt");
-  assert_eq!(p1(inp), "89372645");
-  assert_eq!(p2(inp), 21273394210);
+  let s = include_str!("input/d23.txt");
+  assert_eq!(p1(s), "89372645");
+  assert_eq!(p2(s), 21273394210);
 }
 
 #[cfg(test)]

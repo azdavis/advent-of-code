@@ -70,7 +70,7 @@ fn parse(s: &str) -> [u32; 2] {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d04.txt");
-  assert_eq!(p1(inp), 1864);
-  assert_eq!(p2(inp), 1258);
+  let s = include_str!("input/d04.txt");
+  assert_eq!(p1(s), 1864);
+  assert_eq!(p2(s), 1258);
 }

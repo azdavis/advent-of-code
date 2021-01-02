@@ -84,7 +84,7 @@ fn parse_axial_coord(s: &str) -> AxialCoord {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d24.txt");
-  assert_eq!(p1(inp), 497);
-  assert_eq!(p2(inp), 4156);
+  let s = include_str!("input/d24.txt");
+  assert_eq!(p1(s), 497);
+  assert_eq!(p2(s), 4156);
 }

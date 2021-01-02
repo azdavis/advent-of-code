@@ -61,7 +61,7 @@ pub fn p2(s: &str) -> i64 {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d07.txt");
-  assert_eq!(p1(inp), 24625);
-  assert_eq!(p2(inp), 36497698);
+  let s = include_str!("input/d07.txt");
+  assert_eq!(p1(s), 24625);
+  assert_eq!(p2(s), 36497698);
 }

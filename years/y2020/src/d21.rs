@@ -124,10 +124,7 @@ fn parse_recipe(s: &str) -> Recipe<'_> {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d21.txt");
-  assert_eq!(p1(inp), 1977);
-  assert_eq!(
-    p2(inp),
-    "dpkvsdk,xmmpt,cxjqxbt,drbq,zmzq,mnrjrf,kjgl,rkcpxs"
-  );
+  let s = include_str!("input/d21.txt");
+  assert_eq!(p1(s), 1977);
+  assert_eq!(p2(s), "dpkvsdk,xmmpt,cxjqxbt,drbq,zmzq,mnrjrf,kjgl,rkcpxs");
 }

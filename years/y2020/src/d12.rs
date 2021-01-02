@@ -143,7 +143,7 @@ impl ActionKind {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d12.txt");
-  assert_eq!(p1(inp), 1133);
-  assert_eq!(p2(inp), 61053);
+  let s = include_str!("input/d12.txt");
+  assert_eq!(p1(s), 1133);
+  assert_eq!(p2(s), 61053);
 }

@@ -133,7 +133,7 @@ fn parse_rule(s: &str) -> Rule {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d19.txt");
-  assert_eq!(p1(inp), 144);
-  assert_eq!(p2(inp), 260);
+  let s = include_str!("input/d19.txt");
+  assert_eq!(p1(s), 144);
+  assert_eq!(p2(s), 260);
 }

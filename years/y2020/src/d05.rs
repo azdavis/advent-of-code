@@ -74,7 +74,7 @@ fn seat_id(s: Seat) -> u32 {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d05.txt");
-  assert_eq!(p1(inp), 861);
-  assert_eq!(p2(inp), 633);
+  let s = include_str!("input/d05.txt");
+  assert_eq!(p1(s), 861);
+  assert_eq!(p2(s), 633);
 }

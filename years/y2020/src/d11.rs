@@ -124,7 +124,7 @@ impl Tile {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d11.txt");
-  assert_eq!(p1(inp), 2238);
-  assert_eq!(p2(inp), 2013);
+  let s = include_str!("input/d11.txt");
+  assert_eq!(p1(s), 2238);
+  assert_eq!(p2(s), 2013);
 }

@@ -165,7 +165,7 @@ fn t_p2() {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d18.txt");
-  assert_eq!(p1(inp), 3159145843816);
-  assert_eq!(p2(inp), 55699621957369);
+  let s = include_str!("input/d18.txt");
+  assert_eq!(p1(s), 3159145843816);
+  assert_eq!(p2(s), 55699621957369);
 }

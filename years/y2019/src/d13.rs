@@ -72,7 +72,7 @@ fn parse_tile(n: i64) -> Tile {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d13.txt");
-  assert_eq!(p1(inp), 372);
-  assert_eq!(p2(inp), 19297);
+  let s = include_str!("input/d13.txt");
+  assert_eq!(p1(s), 372);
+  assert_eq!(p2(s), 19297);
 }

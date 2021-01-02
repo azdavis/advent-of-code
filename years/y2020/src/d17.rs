@@ -95,7 +95,7 @@ fn parse(s: &str) -> impl Iterator<Item = (i32, i32)> + '_ {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d17.txt");
-  assert_eq!(p1(inp), 271);
-  assert_eq!(p2(inp), 2064);
+  let s = include_str!("input/d17.txt");
+  assert_eq!(p1(s), 271);
+  assert_eq!(p2(s), 2064);
 }

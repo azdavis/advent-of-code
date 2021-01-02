@@ -106,23 +106,23 @@ fn abs(n: i32) -> u32 {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d12.txt");
-  assert_eq!(p1(inp), 7928);
-  assert_eq!(p2(inp), 518311327635164);
+  let s = include_str!("input/d12.txt");
+  assert_eq!(p1(s), 7928);
+  assert_eq!(p2(s), 518311327635164);
 }
 
 #[test]
 fn t_p1() {
-  let inp = include_str!("input/d12_ex1.txt");
-  assert_eq!(p1_go(inp, 10), 179);
-  let inp = include_str!("input/d12_ex2.txt");
-  assert_eq!(p1_go(inp, 100), 1940);
+  let s = include_str!("input/d12_ex1.txt");
+  assert_eq!(p1_go(s, 10), 179);
+  let s = include_str!("input/d12_ex2.txt");
+  assert_eq!(p1_go(s, 100), 1940);
 }
 
 #[test]
 fn t_p2() {
-  let inp = include_str!("input/d12_ex1.txt");
-  assert_eq!(p2(inp), 2772);
-  let inp = include_str!("input/d12_ex2.txt");
-  assert_eq!(p2(inp), 4686774924);
+  let s = include_str!("input/d12_ex1.txt");
+  assert_eq!(p2(s), 2772);
+  let s = include_str!("input/d12_ex2.txt");
+  assert_eq!(p2(s), 4686774924);
 }

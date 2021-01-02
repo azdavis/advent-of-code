@@ -80,7 +80,7 @@ fn parse_compass(c: char) -> Compass {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d03.txt");
-  assert_eq!(p1(inp), 1626);
-  assert_eq!(p2(inp), 27330);
+  let s = include_str!("input/d03.txt");
+  assert_eq!(p1(s), 1626);
+  assert_eq!(p2(s), 27330);
 }

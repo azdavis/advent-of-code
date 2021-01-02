@@ -38,8 +38,8 @@ fn parse(s: &str) -> [u64; 2] {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d25.txt");
-  assert_eq!(p1(inp), 1478097);
+  let s = include_str!("input/d25.txt");
+  assert_eq!(p1(s), 1478097);
 }
 
 #[test]

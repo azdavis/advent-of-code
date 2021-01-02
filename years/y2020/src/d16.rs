@@ -101,7 +101,7 @@ fn parse_range(s: &str) -> RangeInclusive<u64> {
 
 #[test]
 fn t() {
-  let inp = include_str!("input/d16.txt");
-  assert_eq!(p1(inp), 25984);
-  assert_eq!(p2(inp), 1265347500049);
+  let s = include_str!("input/d16.txt");
+  assert_eq!(p1(s), 25984);
+  assert_eq!(p2(s), 1265347500049);
 }
