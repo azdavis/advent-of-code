@@ -5,6 +5,7 @@
 #![deny(missing_docs)]
 
 pub mod block_char;
+pub mod ceil_div;
 pub mod compass;
 pub mod digits;
 pub mod gcd;
