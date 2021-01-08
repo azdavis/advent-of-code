@@ -27,8 +27,7 @@ const MAX_ORE: usize = 1_000_000_000_000;
 
 fn ore_for_fuel(inp: &Input<'_>, num_fuel: usize) -> usize {
   let mut want = hashmap!["FUEL" => num_fuel];
-  // skip ORE.
-  for &chem in inp.order.iter().skip(1).rev() {
+  for &chem in inp.order.iter() {
     let num_need = want.remove(chem).unwrap();
     let (per_batch, ref ins) = inp.recipes[&chem];
     let num_batches = ceil_div(num_need, per_batch);
@@ -64,21 +63,22 @@ fn process(s: &str) -> Input {
     }
   }
   let order = topological_sort("ORE", &graph);
-  assert_eq!(*order.first().unwrap(), "ORE");
   Input { recipes, order }
 }
 
 type Graph<T> = HashMap<T, HashSet<T>>;
 
-/// topological sort via DFS. returns a topological sort of the subgraph of
-/// `graph` reachable from `start`. panics if this is not a DAG.
+/// topological sort via DFS. returns a reverse topological ordering of the
+/// subgraph of `graph` reachable from `start`, not including `start` (it would
+/// be last). panics if this is not a DAG.
 fn topological_sort<T>(start: T, graph: &Graph<T>) -> Vec<T>
 where
   T: Hash + Eq + Copy,
 {
   let mut st = State::default();
   topological_sort_go(start, graph, &mut st);
-  st.order.reverse();
+  // don't require T: Debug
+  assert!(st.order.pop().unwrap() == start, "last elem was not start");
   st.order
 }
 
