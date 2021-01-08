@@ -44,37 +44,31 @@ where
 {
   let mut distances: HashMap<_, _> = graph
     .keys()
-    .map(|&val| (val, Infinitable::PosInf))
+    .map(|&node| (node, Infinitable::PosInf))
     .collect();
   distances.insert(start, Infinitable::Finite(0));
   let mut pq: BinaryHeap<_> = distances
     .iter()
-    .map(|(&val, &v)| Elem {
-      val,
-      dist: Reverse(v),
-    })
+    .map(|(&node, &dist)| Elem::new(node, dist))
     .collect();
   while let Some(u) = pq.pop() {
-    let d_u = *distances.get(&u.val).unwrap();
-    if u.val == end {
-      match d_u {
+    let u_dist = distances[&u.node];
+    if u.node == end {
+      match u_dist {
         Infinitable::Finite(x) => return Some(x),
         _ => unreachable!(),
       }
     }
-    if u.dist.0 > d_u {
+    if u.dist.0 > u_dist {
       continue;
     }
-    let alt = d_u + 1;
-    for &v in graph.get(&u.val).into_iter().flatten() {
-      if alt >= *distances.get(&v).unwrap() {
+    let new_dist = u_dist + 1;
+    for &node in graph.get(&u.node).into_iter().flatten() {
+      if new_dist >= distances[&node] {
         continue;
       }
-      distances.insert(v, alt);
-      pq.push(Elem {
-        val: v,
-        dist: Reverse(alt),
-      });
+      distances.insert(node, new_dist);
+      pq.push(Elem::new(node, new_dist));
     }
   }
   None
@@ -83,18 +77,27 @@ where
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Elem<T> {
   dist: Reverse<Infinitable<usize>>,
-  val: T,
+  node: T,
+}
+
+impl<T> Elem<T> {
+  fn new(node: T, dist: Infinitable<usize>) -> Self {
+    Self {
+      node,
+      dist: Reverse(dist),
+    }
+  }
 }
 
 #[test]
 fn elem_cmp() {
   let a = Elem {
     dist: Reverse(Infinitable::PosInf),
-    val: "a",
+    node: "a",
   };
   let b = Elem {
     dist: Reverse(Infinitable::Finite(3)),
-    val: "a",
+    node: "a",
   };
   assert!(a < b);
 }
