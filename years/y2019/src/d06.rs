@@ -37,6 +37,7 @@ pub fn p2(s: &str) -> usize {
   dijkstra(&inp, "YOU", "SAN").unwrap() - 2
 }
 
+/// dijkstra's algorithm. don't need to store predecessors info (cf wikipedia).
 fn dijkstra<T>(graph: &Graph<T>, start: T, end: T) -> Option<usize>
 where
   T: Hash + Ord + Copy,
@@ -46,7 +47,6 @@ where
     .map(|&val| (val, Infinitable::PosInf))
     .collect();
   distances.insert(start, Infinitable::Finite(0));
-  let mut predecessors = HashMap::new();
   let mut pq: BinaryHeap<_> = distances
     .iter()
     .map(|(&val, &v)| Elem {
@@ -71,7 +71,6 @@ where
         continue;
       }
       distances.insert(v, alt);
-      predecessors.insert(v, u.val);
       pq.push(Elem {
         val: v,
         dist: Reverse(alt),
