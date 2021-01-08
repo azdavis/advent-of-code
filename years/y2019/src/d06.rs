@@ -1,6 +1,7 @@
 use helpers::infinitable::Infinitable;
 use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
+use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {
   let inp = parse(s, |inp, center, orbiter| {
@@ -33,15 +34,20 @@ pub fn p2(s: &str) -> usize {
     inp.entry(center).or_default().insert(orbiter);
     inp.entry(orbiter).or_default().insert(center);
   });
-  dijkstra(inp, "YOU", "SAN").unwrap() - 2
+  dijkstra(&inp, "YOU", "SAN").unwrap() - 2
 }
 
-fn dijkstra(inp: Input<'_>, start: &str, end: &str) -> Option<usize> {
-  let mut distances: HashMap<_, _> =
-    inp.keys().map(|&val| (val, Infinitable::PosInf)).collect();
+fn dijkstra<T>(graph: &Graph<T>, start: T, end: T) -> Option<usize>
+where
+  T: Hash + Ord + Copy,
+{
+  let mut distances: HashMap<_, _> = graph
+    .keys()
+    .map(|&val| (val, Infinitable::PosInf))
+    .collect();
   distances.insert(start, Infinitable::Finite(0));
   let mut predecessors = HashMap::new();
-  let mut pq: BinaryHeap<Elem<'_>> = distances
+  let mut pq: BinaryHeap<_> = distances
     .iter()
     .map(|(&val, &v)| Elem {
       val,
@@ -49,7 +55,7 @@ fn dijkstra(inp: Input<'_>, start: &str, end: &str) -> Option<usize> {
     })
     .collect();
   while let Some(u) = pq.pop() {
-    let d_u = *distances.get(u.val).unwrap();
+    let d_u = *distances.get(&u.val).unwrap();
     if u.val == end {
       match d_u {
         Infinitable::Finite(x) => return Some(x),
@@ -60,8 +66,8 @@ fn dijkstra(inp: Input<'_>, start: &str, end: &str) -> Option<usize> {
       continue;
     }
     let alt = d_u + 1;
-    for &v in inp.get(u.val).into_iter().flatten() {
-      if alt >= *distances.get(v).unwrap() {
+    for &v in graph.get(&u.val).into_iter().flatten() {
+      if alt >= *distances.get(&v).unwrap() {
         continue;
       }
       distances.insert(v, alt);
@@ -76,9 +82,9 @@ fn dijkstra(inp: Input<'_>, start: &str, end: &str) -> Option<usize> {
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct Elem<'a> {
+struct Elem<T> {
   dist: Reverse<Infinitable<usize>>,
-  val: &'a str,
+  val: T,
 }
 
 #[test]
@@ -94,13 +100,13 @@ fn elem_cmp() {
   assert!(a < b);
 }
 
-type Input<'a> = HashMap<&'a str, HashSet<&'a str>>;
+type Graph<T> = HashMap<T, HashSet<T>>;
 
 fn parse(
   s: &str,
-  add: for<'a> fn(&mut Input<'a>, &'a str, &'a str),
-) -> Input<'_> {
-  let mut ret = Input::new();
+  add: for<'a> fn(&mut Graph<&'a str>, &'a str, &'a str),
+) -> Graph<&str> {
+  let mut ret = Graph::new();
   for line in s.lines() {
     let mut parts = line.split(')');
     let center = parts.next().unwrap();
