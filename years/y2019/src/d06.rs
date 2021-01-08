@@ -12,10 +12,7 @@ pub fn p1(s: &str) -> usize {
   let mut queue = VecDeque::from(vec!["COM"]);
   let mut level = 0;
   let mut ret = 0;
-  loop {
-    if queue.is_empty() {
-      break;
-    }
+  while !queue.is_empty() {
     for _ in 0..queue.len() {
       let vtx = queue.pop_front().unwrap();
       if !visited.insert(vtx) {
