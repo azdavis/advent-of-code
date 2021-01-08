@@ -82,14 +82,14 @@ impl Intcode {
           if a == 0 {
             self.cur_addr + 3
           } else {
-            u(b)
+            i64_to_usize(b)
           }
         }
         6 => {
           let a = self.arg(1, modes);
           let b = self.arg(2, modes);
           if a == 0 {
-            u(b)
+            i64_to_usize(b)
           } else {
             self.cur_addr + 3
           }
@@ -122,18 +122,18 @@ impl Intcode {
   fn arg(&self, off: usize, modes: i64) -> i64 {
     let val = self.mem.read(self.cur_addr + off);
     match Mode::get(off, modes) {
-      Mode::Position => self.mem.read(u(val)),
+      Mode::Position => self.mem.read(i64_to_usize(val)),
       Mode::Immediate => val,
-      Mode::Relative => self.mem.read(u(self.relative_base + val)),
+      Mode::Relative => self.mem.read(i64_to_usize(self.relative_base + val)),
     }
   }
 
   fn pos_arg(&self, off: usize, modes: i64) -> usize {
     let val = self.mem.read(self.cur_addr + off);
     match Mode::get(off, modes) {
-      Mode::Position => u(val),
+      Mode::Position => i64_to_usize(val),
       Mode::Immediate => panic!("immediate mode for positional arg"),
-      Mode::Relative => u(self.relative_base + val),
+      Mode::Relative => i64_to_usize(self.relative_base + val),
     }
   }
 }
@@ -172,7 +172,7 @@ impl Mode {
   }
 }
 
-fn u(n: i64) -> usize {
+fn i64_to_usize(n: i64) -> usize {
   n.try_into().unwrap()
 }
 
