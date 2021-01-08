@@ -162,6 +162,7 @@ enum Mode {
 
 impl Mode {
   fn get(off: usize, modes: i64) -> Self {
+    // pow(10, off - 1)
     let div = (1..off).fold(1, |ac, _| ac * 10);
     match (modes / div) % 10 {
       0 => Self::Position,
