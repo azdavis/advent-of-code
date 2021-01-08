@@ -7,16 +7,16 @@ pub fn p1(s: &str) -> usize {
   let inp = parse(s, |inp, center, orbiter| {
     inp.entry(center).or_default().insert(orbiter);
   });
+  // bfs
   let mut visited = HashSet::new();
   let mut queue = VecDeque::from(vec!["COM"]);
   let mut level = 0;
   let mut ret = 0;
   loop {
-    let level_len = queue.len();
-    if level_len == 0 {
+    if queue.is_empty() {
       break;
     }
-    for _ in 0..level_len {
+    for _ in 0..queue.len() {
       let vtx = queue.pop_front().unwrap();
       if !visited.insert(vtx) {
         continue;

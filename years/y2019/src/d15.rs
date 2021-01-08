@@ -26,7 +26,7 @@ enum Res {
   Found(usize, Intcode),
 }
 
-/// breadth-first search
+/// bfs
 fn go(prog: Intcode) -> Res {
   let mut visited = HashSet::new();
   let mut queue = VecDeque::from(vec![(Vec2::default(), prog)]);
