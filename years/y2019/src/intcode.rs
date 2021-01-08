@@ -148,6 +148,10 @@ impl Res {
   pub fn is_done(&self) -> bool {
     matches!(*self, Self::Done)
   }
+
+  pub fn needs_input(&self) -> bool {
+    matches!(*self, Self::NeedInput)
+  }
 }
 
 enum Mode {

@@ -1,5 +1,7 @@
 //! 2-dimensional integer vectors.
 
+use crate::compass::Compass;
+
 /// A 2-dimensional integer vector.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[allow(missing_docs)]
@@ -19,19 +21,16 @@ impl Vec2 {
     (self.x.abs() + self.y.abs()) as u32
   }
 
-  /// Returns the neighbors of this.
-  pub fn neighbors(self) -> [Self; 8] {
+  /// Returns the neighbors of this. Each neighbor also has the compass
+  /// direction one needs to move from this to get to that neighbor.
+  pub fn neighbors(self) -> [(Compass, Self); 4] {
     let x = self.x;
     let y = self.y;
     [
-      Self::new(x - 1, y + 1),
-      Self::new(x, y + 1),
-      Self::new(x + 1, y + 1),
-      Self::new(x - 1, y),
-      Self::new(x + 1, y),
-      Self::new(x - 1, y - 1),
-      Self::new(x, y - 1),
-      Self::new(x + 1, y - 1),
+      (Compass::North, Self::new(x, y + 1)),
+      (Compass::West, Self::new(x - 1, y)),
+      (Compass::East, Self::new(x + 1, y)),
+      (Compass::South, Self::new(x, y - 1)),
     ]
   }
 }
