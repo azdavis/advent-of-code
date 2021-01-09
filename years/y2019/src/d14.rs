@@ -68,6 +68,11 @@ fn process(s: &str) -> Input {
 
 type Graph<T> = HashMap<T, HashSet<T>>;
 
+enum Action {
+  Start,
+  Finish,
+}
+
 /// topological sort via DFS. returns a reverse topological ordering of the
 /// subgraph of `graph` reachable from `start`, not including `start` (it would
 /// be last). panics if this is not a DAG.
@@ -75,47 +80,34 @@ fn topological_sort<T>(start: T, graph: &Graph<T>) -> Vec<T>
 where
   T: Hash + Eq + Copy,
 {
-  let mut st = State::default();
-  topological_sort_go(start, graph, &mut st);
-  // don't require T: Debug
-  assert!(st.order.pop().unwrap() == start, "last elem was not start");
-  st.order
-}
-
-struct State<T> {
-  active: HashSet<T>,
-  done: HashSet<T>,
-  order: Vec<T>,
-}
-
-impl<T> Default for State<T> {
-  fn default() -> Self {
-    Self {
-      active: HashSet::default(),
-      done: HashSet::default(),
-      order: Vec::default(),
+  let mut active = HashSet::new();
+  let mut done = HashSet::new();
+  let mut order = Vec::new();
+  let mut stack = vec![(Action::Start, start)];
+  while let Some((ac, cur)) = stack.pop() {
+    match ac {
+      Action::Start => {
+        if done.contains(&cur) {
+          continue;
+        }
+        if !active.insert(cur) {
+          panic!("not a DAG");
+        }
+        stack.push((Action::Finish, cur));
+        if let Some(ns) = graph.get(&cur) {
+          stack.extend(ns.iter().map(|&x| (Action::Start, x)));
+        }
+      }
+      Action::Finish => {
+        assert!(active.remove(&cur));
+        assert!(done.insert(cur));
+        order.push(cur);
+      }
     }
   }
-}
-
-fn topological_sort_go<T>(cur: T, graph: &Graph<T>, st: &mut State<T>)
-where
-  T: Hash + Eq + Copy,
-{
-  if st.done.contains(&cur) {
-    return;
-  }
-  if !st.active.insert(cur) {
-    panic!("not a DAG");
-  }
-  // use `Option#into_iter` and `Iterator#flatten` to skip the loop if `get`
-  // returns `None`.
-  for &x in graph.get(&cur).into_iter().flatten() {
-    topological_sort_go(x, graph, st);
-  }
-  assert!(st.active.remove(&cur));
-  assert!(st.done.insert(cur));
-  st.order.push(cur);
+  // don't require T: Debug
+  assert!(order.pop().unwrap() == start, "last elem was not start");
+  order
 }
 
 #[derive(Debug)]
