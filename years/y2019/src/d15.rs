@@ -36,7 +36,7 @@ fn go(prog: Intcode) -> Res {
     for _ in 0..queue.len() {
       let (point, prog) = queue.pop_front().unwrap();
       visited.insert(point);
-      for &(compass, neighbor) in point.neighbors().iter() {
+      for &(compass, neighbor) in neighbors(point).iter() {
         // note: having the visited check be here means replacing the queue with
         // a stack does not yield a DFS. we put the check here since we don't
         // want to return Found when finding an already visited spot. also cuts
@@ -61,6 +61,17 @@ fn go(prog: Intcode) -> Res {
     }
     level += 1;
   }
+}
+
+fn neighbors(v: Vec2) -> [(Compass, Vec2); 4] {
+  let x = v.x;
+  let y = v.y;
+  [
+    (Compass::North, Vec2::new(x, y + 1)),
+    (Compass::West, Vec2::new(x - 1, y)),
+    (Compass::East, Vec2::new(x + 1, y)),
+    (Compass::South, Vec2::new(x, y - 1)),
+  ]
 }
 
 fn compass_to_input(c: Compass) -> i64 {
