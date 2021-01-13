@@ -61,6 +61,7 @@ mod tests {
   fn t() {
     assert_eq!(go(0), vec![0]);
     assert_eq!(go(3), vec![3]);
+    assert_eq!(go(10), vec![1, 0]);
     assert_eq!(go(123), vec![1, 2, 3]);
     assert_eq!(go(456456), vec![4, 5, 6, 4, 5, 6]);
     assert_eq!(go(63544), vec![6, 3, 5, 4, 4]);
