@@ -12,7 +12,7 @@ pub fn digits(n: u32) -> Digits {
   }
 }
 
-/// An iterator the decimal digits of a number from left to right.
+/// An iterator over the decimal digits of a number from left to right.
 #[derive(Debug)]
 pub struct Digits {
   div: u32,
