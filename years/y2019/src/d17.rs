@@ -161,6 +161,13 @@ fn decompose(route: &[Move]) -> Option<Res> {
       buf.len() <= MAX_CHARS
     })
     .collect();
+  let mut all_pats: Vec<_> = all_pats.into_iter().collect();
+  all_pats.sort_by_cached_key(|&ms| {
+    let count = (0..route.len())
+      .filter(|&start| route.get(start..(start + ms.len())) == Some(ms))
+      .count();
+    std::cmp::Reverse(count * (ms.len() - 1))
+  });
   let mut sequence = Vec::with_capacity(MAX_CHARS / 2);
   for &a in all_pats.iter() {
     for &b in all_pats.iter() {
