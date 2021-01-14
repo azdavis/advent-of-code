@@ -18,28 +18,29 @@ impl BitSet {
   /// Adds `val` to the set. Returns whether `val` was _not_ in the set. Panics
   /// if `val > Self::MAX`.
   pub fn insert(&mut self, val: u8) -> bool {
-    assert!(val <= Self::MAX);
-    let s = 1 << val;
-    let ret = (self.inner & s) != s;
+    let (contained, s) = self.contains_impl(val);
     self.inner |= s;
-    ret
+    !contained
   }
 
   /// Removes `val` from the set. Returns whether `val` was in the set. Panics
   /// if `val > Self::MAX`.
   pub fn remove(&mut self, val: u8) -> bool {
-    assert!(val <= Self::MAX);
-    let s = 1 << val;
-    let ret = (self.inner & s) == s;
+    let (contained, s) = self.contains_impl(val);
     self.inner &= !s;
-    ret
+    contained
   }
 
   /// Returns whether `val` is in the set. Panics if `val > Self::MAX`.
   pub fn contains(&self, val: u8) -> bool {
+    self.contains_impl(val).0
+  }
+
+  #[inline]
+  fn contains_impl(&self, val: u8) -> (bool, u32) {
     assert!(val <= Self::MAX);
     let s = 1 << val;
-    (self.inner & s) == s
+    ((self.inner & s) == s, s)
   }
 
   /// Returns the number of values in the set.
