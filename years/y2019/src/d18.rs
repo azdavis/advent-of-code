@@ -14,8 +14,8 @@ pub fn p1(s: &str) -> usize {
     steps: 0,
   }];
   let mut cache = HashMap::<(Node, BitSet), usize>::new();
-  let mut queue = VecDeque::new();
-  let mut visited = HashSet::new();
+  let mut queue = VecDeque::<(usize, Node)>::new();
+  let mut visited = HashSet::<Node>::new();
   let mut min_steps: Option<usize> = None;
   while let Some(st) = states.pop() {
     if st.keys.len() == num_keys {
@@ -108,7 +108,7 @@ fn parse(s: &str) -> Graph {
   }
   let mut ret = Graph::new();
   let mut visited = HashSet::<Point>::new();
-  let mut queue = VecDeque::new();
+  let mut queue = VecDeque::<Point>::new();
   for (&point, &node) in nodes.iter() {
     let mut steps = 0;
     visited.clear();
