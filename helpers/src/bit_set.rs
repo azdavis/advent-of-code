@@ -1,7 +1,7 @@
 //! A set of bits.
 
 /// A set of bits.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct BitSet {
   inner: u32,
 }
