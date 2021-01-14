@@ -4,6 +4,7 @@
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
 
+pub mod bit_set;
 pub mod block_char;
 pub mod ceil_div;
 pub mod compass;
