@@ -1,22 +1,19 @@
-use std::collections::{HashSet, VecDeque};
+use helpers::bit_set::BitSet;
+use std::collections::{HashMap, HashSet, VecDeque};
 
 pub fn p1(s: &str) -> usize {
-  let (maze, loc) = parse(s);
+  let graph = parse(s);
   // depends on no dupe keys
-  let num_keys: usize = maze
-    .iter()
-    .map(|row| {
-      row
-        .iter()
-        .filter(|&&tile| matches!(tile, Tile::Key(_)))
-        .count()
-    })
-    .sum();
+  let num_keys = graph
+    .keys()
+    .filter(|&&k| MIN_KEY <= k && k <= MAX_KEY)
+    .count() as u32;
   let mut states = vec![State {
-    loc,
-    keys: HashSet::new(),
+    at: START,
+    keys: BitSet::new(),
     steps: 0,
   }];
+  let mut cache = HashMap::<(Node, BitSet), usize>::new();
   let mut queue = VecDeque::new();
   let mut visited = HashSet::new();
   let mut min_steps: Option<usize> = None;
@@ -27,46 +24,32 @@ pub fn p1(s: &str) -> usize {
     }
     queue.clear();
     visited.clear();
-    queue.push_back(st.loc);
-    let mut steps = 0;
+    queue.push_back((0, st.at));
     while !queue.is_empty() {
       for _ in 0..queue.len() {
-        let loc = queue.pop_front().unwrap();
-        if !visited.insert(loc) {
+        let (s_at, at) = queue.pop_front().unwrap();
+        if !visited.insert(at) {
           continue;
         }
-        match maze[loc.y][loc.x] {
-          Tile::Wall => continue,
-          Tile::Open => {}
-          Tile::Key(k) => {
-            if !st.keys.contains(&k) {
-              let mut keys = st.keys.clone();
-              keys.insert(k);
-              states.push(State {
-                loc,
-                keys,
-                steps: st.steps + steps,
-              });
-              continue;
-            }
+        if MIN_KEY <= at && at <= MAX_KEY && !st.keys.contains(at) {
+          let mut keys = st.keys;
+          keys.insert(at);
+          // steps(start -> at) = steps(start -> st.at) + steps(st.at -> at).
+          let steps = st.steps + s_at;
+          if cache.get(&(at, keys)).map_or(true, |&x| x > steps) {
+            cache.insert((at, keys), steps);
+            states.push(State { at, keys, steps });
           }
-          Tile::Door(d) => {
-            if !st.keys.contains(&d) {
-              continue;
-            }
-          }
+          continue;
         }
-        let x = loc.x;
-        let y = loc.y;
-        let neighbors = [
-          x.checked_sub(1).map(|x| Vec2 { x, y }),
-          x.checked_add(1).map(|x| Vec2 { x, y }),
-          y.checked_sub(1).map(|y| Vec2 { x, y }),
-          y.checked_add(1).map(|y| Vec2 { x, y }),
-        ];
-        queue.extend(neighbors.iter().flatten().copied());
+        if MIN_DOOR <= at
+          && at <= MAX_DOOR
+          && !st.keys.contains(at - MIN_DOOR + MIN_KEY)
+        {
+          continue;
+        }
+        queue.extend(graph[&at].iter().map(|&(s_n, n)| (s_n + s_at, n)));
       }
-      steps += 1;
     }
   }
   min_steps.unwrap()
@@ -76,62 +59,92 @@ pub fn p2(_: &str) -> u32 {
   todo!()
 }
 
-#[derive(Debug, Clone, Copy)]
-enum Tile {
-  Wall,
-  Open,
-  Key(u8),
-  Door(u8),
-}
+type Node = u8;
+const START: Node = 0;
+const MIN_KEY: Node = 1;
+const MAX_KEY: Node = 26;
+const MIN_DOOR: Node = 27;
+const MAX_DOOR: Node = 52;
 
-/// use usize
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Vec2 {
-  x: usize,
-  y: usize,
-}
+type Graph = HashMap<Node, HashSet<(usize, Node)>>;
+
+/// a tuple of (x, y).
+type Point = (usize, usize);
 
 #[derive(Debug)]
 struct State {
-  loc: Vec2,
-  keys: HashSet<u8>,
+  at: Node,
+  keys: BitSet,
   steps: usize,
 }
 
-fn parse(s: &str) -> (Vec<Vec<Tile>>, Vec2) {
-  let mut cur: Option<Vec2> = None;
-  let mut maze = Vec::<Vec<Tile>>::new();
+fn parse(s: &str) -> Graph {
+  let mut walkable = HashSet::<Point>::new();
+  let mut nodes = HashMap::<Point, Node>::new();
   for (y, line) in s.lines().enumerate() {
-    let mut row = Vec::<Tile>::new();
     for (x, b) in line.bytes().enumerate() {
-      let tile = match b {
+      match b {
         b'@' => {
-          cur = Some(Vec2 { x, y });
-          Tile::Open
+          nodes.insert((x, y), START);
         }
-        b'.' => Tile::Open,
-        b'#' => Tile::Wall,
+        b'.' => {}
+        b'#' => continue,
         _ => {
           if b.is_ascii_lowercase() {
-            Tile::Key(b)
+            let key = b - b'a' + MIN_KEY;
+            assert!(MIN_KEY <= key && key <= MAX_KEY);
+            nodes.insert((x, y), key);
           } else if b.is_ascii_uppercase() {
-            Tile::Door(b.to_ascii_lowercase())
+            let door = b - b'A' + MIN_DOOR;
+            assert!(MIN_DOOR <= door && door <= MAX_DOOR);
+            nodes.insert((x, y), door);
           } else {
             panic!("bad byte: {}", b)
           }
         }
-      };
-      row.push(tile);
+      }
+      walkable.insert((x, y));
     }
-    maze.push(row);
   }
-  (maze, cur.unwrap())
+  let mut ret = Graph::new();
+  let mut visited = HashSet::<Point>::new();
+  let mut queue = VecDeque::new();
+  for (&point, &node) in nodes.iter() {
+    let mut steps = 0;
+    visited.clear();
+    queue.clear();
+    queue.push_back(point);
+    while !queue.is_empty() {
+      for _ in 0..queue.len() {
+        let point = queue.pop_front().unwrap();
+        if !visited.insert(point) || !walkable.contains(&point) {
+          continue;
+        }
+        if let Some(&n) = nodes.get(&point) {
+          if node != n {
+            ret.entry(node).or_default().insert((steps, n));
+            continue;
+          }
+        }
+        let (x, y) = point;
+        let neighbors = [
+          x.checked_sub(1).map(|x| (x, y)),
+          x.checked_add(1).map(|x| (x, y)),
+          y.checked_sub(1).map(|y| (x, y)),
+          y.checked_add(1).map(|y| (x, y)),
+        ];
+        queue.extend(neighbors.iter().flatten().copied());
+      }
+      steps += 1;
+    }
+  }
+  ret
 }
 
 #[test]
 fn t() {
-  // let s = include_str!("input/d18.txt");
-  // assert_eq!(p1(s), ___);
+  let s = include_str!("input/d18.txt");
+  assert_eq!(p1(s), 5068);
   // assert_eq!(p2(s), ___);
 }
 
