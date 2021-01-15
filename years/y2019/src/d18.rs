@@ -32,6 +32,13 @@ fn prepare_input_p2(input: &mut Input) {
   }
 }
 
+#[derive(Debug)]
+struct State {
+  at: Vec<Node>,
+  keys: BitSet,
+  steps: usize,
+}
+
 fn go(s: &str, init: Vec<Node>, prepare_input: fn(&mut Input)) -> usize {
   let mut input = parse(s);
   prepare_input(&mut input);
@@ -115,13 +122,6 @@ type Graph = HashMap<Node, HashSet<(usize, Node)>>;
 
 /// a tuple of (x, y).
 type Point = (usize, usize);
-
-#[derive(Debug)]
-struct State {
-  at: Vec<Node>,
-  keys: BitSet,
-  steps: usize,
-}
 
 #[derive(Debug, Default)]
 struct Input {
