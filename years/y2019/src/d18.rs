@@ -2,16 +2,39 @@ use helpers::bit_set::BitSet;
 use std::collections::{HashMap, HashSet, VecDeque};
 
 pub fn p1(s: &str) -> usize {
-  go(s)
+  go(s, vec![Node::Start1], |input| {
+    input.nodes.insert(input.start, Node::Start1);
+  })
 }
 
-pub fn p2(_: &str) -> u32 {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  go(
+    s,
+    vec![Node::Start1, Node::Start2, Node::Start3, Node::Start4],
+    prepare_input_p2,
+  )
 }
 
-fn go(s: &str) -> usize {
+fn prepare_input_p2(input: &mut Input) {
+  let (x, y) = input.start;
+  for point in [(x, y), (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)].iter() {
+    assert!(input.walkable.remove(point));
+  }
+  for &(point, node) in [
+    ((x - 1, y - 1), Node::Start1),
+    ((x - 1, y + 1), Node::Start2),
+    ((x + 1, y - 1), Node::Start3),
+    ((x + 1, y + 1), Node::Start4),
+  ]
+  .iter()
+  {
+    assert!(input.nodes.insert(point, node).is_none());
+  }
+}
+
+fn go(s: &str, init: Vec<Node>, prepare_input: fn(&mut Input)) -> usize {
   let mut input = parse(s);
-  input.nodes.insert(input.start, Node::Start);
+  prepare_input(&mut input);
   let graph = mk_graph(input);
   // depends on no dupe keys
   let num_keys = graph
@@ -19,11 +42,11 @@ fn go(s: &str) -> usize {
     .filter(|&&node| matches!(node, Node::Key(_)))
     .count() as u32;
   let mut states = vec![State {
-    at: Node::Start,
+    at: init,
     keys: BitSet::new(),
     steps: 0,
   }];
-  let mut cache = HashMap::<(Node, BitSet), usize>::new();
+  let mut cache = HashMap::<(Vec<Node>, BitSet), usize>::new();
   let mut queue = VecDeque::<(usize, Node)>::new();
   let mut visited = HashSet::<Node>::new();
   let mut min_steps: Option<usize> = None;
@@ -32,37 +55,46 @@ fn go(s: &str) -> usize {
       min_steps = Some(min_steps.map_or(st.steps, |ac| ac.min(st.steps)));
       continue;
     }
-    queue.clear();
-    visited.clear();
-    queue.push_back((0, st.at));
-    while !queue.is_empty() {
-      for _ in 0..queue.len() {
-        let (s_at, at) = queue.pop_front().unwrap();
-        if !visited.insert(at) {
-          continue;
-        }
-        match at {
-          Node::Start => {}
-          Node::Key(k) => {
-            if !st.keys.contains(k) {
-              let mut keys = st.keys;
-              keys.insert(k);
-              // steps(start, at) = steps(start, st.at) + steps(st.at, at).
-              let steps = st.steps + s_at;
-              if cache.get(&(at, keys)).map_or(true, |&x| x > steps) {
-                cache.insert((at, keys), steps);
-                states.push(State { at, keys, steps });
+    for (node_idx, &node) in st.at.iter().enumerate() {
+      queue.clear();
+      visited.clear();
+      queue.push_back((0, node));
+      while !queue.is_empty() {
+        for _ in 0..queue.len() {
+          let (steps, node) = queue.pop_front().unwrap();
+          if !visited.insert(node) {
+            continue;
+          }
+          match node {
+            Node::Start1 | Node::Start2 | Node::Start3 | Node::Start4 => {}
+            Node::Key(k) => {
+              if !st.keys.contains(k) {
+                let mut keys = st.keys;
+                keys.insert(k);
+                let steps = st.steps + steps;
+                let mut at = st.at.clone();
+                at[node_idx] = node;
+                let tup = (at.clone(), keys);
+                if cache.get(&tup).map_or(true, |&x| x > steps) {
+                  cache.insert(tup, steps);
+                  states.push(State { at, keys, steps });
+                }
+                continue;
               }
-              continue;
+            }
+            Node::Door(k) => {
+              if !st.keys.contains(k) {
+                continue;
+              }
             }
           }
-          Node::Door(k) => {
-            if !st.keys.contains(k) {
-              continue;
-            }
-          }
+          queue.extend(
+            graph[&node]
+              .iter()
+              .copied()
+              .map(|(s_n, n)| (steps + s_n, n)),
+          );
         }
-        queue.extend(graph[&at].iter().map(|&(s_n, n)| (s_n + s_at, n)));
       }
     }
   }
@@ -71,7 +103,10 @@ fn go(s: &str) -> usize {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Node {
-  Start,
+  Start1,
+  Start2,
+  Start3,
+  Start4,
   Key(u8),
   Door(u8),
 }
@@ -82,8 +117,8 @@ type Graph = HashMap<Node, HashSet<(usize, Node)>>;
 type Point = (usize, usize);
 
 #[derive(Debug)]
-struct State<T> {
-  at: T,
+struct State {
+  at: Vec<Node>,
   keys: BitSet,
   steps: usize,
 }
@@ -160,7 +195,7 @@ fn mk_graph(input: Input) -> Graph {
 fn t() {
   let s = include_str!("input/d18.txt");
   assert_eq!(p1(s), 5068);
-  // assert_eq!(p2(s), ___);
+  assert_eq!(p2(s), 1966);
 }
 
 #[test]
@@ -169,4 +204,10 @@ fn t_p1() {
   assert_eq!(p1(s), 8);
   let s = include_str!("input/d18_ex2.txt");
   assert_eq!(p1(s), 86);
+}
+
+#[test]
+fn t_p2() {
+  let s = include_str!("input/d18_ex3.txt");
+  assert_eq!(p2(s), 8);
 }
