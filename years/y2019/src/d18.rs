@@ -10,7 +10,7 @@ pub fn p2(_: &str) -> u32 {
 }
 
 fn go(s: &str) -> usize {
-  let graph = parse(s);
+  let graph = mk_graph(parse(s));
   // depends on no dupe keys
   let num_keys = graph
     .keys()
@@ -86,34 +86,43 @@ struct State<T> {
   steps: usize,
 }
 
-fn parse(s: &str) -> Graph {
-  let mut walkable = HashSet::<Point>::new();
-  let mut nodes = HashMap::<Point, Node>::new();
+#[derive(Debug, Default)]
+struct Input {
+  walkable: HashSet<Point>,
+  nodes: HashMap<Point, Node>,
+}
+
+fn parse(s: &str) -> Input {
+  let mut ret = Input::default();
   for (y, line) in s.lines().enumerate() {
     for (x, b) in line.bytes().enumerate() {
       match b {
         b'@' => {
-          nodes.insert((x, y), Node::Start);
+          ret.nodes.insert((x, y), Node::Start);
         }
         b'.' => {}
         b'#' => continue,
         _ => {
           if b.is_ascii_lowercase() {
-            nodes.insert((x, y), Node::Key(b - b'a'));
+            ret.nodes.insert((x, y), Node::Key(b - b'a'));
           } else if b.is_ascii_uppercase() {
-            nodes.insert((x, y), Node::Door(b - b'A'));
+            ret.nodes.insert((x, y), Node::Door(b - b'A'));
           } else {
             panic!("bad byte: {}", b)
           }
         }
       }
-      walkable.insert((x, y));
+      ret.walkable.insert((x, y));
     }
   }
+  ret
+}
+
+fn mk_graph(input: Input) -> Graph {
   let mut ret = Graph::new();
   let mut visited = HashSet::<Point>::new();
   let mut queue = VecDeque::<Point>::new();
-  for (&point, &node) in nodes.iter() {
+  for (&point, &node) in input.nodes.iter() {
     let mut steps = 0;
     visited.clear();
     queue.clear();
@@ -121,10 +130,10 @@ fn parse(s: &str) -> Graph {
     while !queue.is_empty() {
       for _ in 0..queue.len() {
         let point = queue.pop_front().unwrap();
-        if !visited.insert(point) || !walkable.contains(&point) {
+        if !visited.insert(point) || !input.walkable.contains(&point) {
           continue;
         }
-        if let Some(&n) = nodes.get(&point) {
+        if let Some(&n) = input.nodes.get(&point) {
           if node != n {
             ret.entry(node).or_default().insert((steps, n));
             continue;
