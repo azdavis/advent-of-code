@@ -2,14 +2,22 @@ use helpers::bit_set::BitSet;
 use std::collections::{HashMap, HashSet, VecDeque};
 
 pub fn p1(s: &str) -> usize {
+  go(s)
+}
+
+pub fn p2(_: &str) -> u32 {
+  todo!()
+}
+
+fn go(s: &str) -> usize {
   let graph = parse(s);
   // depends on no dupe keys
   let num_keys = graph
     .keys()
-    .filter(|&&k| MIN_KEY <= k && k <= MAX_KEY)
+    .filter(|&&node| matches!(node, Node::Key(_)))
     .count() as u32;
   let mut states = vec![State {
-    at: START,
+    at: Node::Start,
     keys: BitSet::new(),
     steps: 0,
   }];
@@ -31,22 +39,26 @@ pub fn p1(s: &str) -> usize {
         if !visited.insert(at) {
           continue;
         }
-        if MIN_KEY <= at && at <= MAX_KEY && !st.keys.contains(at) {
-          let mut keys = st.keys;
-          keys.insert(at);
-          // steps(start -> at) = steps(start -> st.at) + steps(st.at -> at).
-          let steps = st.steps + s_at;
-          if cache.get(&(at, keys)).map_or(true, |&x| x > steps) {
-            cache.insert((at, keys), steps);
-            states.push(State { at, keys, steps });
+        match at {
+          Node::Start => {}
+          Node::Key(k) => {
+            if !st.keys.contains(k) {
+              let mut keys = st.keys;
+              keys.insert(k);
+              // steps(start, at) = steps(start, st.at) + steps(st.at, at).
+              let steps = st.steps + s_at;
+              if cache.get(&(at, keys)).map_or(true, |&x| x > steps) {
+                cache.insert((at, keys), steps);
+                states.push(State { at, keys, steps });
+              }
+              continue;
+            }
           }
-          continue;
-        }
-        if MIN_DOOR <= at
-          && at <= MAX_DOOR
-          && !st.keys.contains(at - MIN_DOOR + MIN_KEY)
-        {
-          continue;
+          Node::Door(k) => {
+            if !st.keys.contains(k) {
+              continue;
+            }
+          }
         }
         queue.extend(graph[&at].iter().map(|&(s_n, n)| (s_n + s_at, n)));
       }
@@ -55,16 +67,12 @@ pub fn p1(s: &str) -> usize {
   min_steps.unwrap()
 }
 
-pub fn p2(_: &str) -> u32 {
-  todo!()
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+enum Node {
+  Start,
+  Key(u8),
+  Door(u8),
 }
-
-type Node = u8;
-const START: Node = 0;
-const MIN_KEY: Node = 1;
-const MAX_KEY: Node = 26;
-const MIN_DOOR: Node = 27;
-const MAX_DOOR: Node = 52;
 
 type Graph = HashMap<Node, HashSet<(usize, Node)>>;
 
@@ -72,8 +80,8 @@ type Graph = HashMap<Node, HashSet<(usize, Node)>>;
 type Point = (usize, usize);
 
 #[derive(Debug)]
-struct State {
-  at: Node,
+struct State<T> {
+  at: T,
   keys: BitSet,
   steps: usize,
 }
@@ -85,19 +93,15 @@ fn parse(s: &str) -> Graph {
     for (x, b) in line.bytes().enumerate() {
       match b {
         b'@' => {
-          nodes.insert((x, y), START);
+          nodes.insert((x, y), Node::Start);
         }
         b'.' => {}
         b'#' => continue,
         _ => {
           if b.is_ascii_lowercase() {
-            let key = b - b'a' + MIN_KEY;
-            assert!(MIN_KEY <= key && key <= MAX_KEY);
-            nodes.insert((x, y), key);
+            nodes.insert((x, y), Node::Key(b - b'a'));
           } else if b.is_ascii_uppercase() {
-            let door = b - b'A' + MIN_DOOR;
-            assert!(MIN_DOOR <= door && door <= MAX_DOOR);
-            nodes.insert((x, y), door);
+            nodes.insert((x, y), Node::Door(b - b'A'));
           } else {
             panic!("bad byte: {}", b)
           }
