@@ -10,7 +10,9 @@ pub fn p2(_: &str) -> u32 {
 }
 
 fn go(s: &str) -> usize {
-  let graph = mk_graph(parse(s));
+  let mut input = parse(s);
+  input.nodes.insert(input.start, Node::Start);
+  let graph = mk_graph(input);
   // depends on no dupe keys
   let num_keys = graph
     .keys()
@@ -90,16 +92,16 @@ struct State<T> {
 struct Input {
   walkable: HashSet<Point>,
   nodes: HashMap<Point, Node>,
+  start: Point,
 }
 
+/// the returned `nodes` contains only Key and Door nodes
 fn parse(s: &str) -> Input {
   let mut ret = Input::default();
   for (y, line) in s.lines().enumerate() {
     for (x, b) in line.bytes().enumerate() {
       match b {
-        b'@' => {
-          ret.nodes.insert((x, y), Node::Start);
-        }
+        b'@' => ret.start = (x, y),
         b'.' => {}
         b'#' => continue,
         _ => {
