@@ -44,7 +44,7 @@ struct Input<'a> {
   order: Vec<&'a str>,
 }
 
-fn process(s: &str) -> Input {
+fn process(s: &str) -> Input<'_> {
   let recipes: HashMap<_, _> = s
     .lines()
     .map(|line| {
