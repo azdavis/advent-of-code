@@ -1,7 +1,7 @@
 //! Matrix-y operations.
 
 /// Rotates the matrix to the left. Requires there exists c such that for all x
-/// in xs, xs.len() == c.
+/// in xs, x.len() == c.
 pub fn rotate_left<T>(xs: &[Vec<T>]) -> Vec<Vec<T>>
 where
   T: Copy,
@@ -31,7 +31,7 @@ fn t_rotate_left() {
 }
 
 /// Transposes the matrix. Requires there exists c such that for all x in xs,
-/// xs.len() == c.
+/// x.len() == c.
 pub fn transpose<T>(xs: &[Vec<T>]) -> Vec<Vec<T>>
 where
   T: Copy,
