@@ -66,20 +66,19 @@ pub fn p2(s: &str) -> usize {
       .enumerate()
       .flat_map(|(y, row)| row.iter().enumerate().map(move |(x, _)| (y, x)))
       .filter_map(|(y, x)| {
-        let all_hit = sea_monster.iter().all(|&(sm_y, sm_x)| {
-          board
-            .get(y + sm_y)
-            .and_then(|row| row.get(x + sm_x))
-            .map_or(false, Pixel::is_black)
-        });
-        if all_hit {
-          let ret = sea_monster
-            .iter()
-            .map(move |&(sm_y, sm_x)| (sm_y + y, sm_x + x));
-          Some(ret)
-        } else {
-          None
-        }
+        sea_monster
+          .iter()
+          .all(|&(sm_y, sm_x)| {
+            board
+              .get(y + sm_y)
+              .and_then(|row| row.get(x + sm_x))
+              .map_or(false, Pixel::is_black)
+          })
+          .then(|| {
+            sea_monster
+              .iter()
+              .map(move |&(sm_y, sm_x)| (sm_y + y, sm_x + x))
+          })
       })
       .flatten()
       .collect();

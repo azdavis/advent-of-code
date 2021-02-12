@@ -16,12 +16,10 @@ pub fn p1(s: &str) -> u32 {
   scaffold
     .iter()
     .filter_map(|&sc| {
-      let all_scaffold = neighbors(sc).iter().all(|&n| scaffold.contains(&n));
-      if all_scaffold {
-        Some((sc.x * sc.y) as u32)
-      } else {
-        None
-      }
+      neighbors(sc)
+        .iter()
+        .all(|&n| scaffold.contains(&n))
+        .then(|| (sc.x * sc.y) as u32)
     })
     .sum()
 }
@@ -41,11 +39,7 @@ pub fn p2(s: &str) -> i64 {
       .iter()
       .enumerate()
       .find_map(|(idx, &n)| {
-        if n == nl && output[idx.checked_sub(1)?] == nl {
-          Some(idx)
-        } else {
-          None
-        }
+        (n == nl && output[idx.checked_sub(1)?] == nl).then(|| idx)
       })
       .unwrap();
     output.truncate(idx);

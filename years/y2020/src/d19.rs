@@ -36,13 +36,7 @@ fn match_prefix(ms: &mut HashSet<Msg>, rules: &Rules, idx: usize) {
     Rule::Char(c) => {
       *ms = ms
         .drain()
-        .filter_map(|mut m| {
-          if m.pop().map_or(false, |x| x == c) {
-            Some(m)
-          } else {
-            None
-          }
-        })
+        .filter_map(|mut m| m.pop().map_or(false, |x| x == c).then(|| m))
         .collect();
     }
     Rule::Seq(ref seq) => match_prefix_seq(ms, rules, seq),

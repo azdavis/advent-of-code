@@ -38,14 +38,12 @@ pub fn p2(s: &str) -> String {
           .copied()
           .collect();
         assert!(!possible_allergens.is_empty());
-        if possible_allergens.len() == 1 {
+        (possible_allergens.len() == 1).then(|| {
           let mut iter = possible_allergens.into_iter();
           let a = iter.next().unwrap();
           assert!(iter.next().is_none());
-          Some((ing, a))
-        } else {
-          None
-        }
+          (ing, a)
+        })
       })
       .unwrap();
     assert!(ingredients.remove(ing));
