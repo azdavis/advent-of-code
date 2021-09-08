@@ -51,7 +51,7 @@ fn get_best(points: &HashSet<Vec2>) -> (Vec2, usize) {
   points
     .iter()
     .map(|&a| {
-      let count = points.iter().filter(|&&b| can_see(a, b, &points)).count();
+      let count = points.iter().filter(|&&b| can_see(a, b, points)).count();
       (a, count)
     })
     .max_by_key(|&(_, count)| count)

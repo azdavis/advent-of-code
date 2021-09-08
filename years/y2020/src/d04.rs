@@ -46,8 +46,8 @@ fn is_p2_valid_key(key: Key, val: &str) -> bool {
     Key::EyeColor => {
       matches!(val, "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth")
     }
-    Key::PassportID => PASSPORT_ID.is_match(val),
-    Key::CountryID => true,
+    Key::PassportId => PASSPORT_ID.is_match(val),
+    Key::CountryId => true,
   }
 }
 
@@ -61,7 +61,7 @@ fn go(s: &str, f: fn(Key, &str) -> bool) -> usize {
       Key::Height,
       Key::HairColor,
       Key::EyeColor,
-      Key::PassportID,
+      Key::PassportId,
     ];
     for field in passport.split_ascii_whitespace() {
       let mut iter = field.split(':');
@@ -88,8 +88,8 @@ enum Key {
   Height,
   HairColor,
   EyeColor,
-  PassportID,
-  CountryID,
+  PassportId,
+  CountryId,
 }
 
 impl Key {
@@ -101,8 +101,8 @@ impl Key {
       "hgt" => Self::Height,
       "hcl" => Self::HairColor,
       "ecl" => Self::EyeColor,
-      "pid" => Self::PassportID,
-      "cid" => Self::CountryID,
+      "pid" => Self::PassportId,
+      "cid" => Self::CountryId,
       _ => panic!("bad key: {}", s),
     }
   }

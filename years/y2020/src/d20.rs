@@ -32,6 +32,8 @@ pub fn p2(s: &str) -> usize {
   let constructed: Tile = board
     .into_iter()
     .flat_map(|mut row| {
+      // because of side effects + rev
+      #[allow(clippy::needless_collect)]
       let new_rows: Vec<_> = (0..tile_dim)
         .map(|_| {
           row
@@ -183,7 +185,7 @@ fn mk_edges(tiles: &Tiles) -> Edges {
   for (&id_a, tile_translations) in tiles.iter() {
     for (id_b, tile) in tile_translations.iter().enumerate() {
       for &(f, dir) in FNS.iter() {
-        ret.entry((f(&tile), dir)).or_default().insert((id_a, id_b));
+        ret.entry((f(tile), dir)).or_default().insert((id_a, id_b));
       }
     }
   }

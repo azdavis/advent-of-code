@@ -84,7 +84,7 @@ pub fn p2(s: &str) -> i64 {
   let decomposition = decompose(&route).unwrap();
   let inp = {
     let mut ret = Vec::new();
-    let mut iter = decomposition.sequence.iter().map(Pat::to_input);
+    let mut iter = decomposition.sequence.iter().map(|x| x.to_input());
     if let Some(x) = iter.next() {
       ret.push(x);
     }
@@ -110,7 +110,7 @@ pub fn p2(s: &str) -> i64 {
 }
 
 fn write_moves(ms: &[Move], buf: &mut Vec<i64>) {
-  let mut iter = ms.iter().map(Move::to_input);
+  let mut iter = ms.iter().map(|x| x.to_input());
   if let Some(x) = iter.next() {
     buf.extend(x);
   }
@@ -128,8 +128,8 @@ enum Pat {
 }
 
 impl Pat {
-  fn to_input(&self) -> i64 {
-    match *self {
+  fn to_input(self) -> i64 {
+    match self {
       Pat::A => b'A' as i64,
       Pat::B => b'B' as i64,
       Pat::C => b'C' as i64,
@@ -234,8 +234,8 @@ enum Move {
 }
 
 impl Move {
-  fn to_input(&self) -> ToInput {
-    match *self {
+  fn to_input(self) -> ToInput {
+    match self {
       Move::TurnLeft => ToInput::Once(std::iter::once(b'L' as i64)),
       Move::TurnRight => ToInput::Once(std::iter::once(b'R' as i64)),
       Move::Forward(n) => ToInput::Digits(digits(n)),

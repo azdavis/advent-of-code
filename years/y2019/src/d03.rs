@@ -21,7 +21,7 @@ pub fn p2(s: &str) -> usize {
   let snd_set: HashSet<_> = snd_map.iter().map(|x| x.0).collect();
   fst_set
     .intersection(&snd_set)
-    .map(|p| fst_map.get(&p).unwrap() + snd_map.get(&p).unwrap())
+    .map(|&p| fst_map.get(p).unwrap() + snd_map.get(p).unwrap())
     .min()
     .unwrap()
 }
