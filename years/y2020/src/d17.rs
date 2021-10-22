@@ -1,5 +1,4 @@
 use std::collections::HashSet;
-use std::convert::TryInto as _;
 use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {

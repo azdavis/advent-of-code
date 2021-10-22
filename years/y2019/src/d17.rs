@@ -4,7 +4,6 @@ use helpers::digits::{digits, to_char, Digits};
 use helpers::maplit::hashmap;
 use helpers::vec2::Vec2;
 use std::collections::{HashMap, HashSet};
-use std::convert::TryFrom as _;
 
 pub fn p1(s: &str) -> u32 {
   let scaffold = {

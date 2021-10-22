@@ -1,5 +1,4 @@
 use helpers::digits::to_char;
-use std::convert::TryInto;
 
 pub fn p1(s: &str) -> String {
   go_p1(s, 100)

@@ -3,7 +3,6 @@ use helpers::gcd::gcd;
 use helpers::vec2::Vec2;
 use std::cmp::Reverse;
 use std::collections::{HashMap, HashSet};
-use std::convert::TryInto as _;
 
 pub fn p1(s: &str) -> usize {
   let points = parse(s);
