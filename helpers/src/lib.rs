@@ -17,6 +17,5 @@ pub mod permute;
 pub mod vec2;
 
 pub use float_ord;
-pub use maplit;
 pub use once_cell;
 pub use regex;

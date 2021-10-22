@@ -1,4 +1,4 @@
-use helpers::{ceil_div::ceil_div, maplit::hashmap};
+use helpers::ceil_div::ceil_div;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 
@@ -26,7 +26,7 @@ pub fn p2(s: &str) -> usize {
 const MAX_ORE: usize = 1_000_000_000_000;
 
 fn ore_for_fuel(inp: &Input<'_>, num_fuel: usize) -> usize {
-  let mut want = hashmap!["FUEL" => num_fuel];
+  let mut want = HashMap::from([("FUEL", num_fuel)]);
   for &chem in inp.order.iter() {
     let num_need = want.remove(chem).unwrap();
     let (per_batch, ref ins) = inp.recipes[&chem];

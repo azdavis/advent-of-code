@@ -1,4 +1,3 @@
-use helpers::maplit::hashset;
 use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> usize {
@@ -18,7 +17,7 @@ fn go(rules: Rules, messages: Vec<Msg>) -> usize {
   for mut m in messages {
     // don't use filter + count since we mutate
     m.reverse();
-    let mut ms = hashset![m];
+    let mut ms = HashSet::from([m]);
     match_prefix(&mut ms, &rules, 0);
     if ms.contains(&vec![]) {
       ret += 1;

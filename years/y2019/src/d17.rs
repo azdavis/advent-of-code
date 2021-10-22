@@ -1,7 +1,6 @@
 use crate::intcode::{parse, Intcode};
 use helpers::compass::Compass;
 use helpers::digits::{digits, to_char, Digits};
-use helpers::maplit::hashmap;
 use helpers::vec2::Vec2;
 use std::collections::{HashMap, HashSet};
 
@@ -166,7 +165,7 @@ fn decompose(route: &[Move]) -> Option<Res> {
     for &b in all_pats.iter() {
       'outer: for &c in all_pats.iter() {
         sequence.clear();
-        let pats = hashmap![a => Pat::A, b => Pat::B, c => Pat::C];
+        let pats = HashMap::from([(a, Pat::A), (b, Pat::B), (c, Pat::C)]);
         if pats.len() != 3 {
           // duplicate
           continue 'outer;

@@ -1,16 +1,15 @@
 use crate::intcode::{Intcode, Res};
 use helpers::block_char::{BLACK, WHITE};
 use helpers::compass::Compass;
-use helpers::maplit::hashset;
 use helpers::vec2::Vec2;
 use std::collections::HashSet;
 
 pub fn p1(s: &str) -> usize {
-  go(s, &mut hashset![])
+  go(s, &mut HashSet::new())
 }
 
 pub fn p2(s: &str) -> String {
-  let mut white = hashset![Vec2::default()];
+  let mut white = HashSet::from([Vec2::default()]);
   go(s, &mut white);
   let min_x = white.iter().map(|p| p.x).min().unwrap();
   let min_y = white.iter().map(|p| p.y).min().unwrap();
