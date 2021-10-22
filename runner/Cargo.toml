@@ -2,7 +2,7 @@
 name = "runner"
 version = "0.1.0"
 authors = ["Ariel Davis <ariel.z.davis@icloud.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 y2019 = { path = "../years/y2019" }
