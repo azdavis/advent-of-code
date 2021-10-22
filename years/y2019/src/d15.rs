@@ -1,7 +1,8 @@
 use crate::intcode::Intcode;
 use helpers::compass::Compass;
 use helpers::vec2::Vec2;
-use std::collections::{HashSet, VecDeque};
+use helpers::HashSet;
+use std::collections::VecDeque;
 
 pub fn p1(s: &str) -> usize {
   match go(Intcode::parse(s)) {
@@ -28,7 +29,7 @@ enum Res {
 
 /// bfs
 fn go(prog: Intcode) -> Res {
-  let mut visited = HashSet::new();
+  let mut visited = HashSet::default();
   let mut queue = VecDeque::from(vec![(Vec2::default(), prog)]);
   let mut level = 1;
   let mut output = Vec::with_capacity(1);

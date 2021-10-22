@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use helpers::HashSet;
 
 pub fn p1(s: &str) -> i32 {
   let instrs = get_instrs(s);
@@ -30,7 +30,7 @@ pub fn p2(s: &str) -> i32 {
 }
 
 fn simulate(instrs: &[Instr]) -> Res {
-  let mut visited = HashSet::new();
+  let mut visited = HashSet::default();
   let mut acc = 0;
   let mut idx = 0;
   loop {

@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use helpers::HashSet;
 
 pub fn p1(s: &str) -> usize {
   let recipes = parse(s);
@@ -98,7 +98,7 @@ struct Recipe<'a> {
 
 fn parse_recipe(s: &str) -> Recipe<'_> {
   let mut parts = s.split(' ');
-  let mut ingredients = HashSet::new();
+  let mut ingredients = HashSet::default();
   loop {
     let cur = parts.next().unwrap();
     if cur == "(contains" {

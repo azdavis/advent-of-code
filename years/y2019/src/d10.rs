@@ -1,8 +1,8 @@
 use helpers::float_ord::FloatOrd;
 use helpers::gcd::gcd;
 use helpers::vec2::Vec2;
+use helpers::{HashMap, HashSet};
 use std::cmp::Reverse;
-use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> usize {
   let points = parse(s);
@@ -14,7 +14,7 @@ pub fn p2(s: &str) -> u32 {
   let mut points = parse(s);
   let (best, _) = get_best(&points);
   assert!(points.remove(&best));
-  let mut map = HashMap::<(i32, i32), Vec<Vec2>>::new();
+  let mut map = HashMap::<(i32, i32), Vec<Vec2>>::default();
   for &p in points.iter() {
     map.entry(diff_gcd(best, p)).or_default().push(p);
   }

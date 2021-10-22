@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use helpers::hash_map;
 
 pub fn p1(s: &str) -> usize {
   let mut nums = parse(s);
@@ -22,7 +22,7 @@ pub fn p1(s: &str) -> usize {
 pub fn p2(s: &str) -> usize {
   let mut nums = parse(s);
   nums.sort_unstable();
-  let mut dp = HashMap::from([(0, 1)]);
+  let mut dp = hash_map([(0, 1)]);
   for &n in nums.iter() {
     let ans: usize = [1, 2, 3]
       .iter()

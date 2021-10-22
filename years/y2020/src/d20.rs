@@ -1,8 +1,8 @@
 use helpers::matrix::{bot, left, right, rotate_left, top, transpose};
 use helpers::once_cell::sync::Lazy;
 use helpers::regex::Regex;
+use helpers::{HashMap, HashSet};
 use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> u64 {
   let board = go(s);
@@ -181,7 +181,7 @@ fn go(s: &str) -> Board {
 }
 
 fn mk_edges(tiles: &Tiles) -> Edges {
-  let mut ret = Edges::new();
+  let mut ret = Edges::default();
   for (&id_a, tile_translations) in tiles.iter() {
     for (id_b, tile) in tile_translations.iter().enumerate() {
       for &(f, dir) in FNS.iter() {
@@ -236,7 +236,7 @@ fn expand(
     // try must be in both sets.
     (Some(top), Some(left)) => top.intersection(left).copied().collect(),
     (Some(a), None) | (None, Some(a)) => a.clone(),
-    (None, None) => HashSet::new(),
+    (None, None) => HashSet::default(),
   };
   tile_ids.into_iter().filter_map(move |(id_a, id_b)| {
     // if we've already used a tile, we can't use it again.

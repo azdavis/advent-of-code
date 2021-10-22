@@ -1,6 +1,7 @@
 use helpers::infinitable::Infinitable;
+use helpers::{HashMap, HashSet};
 use std::cmp::Reverse;
-use std::collections::{BinaryHeap, HashMap, HashSet, VecDeque};
+use std::collections::{BinaryHeap, VecDeque};
 use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {
@@ -8,7 +9,7 @@ pub fn p1(s: &str) -> usize {
     inp.entry(center).or_default().insert(orbiter);
   });
   // bfs
-  let mut visited = HashSet::new();
+  let mut visited = HashSet::default();
   let mut queue = VecDeque::from(vec!["COM"]);
   let mut level = 0;
   let mut ret = 0;
@@ -105,7 +106,7 @@ fn parse(
   s: &str,
   add: for<'a> fn(&mut Graph<&'a str>, &'a str, &'a str),
 ) -> Graph<&str> {
-  let mut ret = Graph::new();
+  let mut ret = Graph::default();
   for line in s.lines() {
     let mut parts = line.split(')');
     let center = parts.next().unwrap();

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use helpers::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct Mem<T> {

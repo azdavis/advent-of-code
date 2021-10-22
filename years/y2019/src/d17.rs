@@ -2,7 +2,7 @@ use crate::intcode::{parse, Intcode};
 use helpers::compass::Compass;
 use helpers::digits::{digits, to_char, Digits};
 use helpers::vec2::Vec2;
-use std::collections::{HashMap, HashSet};
+use helpers::{hash_map, HashMap, HashSet};
 
 pub fn p1(s: &str) -> u32 {
   let scaffold = {
@@ -165,7 +165,7 @@ fn decompose(route: &[Move]) -> Option<Res> {
     for &b in all_pats.iter() {
       'outer: for &c in all_pats.iter() {
         sequence.clear();
-        let pats = HashMap::from([(a, Pat::A), (b, Pat::B), (c, Pat::C)]);
+        let pats = hash_map([(a, Pat::A), (b, Pat::B), (c, Pat::C)]);
         if pats.len() != 3 {
           // duplicate
           continue 'outer;
@@ -265,7 +265,7 @@ struct Screen {
 }
 
 fn parse_screen(output: &[i64]) -> Screen {
-  let mut scaffold = HashSet::new();
+  let mut scaffold = HashSet::default();
   let mut robot: Option<(Vec2, Compass)> = None;
   let mut cur = Vec2::default();
   for &n in output.iter() {

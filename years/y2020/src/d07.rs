@@ -1,8 +1,8 @@
-use std::collections::{HashMap, HashSet};
+use helpers::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> usize {
   let graph = mk_graph(s, |a, _, b| (b, a));
-  let mut visited = HashSet::new();
+  let mut visited = HashSet::default();
   let mut cur = vec![START];
   while let Some(bag) = cur.pop() {
     if !visited.insert(bag) {
@@ -47,7 +47,7 @@ fn mk_graph<'a, T>(
 where
   T: std::hash::Hash + Eq + 'a,
 {
-  let mut ret = HashMap::<_, HashSet<_>>::new();
+  let mut ret = HashMap::<_, HashSet<_>>::default();
   for line in s.lines() {
     let mut iter = line.split_ascii_whitespace();
     let container = Bag {

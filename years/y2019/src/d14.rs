@@ -1,5 +1,5 @@
 use helpers::ceil_div::ceil_div;
-use std::collections::{HashMap, HashSet};
+use helpers::{hash_map, HashMap, HashSet};
 use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {
@@ -26,7 +26,7 @@ pub fn p2(s: &str) -> usize {
 const MAX_ORE: usize = 1_000_000_000_000;
 
 fn ore_for_fuel(inp: &Input<'_>, num_fuel: usize) -> usize {
-  let mut want = HashMap::from([("FUEL", num_fuel)]);
+  let mut want = hash_map([("FUEL", num_fuel)]);
   for &chem in inp.order.iter() {
     let num_need = want.remove(chem).unwrap();
     let (per_batch, ref ins) = inp.recipes[&chem];
@@ -56,7 +56,7 @@ fn process(s: &str) -> Input<'_> {
       (out.chem, (out.count, ins))
     })
     .collect();
-  let mut graph = Graph::new();
+  let mut graph = Graph::default();
   for (&out, &(_, ref ins)) in recipes.iter() {
     for ing in ins.iter() {
       graph.entry(ing.chem).or_default().insert(out);
@@ -80,8 +80,8 @@ fn topological_sort<T>(start: T, graph: &Graph<T>) -> Vec<T>
 where
   T: Hash + Eq + Copy,
 {
-  let mut active = HashSet::new();
-  let mut done = HashSet::new();
+  let mut active = HashSet::default();
+  let mut done = HashSet::default();
   let mut order = Vec::new();
   let mut stack = vec![(Action::Start, start)];
   while let Some((ac, cur)) = stack.pop() {

@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use helpers::{hash_set, HashMap, HashSet};
 
 pub fn p1(s: &str) -> usize {
   let (rules, messages) = parse(s);
@@ -17,7 +17,7 @@ fn go(rules: Rules, messages: Vec<Msg>) -> usize {
   for mut m in messages {
     // don't use filter + count since we mutate
     m.reverse();
-    let mut ms = HashSet::from([m]);
+    let mut ms = hash_set([m]);
     match_prefix(&mut ms, &rules, 0);
     if ms.contains(&vec![]) {
       ret += 1;
@@ -72,7 +72,7 @@ type Msg = Vec<Char>;
 
 fn parse(s: &str) -> (Rules, Vec<Msg>) {
   let mut lines = s.lines();
-  let mut rules = HashMap::new();
+  let mut rules = HashMap::default();
   loop {
     let line = lines.next().unwrap();
     if line.is_empty() {

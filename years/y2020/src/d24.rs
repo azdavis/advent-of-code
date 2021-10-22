@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use helpers::HashSet;
 
 pub fn p1(s: &str) -> usize {
   parse(s).len()
@@ -40,7 +40,7 @@ fn neighbors(c: AxialCoord) -> [AxialCoord; 6] {
 }
 
 fn parse(s: &str) -> HashSet<AxialCoord> {
-  let mut ret = HashSet::new();
+  let mut ret = HashSet::default();
   for line in s.lines() {
     let coord = parse_axial_coord(line);
     if ret.contains(&coord) {

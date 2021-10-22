@@ -1,5 +1,6 @@
 use helpers::bit_set::BitSet;
-use std::collections::{HashMap, HashSet, VecDeque};
+use helpers::{HashMap, HashSet};
+use std::collections::VecDeque;
 
 pub fn p1(s: &str) -> usize {
   go(s, vec![Node::Start1], |input| {
@@ -53,9 +54,9 @@ fn go(s: &str, init: Vec<Node>, prepare_input: fn(&mut Input)) -> usize {
     keys: BitSet::new(),
     steps: 0,
   }];
-  let mut cache = HashMap::<(Vec<Node>, BitSet), usize>::new();
+  let mut cache = HashMap::<(Vec<Node>, BitSet), usize>::default();
   let mut queue = VecDeque::<(usize, Node)>::new();
-  let mut visited = HashSet::<Node>::new();
+  let mut visited = HashSet::<Node>::default();
   let mut min_steps: Option<usize> = None;
   while let Some(st) = states.pop() {
     if st.keys.len() == num_keys {
@@ -156,8 +157,8 @@ fn parse(s: &str) -> Input {
 }
 
 fn mk_graph(input: Input) -> Graph {
-  let mut ret = Graph::new();
-  let mut visited = HashSet::<Point>::new();
+  let mut ret = Graph::default();
+  let mut visited = HashSet::<Point>::default();
   let mut queue = VecDeque::<Point>::new();
   for (&point, &node) in input.nodes.iter() {
     let mut steps = 0;

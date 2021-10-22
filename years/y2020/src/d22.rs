@@ -1,5 +1,6 @@
+use helpers::HashSet;
 use std::cmp::Ordering;
-use std::collections::{HashSet, VecDeque};
+use std::collections::VecDeque;
 
 pub fn p1(s: &str) -> usize {
   let [d1, d2] = parse(s);
@@ -45,7 +46,7 @@ fn regular(mut d1: Deck, mut d2: Deck) -> Deck {
 }
 
 fn recursive(mut d1: Deck, mut d2: Deck) -> (Player, Deck) {
-  let mut prev = HashSet::new();
+  let mut prev = HashSet::default();
   loop {
     if !prev.insert((d1.clone(), d2.clone())) {
       return (Player::P1, d1);

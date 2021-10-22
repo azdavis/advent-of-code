@@ -1,6 +1,6 @@
+use helpers::hash_set;
 use helpers::once_cell::sync::Lazy;
 use helpers::regex::Regex;
-use std::collections::HashSet;
 
 pub fn p1(s: &str) -> usize {
   go(s, |_, _| true)
@@ -54,7 +54,7 @@ fn is_p2_valid_key(key: Key, val: &str) -> bool {
 fn go(s: &str, f: fn(Key, &str) -> bool) -> usize {
   let mut ret = 0;
   'outer: for passport in s.split("\n\n") {
-    let mut need = HashSet::from([
+    let mut need = hash_set([
       Key::BirthYear,
       Key::IssueYear,
       Key::ExpirationYear,

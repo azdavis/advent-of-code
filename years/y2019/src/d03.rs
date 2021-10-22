@@ -1,6 +1,6 @@
 use helpers::compass::Compass;
 use helpers::vec2::Vec2;
-use std::collections::{HashMap, HashSet};
+use helpers::{HashMap, HashSet};
 
 pub fn p1(s: &str) -> i32 {
   let [fst, snd] = parse(s);
@@ -28,7 +28,7 @@ pub fn p2(s: &str) -> usize {
 
 fn evolve(xs: &[Action]) -> HashMap<Vec2, usize> {
   let mut cur = Vec2::default();
-  let mut ret = HashMap::new();
+  let mut ret = HashMap::default();
   let mut idx = 0;
   for ac in xs {
     let [dx, dy] = ac.direction.dx_dy();

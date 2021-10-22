@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use helpers::HashMap;
 
 pub fn p1(s: &str) -> usize {
   go(s, |mask, mem, addr, mut val| {
@@ -29,7 +29,7 @@ type Mem = HashMap<usize, usize>;
 fn go(s: &str, f: fn(&Mask, &mut Mem, usize, usize)) -> usize {
   let instrs = parse(s);
   let mut mask = Mask::default();
-  let mut mem = Mem::new();
+  let mut mem = Mem::default();
   for instr in instrs {
     match instr {
       Instr::Mask(m) => mask = m,

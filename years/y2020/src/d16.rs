@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use helpers::{HashMap, HashSet};
 use std::ops::RangeInclusive;
 
 pub fn p1(s: &str) -> u64 {
@@ -29,8 +29,8 @@ pub fn p2(s: &str) -> u64 {
     })
     .collect();
   candidates.sort_unstable_by_key(|&(key, ref set)| (set.len(), key));
-  let mut assigned = HashSet::new();
-  let mut mapping = HashMap::new();
+  let mut assigned = HashSet::default();
+  let mut mapping = HashMap::default();
   for &(key, ref set) in candidates.iter() {
     assert_eq!(assigned.len(), mapping.len());
     assert_eq!(assigned.len() + 1, set.len());
@@ -63,7 +63,7 @@ impl Ranges {
 
 fn parse(s: &str) -> (HashMap<&str, Ranges>, Ticket, Vec<Ticket>) {
   let mut lines = s.lines();
-  let mut fields = HashMap::new();
+  let mut fields = HashMap::default();
   loop {
     let line = lines.next().unwrap();
     if line.is_empty() {

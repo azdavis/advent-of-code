@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use helpers::HashSet;
 
 pub fn p1(s: &str) -> u32 {
   seat_ids(s).max().unwrap()

@@ -2,14 +2,14 @@ use crate::intcode::{Intcode, Res};
 use helpers::block_char::{BLACK, WHITE};
 use helpers::compass::Compass;
 use helpers::vec2::Vec2;
-use std::collections::HashSet;
+use helpers::{hash_set, HashSet};
 
 pub fn p1(s: &str) -> usize {
-  go(s, &mut HashSet::new())
+  go(s, &mut HashSet::default())
 }
 
 pub fn p2(s: &str) -> String {
-  let mut white = HashSet::from([Vec2::default()]);
+  let mut white = hash_set([Vec2::default()]);
   go(s, &mut white);
   let min_x = white.iter().map(|p| p.x).min().unwrap();
   let min_y = white.iter().map(|p| p.y).min().unwrap();
@@ -32,7 +32,7 @@ pub fn p2(s: &str) -> String {
 
 fn go(s: &str, white: &mut HashSet<Vec2>) -> usize {
   let mut p = Intcode::parse(s);
-  let mut did_paint = HashSet::<Vec2>::new();
+  let mut did_paint = HashSet::<Vec2>::default();
   let mut cur = Vec2::default();
   let mut facing = Compass::North;
   let mut output = Vec::with_capacity(2);

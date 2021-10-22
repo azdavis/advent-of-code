@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use helpers::HashSet;
 use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {
