@@ -16,9 +16,9 @@ pub mod matrix;
 pub mod permute;
 pub mod vec2;
 
-pub use float_ord;
-pub use once_cell;
-pub use regex;
+pub use float_ord::{sort, FloatOrd};
+pub use once_cell::sync::Lazy;
+pub use regex::Regex;
 pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
 
 /// Returns a hash set of the given items.

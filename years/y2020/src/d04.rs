@@ -1,6 +1,4 @@
-use helpers::hash_set;
-use helpers::once_cell::sync::Lazy;
-use helpers::regex::Regex;
+use helpers::{hash_set, Lazy, Regex};
 
 pub fn p1(s: &str) -> usize {
   go(s, |_, _| true)

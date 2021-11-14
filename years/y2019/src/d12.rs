@@ -1,6 +1,5 @@
 use helpers::gcd::lcm;
-use helpers::once_cell::sync::Lazy;
-use helpers::regex::Regex;
+use helpers::{Lazy, Regex};
 use std::cmp::Ordering;
 
 pub fn p1(s: &str) -> u32 {

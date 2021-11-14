@@ -1,7 +1,5 @@
 use helpers::matrix::{bot, left, right, rotate_left, top, transpose};
-use helpers::once_cell::sync::Lazy;
-use helpers::regex::Regex;
-use helpers::{HashMap, HashSet};
+use helpers::{HashMap, HashSet, Lazy, Regex};
 use std::cmp::Ordering;
 
 pub fn p1(s: &str) -> u64 {
