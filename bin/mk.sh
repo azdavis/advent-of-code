@@ -48,7 +48,7 @@ rustfmt "$SRC/lib.rs"
 cat <<EOF > runner/src/main.rs
 fn main() {
   let s = include_str!("../../$SRC/input/d$DAY.txt");
-  println!("{}", y$YEAR::d$DAY::p1(&s));
+  println!("{}", y$YEAR::d$DAY::p1(s));
 }
 EOF
 
