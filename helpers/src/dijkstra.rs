@@ -83,11 +83,6 @@ impl<T> MapGraph<T>
 where
   T: Hash + Eq,
 {
-  /// Returns the set of neighbors for this node.
-  pub fn get(&self, node: T) -> Option<&HashSet<T>> {
-    self.0.get(&node)
-  }
-
   /// Returns an entry for this node.
   pub fn entry(
     &mut self,

@@ -1,4 +1,4 @@
-use helpers::dijkstra::{dijkstra, MapGraph};
+use helpers::dijkstra::{dijkstra, Graph as _, MapGraph};
 use helpers::HashSet;
 use std::collections::VecDeque;
 
@@ -18,7 +18,7 @@ pub fn p1(s: &str) -> usize {
         continue;
       }
       ret += level;
-      queue.extend(inp.get(vtx).into_iter().flatten());
+      queue.extend(inp.neighbors(vtx));
     }
     level += 1;
   }
