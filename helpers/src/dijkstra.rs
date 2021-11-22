@@ -6,36 +6,30 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::hash::Hash;
 
-/// The graph trait. TODO the `'a` is a hack around the absence of GATs at time
-/// of writing.
-pub trait Graph<'a> {
+/// The graph trait.
+///
+/// NOTE the methods would return iterators if they were better supported
+/// (generators, GATs, nameable closure types, etc)
+pub trait Graph {
   /// The type of nodes in this graph.
-  type Node: Hash + Ord + Copy;
+  type Node;
 
-  /// The iterator returned by [`Self::nodes`].
-  type Nodes: Iterator<Item = Self::Node>;
+  /// Returns all the nodes in the graph.
+  fn nodes(&self) -> HashSet<Self::Node>;
 
-  /// Returns an iterator over all the nodes in the graph.
-  fn nodes(&'a self) -> Self::Nodes;
-
-  /// The iterator returned by [`Self::neighbors`].
-  type Neighbors: Iterator<Item = Self::Node>;
-
-  /// Returns an iterator over the neighbors of `node` in the graph.
-  fn neighbors(&'a self, node: Self::Node) -> Self::Neighbors;
+  /// Returns the neighbors of `node` in the graph.
+  fn neighbors(&self, node: Self::Node) -> HashSet<Self::Node>;
 }
 
 /// The algorithm. Don't need to store predecessors info (cf wikipedia).
-pub fn dijkstra<'a, G>(
-  graph: &'a G,
-  start: G::Node,
-  end: G::Node,
-) -> Option<usize>
+pub fn dijkstra<G>(graph: &G, start: G::Node, end: G::Node) -> Option<usize>
 where
-  G: Graph<'a>,
+  G: Graph,
+  G::Node: Hash + Ord + Copy,
 {
   let mut distances: HashMap<_, _> = graph
     .nodes()
+    .into_iter()
     .map(|node| (node, Infinitable::PosInf))
     .collect();
   distances.insert(start, Infinitable::Finite(0));
@@ -109,25 +103,18 @@ impl<T> Default for MapGraph<T> {
   }
 }
 
-impl<'a, T> Graph<'a> for MapGraph<T>
+impl<T> Graph for MapGraph<T>
 where
-  T: 'a + Hash + Ord + Copy,
+  T: Hash + Eq + Copy,
 {
   type Node = T;
 
-  type Nodes =
-    std::iter::Copied<std::collections::hash_map::Keys<'a, T, HashSet<T>>>;
-
-  fn nodes(&'a self) -> Self::Nodes {
-    self.0.keys().copied()
+  fn nodes(&self) -> HashSet<Self::Node> {
+    self.0.keys().copied().collect()
   }
 
-  type Neighbors = std::iter::Copied<
-    std::iter::Flatten<std::option::IntoIter<&'a HashSet<T>>>,
-  >;
-
-  fn neighbors(&'a self, node: Self::Node) -> Self::Neighbors {
-    self.0.get(&node).into_iter().flatten().copied()
+  fn neighbors(&self, node: Self::Node) -> HashSet<Self::Node> {
+    self.0.get(&node).into_iter().flatten().copied().collect()
   }
 }
 
