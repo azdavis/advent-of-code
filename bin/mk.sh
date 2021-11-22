@@ -2,12 +2,17 @@
 
 set -eu
 
-if [ "$#" -ne 1 ]; then
-  echo "usage: $0 <year>"
+if [ "$#" -gt 1 ]; then
+  echo "usage: $0 [<year>]"
   exit 1
 fi
 
-YEAR="$1"
+if [ "$#" -eq 0 ]; then
+  YEAR="$(date +%Y)"
+else
+  YEAR="$1"
+fi
+
 SRC="years/y$YEAR/src"
 
 cd "$(dirname "$0")"
