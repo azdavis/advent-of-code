@@ -24,12 +24,12 @@ done
 DAY="$(printf '%02d' "$i")"
 
 cat <<EOF > "$SRC/d$DAY.rs"
-pub fn p1(_: &str) -> u32 {
-  todo!()
+pub fn p1(s: &str) -> usize {
+  s.len()
 }
 
-pub fn p2(_: &str) -> u32 {
-  todo!()
+pub fn p2(s: &str) -> usize {
+  s.len()
 }
 
 #[test]
@@ -48,7 +48,8 @@ rustfmt "$SRC/lib.rs"
 cat <<EOF > runner/src/main.rs
 fn main() {
   let s = include_str!("../../$SRC/input/d$DAY.txt");
-  println!("{}", y$YEAR::d$DAY::p1(s));
+  println!("p1: {}", y$YEAR::d$DAY::p1(s));
+  println!("p2: {}", y$YEAR::d$DAY::p2(s));
 }
 EOF
 
