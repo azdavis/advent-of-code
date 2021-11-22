@@ -10,6 +10,7 @@ pub mod block_char;
 pub mod ceil_div;
 pub mod compass;
 pub mod digits;
+pub mod dijkstra;
 pub mod gcd;
 pub mod infinitable;
 pub mod matrix;

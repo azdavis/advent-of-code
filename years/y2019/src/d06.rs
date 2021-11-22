@@ -1,8 +1,6 @@
-use helpers::infinitable::Infinitable;
-use helpers::{HashMap, HashSet};
-use std::cmp::Reverse;
-use std::collections::{BinaryHeap, VecDeque};
-use std::hash::Hash;
+use helpers::dijkstra::{dijkstra, Graph};
+use helpers::HashSet;
+use std::collections::VecDeque;
 
 pub fn p1(s: &str) -> usize {
   let inp = parse(s, |inp, center, orbiter| {
@@ -34,73 +32,6 @@ pub fn p2(s: &str) -> usize {
   });
   dijkstra(&inp, "YOU", "SAN").unwrap() - 2
 }
-
-/// dijkstra's algorithm. don't need to store predecessors info (cf wikipedia).
-fn dijkstra<T>(graph: &Graph<T>, start: T, end: T) -> Option<usize>
-where
-  T: Hash + Ord + Copy,
-{
-  let mut distances: HashMap<_, _> = graph
-    .keys()
-    .map(|&node| (node, Infinitable::PosInf))
-    .collect();
-  distances.insert(start, Infinitable::Finite(0));
-  let mut pq: BinaryHeap<_> = distances
-    .iter()
-    .map(|(&node, &dist)| Elem::new(node, dist))
-    .collect();
-  while let Some(u) = pq.pop() {
-    let u_dist = distances[&u.node];
-    if u.node == end {
-      match u_dist {
-        Infinitable::Finite(x) => return Some(x),
-        _ => unreachable!(),
-      }
-    }
-    if u.dist.0 > u_dist {
-      continue;
-    }
-    let new_dist = u_dist + 1;
-    for &node in graph.get(&u.node).into_iter().flatten() {
-      if new_dist >= distances[&node] {
-        continue;
-      }
-      distances.insert(node, new_dist);
-      pq.push(Elem::new(node, new_dist));
-    }
-  }
-  None
-}
-
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct Elem<T> {
-  dist: Reverse<Infinitable<usize>>,
-  node: T,
-}
-
-impl<T> Elem<T> {
-  fn new(node: T, dist: Infinitable<usize>) -> Self {
-    Self {
-      node,
-      dist: Reverse(dist),
-    }
-  }
-}
-
-#[test]
-fn elem_cmp() {
-  let a = Elem {
-    dist: Reverse(Infinitable::PosInf),
-    node: "a",
-  };
-  let b = Elem {
-    dist: Reverse(Infinitable::Finite(3)),
-    node: "a",
-  };
-  assert!(a < b);
-}
-
-type Graph<T> = HashMap<T, HashSet<T>>;
 
 fn parse(
   s: &str,
