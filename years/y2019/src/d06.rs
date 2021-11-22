@@ -1,4 +1,4 @@
-use helpers::dijkstra::{dijkstra, Graph};
+use helpers::dijkstra::{dijkstra, MapGraph};
 use helpers::HashSet;
 use std::collections::VecDeque;
 
@@ -35,9 +35,9 @@ pub fn p2(s: &str) -> usize {
 
 fn parse(
   s: &str,
-  add: for<'a> fn(&mut Graph<&'a str>, &'a str, &'a str),
-) -> Graph<&str> {
-  let mut ret = Graph::default();
+  add: for<'a> fn(&mut MapGraph<&'a str>, &'a str, &'a str),
+) -> MapGraph<&str> {
+  let mut ret = MapGraph::default();
   for line in s.lines() {
     let mut parts = line.split(')');
     let center = parts.next().unwrap();
