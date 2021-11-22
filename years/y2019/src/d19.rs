@@ -1,5 +1,4 @@
 use crate::intcode::Intcode;
-use helpers::HashMap;
 
 struct Beam {
   prog: Intcode,
@@ -35,48 +34,21 @@ pub fn p1(s: &str) -> usize {
     .sum()
 }
 
-pub fn p2(s: &str) -> u64 {
+pub fn p2(s: &str) -> i64 {
   let mut beam = Beam::new(s);
-  let mut top_x = 100i64;
-  let mut top_y = 0;
-  while !beam.affects(top_x, top_y) {
-    top_y += 1;
+  let mut x = 100i64;
+  let mut y = 0;
+  while !beam.affects(x, y) {
+    y += 1;
   }
-  let mut bot_xs = HashMap::<i64, i64>::default();
-  let mut bot_x = 0i64;
-  while !beam.affects(bot_x, top_y - 1) {
-    bot_x += 1
-  }
-  bot_xs.insert(top_y - 1, bot_x);
   loop {
-    while !beam.affects(top_x, top_y) {
-      top_x += 1;
+    if beam.affects(x - 99, y + 99) {
+      return (x - 99) * 10000 + y;
     }
-    while beam.affects(top_x + 1, top_y) {
-      top_x += 1;
+    y += 1;
+    while beam.affects(x + 1, y) {
+      x += 1
     }
-    let mut bot_y = top_y;
-    loop {
-      let bot_x = match bot_xs.get(&bot_y) {
-        Some(x) => *x,
-        None => {
-          let mut x = bot_xs[&(bot_y - 1)];
-          while !beam.affects(x, bot_y) {
-            x += 1;
-          }
-          bot_xs.insert(bot_y, x);
-          x
-        }
-      };
-      if bot_x > top_x {
-        break;
-      }
-      if top_x - bot_x >= 99 && bot_y - top_y >= 99 {
-        return u64::try_from(bot_x * 10000 + top_y).unwrap();
-      }
-      bot_y += 1;
-    }
-    top_y += 1;
   }
 }
 
