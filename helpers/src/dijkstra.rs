@@ -14,9 +14,6 @@ pub trait Graph {
   /// The type of nodes in this graph.
   type Node;
 
-  /// Returns all the nodes in the graph.
-  fn nodes(&self) -> HashSet<Self::Node>;
-
   /// Returns the neighbors of `node` in the graph.
   fn neighbors(&self, node: Self::Node) -> HashSet<Self::Node>;
 }
@@ -27,18 +24,17 @@ where
   G: Graph,
   G::Node: Hash + Ord + Copy,
 {
-  let mut distances: HashMap<_, _> = graph
-    .nodes()
-    .into_iter()
-    .map(|node| (node, Infinitable::PosInf))
-    .collect();
+  let mut distances = HashMap::default();
   distances.insert(start, Infinitable::Finite(0));
   let mut pq: BinaryHeap<_> = distances
     .iter()
     .map(|(&node, &dist)| Elem::new(node, dist))
     .collect();
   while let Some(u) = pq.pop() {
-    let u_dist = distances[&u.node];
+    let u_dist = distances
+      .get(&u.node)
+      .copied()
+      .unwrap_or(Infinitable::PosInf);
     if u.node == end {
       match u_dist {
         Infinitable::Finite(x) => return Some(x),
@@ -50,7 +46,9 @@ where
     }
     let new_dist = u_dist + 1;
     for node in graph.neighbors(u.node) {
-      if new_dist >= distances[&node] {
+      let old_dist =
+        distances.get(&node).copied().unwrap_or(Infinitable::PosInf);
+      if new_dist >= old_dist {
         continue;
       }
       distances.insert(node, new_dist);
@@ -103,10 +101,6 @@ where
   T: Hash + Eq + Copy,
 {
   type Node = T;
-
-  fn nodes(&self) -> HashSet<Self::Node> {
-    self.0.keys().copied().collect()
-  }
 
   fn neighbors(&self, node: Self::Node) -> HashSet<Self::Node> {
     self.0.get(&node).into_iter().flatten().copied().collect()

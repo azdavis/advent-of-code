@@ -30,20 +30,6 @@ struct Board {
 impl Graph for Board {
   type Node = Coord;
 
-  fn nodes(&self) -> HashSet<Self::Node> {
-    self
-      .tiles
-      .iter()
-      .enumerate()
-      .flat_map(|(y, row)| {
-        row
-          .iter()
-          .enumerate()
-          .filter_map(move |(x, &t)| t.is_walkable().then(|| [x, y]))
-      })
-      .collect()
-  }
-
   fn neighbors(&self, [x, y]: Self::Node) -> HashSet<Self::Node> {
     let mut ret: HashSet<_> = neighbors(&self.tiles, [x, y])
       .filter_map(|(t, node)| t.is_walkable().then(|| node))
