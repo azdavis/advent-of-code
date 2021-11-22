@@ -10,16 +10,16 @@ use std::hash::Hash;
 /// of writing.
 pub trait Graph<'a> {
   /// The type of nodes in this graph.
-  type Node: 'a + Hash + Ord + Copy;
+  type Node: Hash + Ord + Copy;
 
   /// The iterator returned by [`Self::nodes`].
-  type Nodes: 'a + Iterator<Item = Self::Node>;
+  type Nodes: Iterator<Item = Self::Node>;
 
   /// Returns an iterator over all the nodes in the graph.
   fn nodes(&'a self) -> Self::Nodes;
 
   /// The iterator returned by [`Self::neighbors`].
-  type Neighbors: 'a + Iterator<Item = Self::Node>;
+  type Neighbors: Iterator<Item = Self::Node>;
 
   /// Returns an iterator over the neighbors of `node` in the graph.
   fn neighbors(&'a self, node: Self::Node) -> Self::Neighbors;
