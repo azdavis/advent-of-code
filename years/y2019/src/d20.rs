@@ -1,10 +1,9 @@
 use helpers::dijkstra::{dijkstra, Graph};
+use helpers::matrix::{neighbors, Coord};
 use helpers::{HashMap, HashSet};
 use std::ascii::escape_default;
-use std::ops::Deref;
 
 type Portal = [char; 2];
-type Coord = [usize; 2];
 
 const PORTAL_LEN: usize = 2;
 const START: Portal = ['A', 'A'];
@@ -82,29 +81,6 @@ impl Graph for RecursiveBoard {
     });
     nearby.chain(warp).collect()
   }
-}
-
-fn neighbors<'a, M, R, T>(
-  matrix: &'a M,
-  [x, y]: Coord,
-) -> impl Iterator<Item = (&'a T, Coord)>
-where
-  M: Deref<Target = [R]>,
-  R: 'a + Deref<Target = [T]>,
-  T: 'a,
-{
-  [
-    x.checked_add(1).map(|x| [x, y]),
-    x.checked_sub(1).map(|x| [x, y]),
-    y.checked_add(1).map(|y| [x, y]),
-    y.checked_sub(1).map(|y| [x, y]),
-  ]
-  .into_iter()
-  .filter_map(|xy| {
-    let [x, y] = xy?;
-    let v = matrix.get(y)?.get(x)?;
-    Some((v, [x, y]))
-  })
 }
 
 fn parse(text: &str) -> (Board, Coord, Coord) {

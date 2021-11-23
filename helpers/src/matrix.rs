@@ -1,5 +1,7 @@
 //! Matrix-y operations.
 
+use std::ops::Deref;
+
 /// Rotates the matrix to the left. Requires there exists c such that for all x
 /// in xs, x.len() == c.
 pub fn rotate_left<T>(xs: &[Vec<T>]) -> Vec<Vec<T>>
@@ -90,4 +92,32 @@ where
   T: Copy,
 {
   xs.iter().map(|x| *x.last().unwrap()).collect()
+}
+
+/// A pair of usizes.
+pub type Coord = [usize; 2];
+
+/// Returns the neighbors (up, down, left, right) of `coord` in `matrix`.
+pub fn neighbors<'a, M, R, T>(
+  matrix: &'a M,
+  coord: Coord,
+) -> impl Iterator<Item = (&'a T, Coord)>
+where
+  M: Deref<Target = [R]>,
+  R: 'a + Deref<Target = [T]>,
+  T: 'a,
+{
+  let [x, y] = coord;
+  [
+    x.checked_add(1).map(|x| [x, y]),
+    x.checked_sub(1).map(|x| [x, y]),
+    y.checked_add(1).map(|y| [x, y]),
+    y.checked_sub(1).map(|y| [x, y]),
+  ]
+  .into_iter()
+  .filter_map(|xy| {
+    let [x, y] = xy?;
+    let v = matrix.get(y)?.get(x)?;
+    Some((v, [x, y]))
+  })
 }
