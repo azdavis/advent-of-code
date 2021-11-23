@@ -34,24 +34,25 @@ fn parse(s: &str) -> impl Iterator<Item = Instr> + '_ {
   })
 }
 
-fn run(s: &str, n: u16) -> Vec<u16> {
-  let mut deck: Vec<_> = (0u16..n).collect();
+fn run(s: &str, len: u16) -> Vec<u16> {
+  let mut deck: Vec<_> = (0u16..len).collect();
+  let len = len as usize;
   for instr in parse(s) {
     match instr {
       Instr::NewStack => deck.reverse(),
       Instr::Cut(n) => {
-        let n = if n >= 0 { n } else { (deck.len() as i16) + n };
+        let n = if n >= 0 { n } else { (len as i16) + n };
         let mut bot = deck.split_off(n as usize);
         bot.extend(deck);
         deck = bot;
       }
       Instr::Incr(n) => {
-        let mut new_deck = vec![0u16; deck.len()];
+        let mut new_deck = vec![0u16; len];
         let mut i = 0usize;
         for card in deck {
           new_deck[i] = card;
           i += n;
-          i %= new_deck.len();
+          i %= len;
         }
         deck = new_deck;
       }
