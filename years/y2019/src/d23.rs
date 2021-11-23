@@ -28,8 +28,9 @@ pub fn p1(s: &str) -> i64 {
         let y = chunk[2];
         if addr == 255 {
           return y;
+        } else {
+          nodes[addr].1.push_back((x, y));
         }
-        nodes[addr].1.push_back((x, y));
       }
       output.clear();
     }
