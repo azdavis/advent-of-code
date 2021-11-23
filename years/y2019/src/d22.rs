@@ -40,19 +40,19 @@ fn run(s: &str, len: u16) -> Vec<u16> {
   for instr in parse(s) {
     match instr {
       Instr::NewStack => deck.reverse(),
-      Instr::Cut(n) => {
-        let n = if n >= 0 { n } else { (len as i16) + n };
-        let mut bot = deck.split_off(n as usize);
+      Instr::Cut(cut) => {
+        let cut = if cut >= 0 { cut } else { (len as i16) + cut };
+        let mut bot = deck.split_off(cut as usize);
         bot.extend(deck);
         deck = bot;
       }
-      Instr::Incr(n) => {
+      Instr::Incr(inc) => {
         let mut new_deck = vec![0u16; len];
-        let mut i = 0usize;
+        let mut idx = 0usize;
         for card in deck {
-          new_deck[i] = card;
-          i += n;
-          i %= len;
+          new_deck[idx] = card;
+          idx += inc;
+          idx %= len;
         }
         deck = new_deck;
       }
