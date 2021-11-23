@@ -59,7 +59,7 @@ impl BitSet {
   }
 
   /// Returns an iterator over the elements in the set in ascending order.
-  pub fn iter(&self) -> Iter {
+  pub fn iter(&self) -> impl Iterator<Item = u8> {
     Iter {
       set: *self,
       counter: 0,
@@ -69,7 +69,7 @@ impl BitSet {
 
 /// An iterator over the elements in the set in ascending order.
 #[derive(Debug, Clone, Copy)]
-pub struct Iter {
+struct Iter {
   set: BitSet,
   counter: u8,
 }

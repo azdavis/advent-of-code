@@ -1,7 +1,5 @@
 use crate::intcode::Intcode;
-use helpers::compass::Compass;
-use helpers::vec2::Vec2;
-use helpers::HashSet;
+use helpers::{Compass, HashSet, Vec2};
 use std::collections::VecDeque;
 
 pub fn p1(s: &str) -> usize {

@@ -1,5 +1,4 @@
-use helpers::compass::Compass;
-use helpers::vec2::Vec2;
+use helpers::{Compass, Vec2};
 
 pub fn p1(s: &str) -> u32 {
   let mut st = State::new();

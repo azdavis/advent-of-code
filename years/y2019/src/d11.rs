@@ -1,8 +1,6 @@
 use crate::intcode::{Intcode, Res};
 use helpers::block_char::{BLACK, WHITE};
-use helpers::compass::Compass;
-use helpers::vec2::Vec2;
-use helpers::{hash_set, HashSet};
+use helpers::{hash_set, Compass, HashSet, Vec2};
 
 pub fn p1(s: &str) -> usize {
   go(s, &mut HashSet::default())

@@ -1,5 +1,5 @@
 use crate::intcode::Intcode;
-use helpers::permute::permute;
+use helpers::permute;
 
 pub fn p1(s: &str) -> i64 {
   let p = Intcode::parse(s);

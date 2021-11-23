@@ -5,22 +5,29 @@
 #![deny(missing_docs)]
 #![deny(rust_2018_idioms)]
 
-pub mod bit_set;
+mod bit_set;
 pub mod block_char;
-pub mod ceil_div;
-pub mod compass;
+mod ceil_div;
+mod compass;
 pub mod digits;
 pub mod dijkstra;
-pub mod gcd;
-pub mod infinitable;
+mod gcd;
+mod infinitable;
 pub mod matrix;
-pub mod permute;
-pub mod vec2;
+mod permute;
+mod vec2;
 
+pub use bit_set::BitSet;
+pub use ceil_div::ceil_div;
+pub use compass::Compass;
 pub use float_ord::{sort, FloatOrd};
+pub use gcd::{gcd, lcm};
+pub use infinitable::Infinitable;
 pub use once_cell::sync::Lazy;
+pub use permute::permute;
 pub use regex::Regex;
 pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
+pub use vec2::Vec2;
 
 /// Returns a hash set of the given items.
 pub fn hash_set<T, const N: usize>(xs: [T; N]) -> HashSet<T>

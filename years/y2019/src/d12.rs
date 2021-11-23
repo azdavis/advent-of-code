@@ -1,5 +1,4 @@
-use helpers::gcd::lcm;
-use helpers::{Lazy, Regex};
+use helpers::{lcm, Lazy, Regex};
 use std::cmp::Ordering;
 
 pub fn p1(s: &str) -> u32 {

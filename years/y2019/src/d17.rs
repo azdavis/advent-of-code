@@ -1,8 +1,7 @@
 use crate::intcode::{parse, Intcode};
-use helpers::compass::Compass;
 use helpers::digits::{digits, to_char, Digits};
-use helpers::vec2::Vec2;
 use helpers::{hash_map, HashMap, HashSet};
+use helpers::{Compass, Vec2};
 
 pub fn p1(s: &str) -> u32 {
   let scaffold = {

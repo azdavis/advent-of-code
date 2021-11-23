@@ -1,5 +1,4 @@
-use helpers::ceil_div::ceil_div;
-use helpers::{hash_map, HashMap, HashSet};
+use helpers::{ceil_div, hash_map, HashMap, HashSet};
 use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {

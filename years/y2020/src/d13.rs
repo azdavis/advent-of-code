@@ -1,4 +1,4 @@
-use helpers::gcd::lcm;
+use helpers::lcm;
 
 pub fn p1(s: &str) -> usize {
   let inp = parse(s);

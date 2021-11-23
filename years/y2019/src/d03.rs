@@ -1,6 +1,4 @@
-use helpers::compass::Compass;
-use helpers::vec2::Vec2;
-use helpers::{HashMap, HashSet};
+use helpers::{Compass, HashMap, HashSet, Vec2};
 
 pub fn p1(s: &str) -> i32 {
   let [fst, snd] = parse(s);

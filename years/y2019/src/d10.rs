@@ -1,6 +1,4 @@
-use helpers::gcd::gcd;
-use helpers::vec2::Vec2;
-use helpers::{FloatOrd, HashMap, HashSet};
+use helpers::{gcd, FloatOrd, HashMap, HashSet, Vec2};
 use std::cmp::Reverse;
 
 pub fn p1(s: &str) -> usize {
