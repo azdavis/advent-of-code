@@ -49,10 +49,8 @@ pub fn p1(s: &str) -> usize {
               .filter(|&(&tile, _)| tile == Tile::Bug)
               .count();
             match (tile, bugs) {
-              (Tile::Bug, 1) => Tile::Bug,
-              (Tile::Bug, _) => Tile::Empty,
-              (Tile::Empty, 1 | 2) => Tile::Bug,
-              (Tile::Empty, _) => Tile::Empty,
+              (Tile::Bug, 1) | (Tile::Empty, 1 | 2) => Tile::Bug,
+              _ => Tile::Empty,
             }
           })
           .collect()
