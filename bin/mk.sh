@@ -64,4 +64,4 @@ fn main() {
 }
 EOF
 
-"$EDITOR" "$SRC/d$DAY.rs"
+"$EDITOR" "$SRC/input/d$DAY.txt" "$SRC/d$DAY.rs"
