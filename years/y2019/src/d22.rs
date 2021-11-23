@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 #[derive(Debug, Clone, Copy)]
 enum Instr {
   NewStack,
@@ -40,12 +42,11 @@ fn run(s: &str, len: u16) -> Vec<u16> {
   for instr in parse(s) {
     match instr {
       Instr::NewStack => deck.reverse(),
-      Instr::Cut(cut) => {
-        let cut = if cut >= 0 { cut } else { (len as i16) + cut };
-        let mut bot = deck.split_off(cut as usize);
-        bot.extend(deck);
-        deck = bot;
-      }
+      Instr::Cut(cut) => match cut.cmp(&0) {
+        Ordering::Equal => {}
+        Ordering::Greater => deck.rotate_left((cut as usize) % len),
+        Ordering::Less => deck.rotate_right(((-cut) as usize) % len),
+      },
       Instr::Incr(inc) => {
         let mut new_deck = vec![0u16; len];
         let mut idx = 0usize;
