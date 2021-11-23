@@ -3,6 +3,9 @@ name = "helpers"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+doctest = false
+
 [dependencies]
 float-ord = "0.2"
 once_cell = "1"
