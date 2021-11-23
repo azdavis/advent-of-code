@@ -1,4 +1,4 @@
-use helpers::block_char::{BLACK, WHITE};
+use helpers::block_char::{EMPTY, FILLED};
 
 pub fn p1(s: &str) -> usize {
   let ns = parse(s);
@@ -31,8 +31,8 @@ pub fn p2(s: &str) -> String {
         }
       };
       let c = match px {
-        Pixel::Black => BLACK,
-        Pixel::White => WHITE,
+        Pixel::Black => FILLED,
+        Pixel::White => EMPTY,
         Pixel::Transparent => ' ',
       };
       ret.push(c);

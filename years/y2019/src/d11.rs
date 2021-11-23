@@ -1,5 +1,5 @@
 use crate::intcode::{Intcode, Res};
-use helpers::block_char::{BLACK, WHITE};
+use helpers::block_char::{EMPTY, FILLED};
 use helpers::{hash_set, Compass, HashSet, Vec2};
 
 pub fn p1(s: &str) -> usize {
@@ -17,9 +17,9 @@ pub fn p2(s: &str) -> String {
   for y in (min_y..=max_y).rev() {
     for x in min_x..=max_x {
       let c = if white.contains(&Vec2::new(x, y)) {
-        WHITE
+        EMPTY
       } else {
-        BLACK
+        FILLED
       };
       ret.push(c);
     }

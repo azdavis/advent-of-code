@@ -1,7 +1,7 @@
 //! Specialty characters, useful for drawing things in a terminal.
 
-/// A black box.
-pub const BLACK: char = '█';
+/// A filled box.
+pub const FILLED: char = '█';
 
-/// A white box.
-pub const WHITE: char = '░';
+/// An empty box.
+pub const EMPTY: char = '░';
