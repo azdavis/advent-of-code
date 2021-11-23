@@ -34,8 +34,8 @@ fn parse(s: &str) -> impl Iterator<Item = Instr> + '_ {
   })
 }
 
-fn run(s: &str, n: i16) -> Vec<i16> {
-  let mut deck: Vec<_> = (0i16..n).collect();
+fn run(s: &str, n: u16) -> Vec<u16> {
+  let mut deck: Vec<_> = (0u16..n).collect();
   for instr in parse(s) {
     match instr {
       Instr::NewStack => deck.reverse(),
@@ -46,7 +46,7 @@ fn run(s: &str, n: i16) -> Vec<i16> {
         deck = bot;
       }
       Instr::Incr(n) => {
-        let mut new_deck = vec![0i16; deck.len()];
+        let mut new_deck = vec![0u16; deck.len()];
         let mut i = 0usize;
         for card in deck {
           new_deck[i] = card;
