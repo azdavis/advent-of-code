@@ -7,6 +7,11 @@ if [ "$#" -gt 1 ]; then
   exit 1
 fi
 
+if ! command -v fix-ws > /dev/null; then
+  echo 'install fix-ws: https://github.com/azdavis/fix-ws.git'
+  exit 1
+fi
+
 if [ "$#" -eq 0 ]; then
   YEAR="$(date +%Y)"
 else
@@ -45,7 +50,8 @@ fn t() {
 }
 EOF
 
-touch "$SRC/input/d$DAY.txt"
+pbpaste > "$SRC/input/d$DAY.txt"
+fix-ws "$SRC/input/d$DAY.txt"
 
 echo "pub mod d$DAY;" >> "$SRC/lib.rs"
 rustfmt "$SRC/lib.rs"
@@ -58,4 +64,4 @@ fn main() {
 }
 EOF
 
-"$EDITOR" "$SRC/input/d$DAY.txt" "$SRC/d$DAY.rs"
+"$EDITOR" "$SRC/d$DAY.rs"
