@@ -67,6 +67,9 @@ pub fn p1(s: &str) -> usize {
   deck.iter().position(|&c| c == 2019).unwrap()
 }
 
+/// something something modular arithmitic
+///
+/// https://www.reddit.com/r/adventofcode/comments/ee56wh
 pub fn p2(s: &str) -> usize {
   s.len()
 }
