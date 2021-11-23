@@ -29,7 +29,7 @@ pub fn p1(s: &str) -> i64 {
         if addr == 255 {
           return y;
         }
-        nodes[addr].1.push_front((x, y));
+        nodes[addr].1.push_back((x, y));
       }
       output.clear();
     }
