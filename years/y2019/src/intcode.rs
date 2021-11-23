@@ -2,12 +2,12 @@ mod mem;
 
 use std::collections::VecDeque;
 
-pub fn parse(s: &str) -> impl Iterator<Item = i64> + '_ {
+pub(crate) fn parse(s: &str) -> impl Iterator<Item = i64> + '_ {
   s.trim_end().split(',').map(|x| x.parse().unwrap())
 }
 
 #[derive(Debug, Clone)]
-pub struct Intcode {
+pub(crate) struct Intcode {
   mem: mem::Mem<i64>,
   cur_addr: usize,
   relative_base: i64,
@@ -15,11 +15,11 @@ pub struct Intcode {
 }
 
 impl Intcode {
-  pub fn parse(s: &str) -> Self {
+  pub(crate) fn parse(s: &str) -> Self {
     Self::new(parse(s))
   }
 
-  pub fn new<I>(iter: I) -> Self
+  pub(crate) fn new<I>(iter: I) -> Self
   where
     I: IntoIterator<Item = i64>,
   {
@@ -32,16 +32,16 @@ impl Intcode {
   }
 
   // for day 2
-  pub fn read_zeroth(self) -> i64 {
+  pub(crate) fn read_zeroth(self) -> i64 {
     self.mem.read(0)
   }
 
-  pub fn input(&mut self, inp: i64) {
+  pub(crate) fn input(&mut self, inp: i64) {
     self.input.push_back(inp);
   }
 
   #[must_use = "the program may not be done running"]
-  pub fn run(&mut self, output: &mut Vec<i64>) -> Res {
+  pub(crate) fn run(&mut self, output: &mut Vec<i64>) -> Res {
     loop {
       let cur = self.mem.read(self.cur_addr);
       let op = cur % 100;
@@ -138,17 +138,17 @@ impl Intcode {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Res {
+pub(crate) enum Res {
   Done,
   NeedInput,
 }
 
 impl Res {
-  pub fn is_done(&self) -> bool {
+  pub(crate) fn is_done(&self) -> bool {
     matches!(*self, Self::Done)
   }
 
-  pub fn needs_input(&self) -> bool {
+  pub(crate) fn needs_input(&self) -> bool {
     matches!(*self, Self::NeedInput)
   }
 }
