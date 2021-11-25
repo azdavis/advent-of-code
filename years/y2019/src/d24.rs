@@ -249,13 +249,19 @@ mod examples {
 
      */
 
-    type C2 = (usize, usize);
+    type Coord2 = (usize, usize);
 
-    const A: C2 = (0, 0); const B: C2 = (1, 0); const C: C2 = (2, 0); const D: C2 = (3, 0); const E: C2 = (4, 0);
-    const F: C2 = (0, 1); const G: C2 = (1, 1); const H: C2 = (2, 1); const I: C2 = (3, 1); const J: C2 = (4, 1);
-    const K: C2 = (0, 2); const L: C2 = (1, 2);                       const N: C2 = (3, 2); const O: C2 = (4, 2);
-    const P: C2 = (0, 3); const Q: C2 = (1, 3); const R: C2 = (2, 3); const S: C2 = (3, 3); const T: C2 = (4, 3);
-    const U: C2 = (0, 4); const V: C2 = (1, 4); const W: C2 = (2, 4); const X: C2 = (3, 4); const Y: C2 = (4, 4);
+    macro_rules! p {
+      ($name: ident, $x: expr, $y: expr) => {
+        const $name: Coord2 = ($x, $y);
+      };
+    }
+
+    p!{A, 0, 0} p!{B, 1, 0} p!{C, 2, 0} p!{D, 3, 0} p!{E, 4, 0}
+    p!{F, 0, 1} p!{G, 1, 1} p!{H, 2, 1} p!{I, 3, 1} p!{J, 4, 1}
+    p!{K, 0, 2} p!{L, 1, 2}             p!{N, 3, 2} p!{O, 4, 2}
+    p!{P, 0, 3} p!{Q, 1, 3} p!{R, 2, 3} p!{S, 3, 3} p!{T, 4, 3}
+    p!{U, 0, 4} p!{V, 1, 4} p!{W, 2, 4} p!{X, 3, 4} p!{Y, 4, 4}
 
     fn ck<const LEN: usize>(coord: Coord3, want: [Coord3; LEN]) {
       let mut want = want.to_vec();
@@ -265,9 +271,9 @@ mod examples {
       assert_eq!(want, got);
     }
 
-    fn d((x, y): C2) -> Coord3 { (-1, x, y) }
-    fn z((x, y): C2) -> Coord3 { (0,  x, y) }
-    fn u((x, y): C2) -> Coord3 { (1,  x, y) }
+    fn d((x, y): Coord2) -> Coord3 { (-1, x, y) }
+    fn z((x, y): Coord2) -> Coord3 { (0,  x, y) }
+    fn u((x, y): Coord2) -> Coord3 { (1,  x, y) }
 
     #[test] fn ta() { ck(z(A), [z(B), z(F), d(H), d(L)]); }
     #[test] fn tb() { ck(z(B), [z(A), z(C), z(G), d(H)]); }
