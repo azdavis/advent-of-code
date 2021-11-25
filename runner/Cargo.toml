@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+y2018 = { path = "../years/y2018" }
 y2019 = { path = "../years/y2019" }
 y2020 = { path = "../years/y2020" }
