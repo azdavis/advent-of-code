@@ -50,10 +50,9 @@ fn parse(s: &str) -> Vec<(Date, Action)> {
 const HR_MINS: usize = 60;
 
 #[allow(clippy::needless_range_loop)]
-fn run(s: &str) -> HashMap<usize, Vec<usize>> {
+fn guard_sleep(s: &str) -> HashMap<usize, Vec<usize>> {
   let mut log = parse(s);
   log.sort_unstable_by_key(|e| e.0);
-  let mut guard_sleep = HashMap::<usize, Vec<usize>>::default();
   let mut log = log.into_iter();
   let (date, action) = log.next().unwrap();
   let mut minute = usize::from(date.minute);
@@ -61,14 +60,13 @@ fn run(s: &str) -> HashMap<usize, Vec<usize>> {
     Action::BeginShift(g) => g,
     Action::Wake | Action::Sleep => unreachable!(),
   };
+  let mut ret = HashMap::<usize, Vec<usize>>::default();
   for (date, action) in log {
     let new_minute = usize::from(date.minute);
     match action {
       Action::BeginShift(g) => on_duty = g,
       Action::Wake => {
-        let entry = guard_sleep
-          .entry(on_duty)
-          .or_insert_with(|| vec![0; HR_MINS]);
+        let entry = ret.entry(on_duty).or_insert_with(|| vec![0; HR_MINS]);
         for m in minute..new_minute {
           entry[m] += 1;
         }
@@ -77,12 +75,12 @@ fn run(s: &str) -> HashMap<usize, Vec<usize>> {
     }
     minute = new_minute;
   }
-  guard_sleep
+  ret
 }
 
 pub fn p1(s: &str) -> usize {
-  let guard_sleep = run(s);
-  let (guard, entry) = guard_sleep
+  let gs = guard_sleep(s);
+  let (guard, entry) = gs
     .into_iter()
     .max_by_key(|(_, entry)| entry.iter().sum::<usize>())
     .unwrap();
@@ -95,11 +93,15 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> usize {
-  let guard_sleep = run(s);
-  let (guard, minute, _) = guard_sleep
-    .iter()
-    .map(|(&g, entry)| {
-      let (m, &n) = entry.iter().enumerate().max_by_key(|&(_, &n)| n).unwrap();
+  let gs = guard_sleep(s);
+  let (guard, minute, _) = gs
+    .into_iter()
+    .map(|(g, entry)| {
+      let (m, n) = entry
+        .into_iter()
+        .enumerate()
+        .max_by_key(|&(_, n)| n)
+        .unwrap();
       (g, m, n)
     })
     .max_by_key(|&(_, _, n)| n)
