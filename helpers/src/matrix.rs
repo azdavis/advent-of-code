@@ -108,14 +108,13 @@ where
   T: 'a,
 {
   let [x, y] = coord;
-  [
+  let coords = [
     x.checked_add(1).map(|x| [x, y]),
     x.checked_sub(1).map(|x| [x, y]),
     y.checked_add(1).map(|y| [x, y]),
     y.checked_sub(1).map(|y| [x, y]),
-  ]
-  .into_iter()
-  .filter_map(|xy| {
+  ];
+  coords.into_iter().filter_map(|xy| {
     let [x, y] = xy?;
     let v = matrix.get(y)?.get(x)?;
     Some((v, [x, y]))
