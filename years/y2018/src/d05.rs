@@ -4,25 +4,23 @@ fn ok(upper: u8, lower: u8) -> bool {
     && upper.to_ascii_lowercase() == lower
 }
 
-fn run(mut bs: Vec<u8>) -> Vec<u8> {
-  'outer: loop {
-    assert_eq!(bs.len() % 2, 0);
-    for (idx, &b1) in bs.iter().enumerate() {
-      if let Some(&b2) = idx.checked_add(1).and_then(|idx| bs.get(idx)) {
-        if ok(b1, b2) || ok(b2, b1) {
-          // not great for runtime
-          assert_eq!(b1, bs.remove(idx));
-          assert_eq!(b2, bs.remove(idx));
-          continue 'outer;
-        }
-      }
+fn run(bs: &[u8]) -> Vec<u8> {
+  let mut ret = Vec::with_capacity(bs.len());
+  assert_eq!(bs.len() % 2, 0);
+  for &b2 in bs.iter() {
+    let react = ret.last().map_or(false, |&b1| ok(b1, b2) || ok(b2, b1));
+    if react {
+      ret.pop().unwrap();
+    } else {
+      ret.push(b2);
     }
-    return bs;
   }
+  ret.shrink_to_fit();
+  ret
 }
 
 pub fn p1(s: &str) -> usize {
-  run(s.trim().as_bytes().to_vec()).len()
+  run(s.trim().as_bytes()).len()
 }
 
 pub fn p2(s: &str) -> usize {
@@ -36,7 +34,7 @@ pub fn p2(s: &str) -> usize {
         .bytes()
         .filter(|b| b.to_ascii_lowercase() != del)
         .collect();
-      run(bs).len()
+      run(&bs).len()
     })
     .min()
     .unwrap()
@@ -51,9 +49,7 @@ fn t() {
 
 #[test]
 fn ex1() {
-  let inp = b"dabAcCaCBAcCcaDA".to_vec();
-  let out = b"dabCBAcaDA".to_vec();
-  assert_eq!(run(inp), out);
+  assert_eq!(run(b"dabAcCaCBAcCcaDA"), b"dabCBAcaDA");
 }
 
 #[test]
