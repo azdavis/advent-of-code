@@ -1,4 +1,4 @@
-fn ok(upper: u8, lower: u8) -> bool {
+fn react(upper: u8, lower: u8) -> bool {
   upper.is_ascii_uppercase()
     && lower.is_ascii_lowercase()
     && upper.to_ascii_lowercase() == lower
@@ -8,8 +8,10 @@ fn run(bs: &[u8]) -> Vec<u8> {
   let mut ret = Vec::with_capacity(bs.len());
   assert_eq!(bs.len() % 2, 0);
   for &b2 in bs.iter() {
-    let react = ret.last().map_or(false, |&b1| ok(b1, b2) || ok(b2, b1));
-    if react {
+    let should_rm = ret
+      .last()
+      .map_or(false, |&b1| react(b1, b2) || react(b2, b1));
+    if should_rm {
       ret.pop().unwrap();
     } else {
       ret.push(b2);
@@ -29,10 +31,10 @@ pub fn p2(s: &str) -> usize {
   // looking up a solution and realizing i made the same mistake again.)
   let s = s.trim();
   (b'a'..=b'z')
-    .map(|del| {
+    .map(|b_rm| {
       let bs: Vec<_> = s
         .bytes()
-        .filter(|b| b.to_ascii_lowercase() != del)
+        .filter(|b| b.to_ascii_lowercase() != b_rm)
         .collect();
       run(&bs).len()
     })
