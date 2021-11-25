@@ -7,3 +7,4 @@ edition = "2021"
 y2018 = { path = "../years/y2018" }
 y2019 = { path = "../years/y2019" }
 y2020 = { path = "../years/y2020" }
+y2021 = { path = "../years/y2021" }
