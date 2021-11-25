@@ -1,0 +1,16 @@
+west
+take semiconductor
+west
+take planetoid
+west
+take food ration
+west
+take fixed point
+east
+east
+south
+east
+east
+north
+east
+north
