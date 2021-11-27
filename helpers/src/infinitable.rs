@@ -1,6 +1,6 @@
 //! Possibly-infinite values.
 
-use std::ops::Add;
+use std::ops::{Add, AddAssign};
 
 /// A possibly (negatively) infinite value of type `T`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -35,6 +35,18 @@ where
 
   fn add(self, rhs: U) -> Self::Output {
     self.map(|x| x + rhs)
+  }
+}
+
+impl<T, U> AddAssign<U> for Infinitable<T>
+where
+  T: AddAssign<U>,
+{
+  fn add_assign(&mut self, rhs: U) {
+    match self {
+      Infinitable::Finite(x) => x.add_assign(rhs),
+      Infinitable::NegInf | Infinitable::PosInf => {}
+    }
   }
 }
 
