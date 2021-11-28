@@ -64,13 +64,23 @@ pub fn p1(s: &str) -> usize {
   })
 }
 
+const MIN_DIST: usize = 10000;
+
 pub fn p2(s: &str) -> usize {
-  s.len()
+  let (points, width, height) = parse(s);
+  (0..height)
+    .flat_map(|y| (0..width).map(move |x| [x, y]))
+    .filter(|&p1| {
+      let dist: usize =
+        points.iter().map(|&p2| manhattan_distance(p1, p2)).sum();
+      dist < MIN_DIST
+    })
+    .count()
 }
 
 #[test]
 fn t() {
   let s = include_str!("input/d06.txt");
   assert_eq!(p1(s), 3449);
-  // assert_eq!(p2(s), ___);
+  assert_eq!(p2(s), 44868);
 }
