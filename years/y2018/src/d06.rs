@@ -16,7 +16,7 @@ fn parse(s: &str) -> (Vec<Vec2>, usize, usize) {
   (points, width, height)
 }
 
-fn manhattan_distance([xa, ya]: Vec2, [xb, yb]: Vec2) -> usize {
+fn city_dist([xa, ya]: Vec2, [xb, yb]: Vec2) -> usize {
   (xa.max(xb) - xa.min(xb)) + (ya.max(yb) - ya.min(yb))
 }
 
@@ -25,11 +25,11 @@ fn manhattan_distance([xa, ya]: Vec2, [xb, yb]: Vec2) -> usize {
 fn min_point(points: &[Vec2], p: Vec2) -> Option<usize> {
   let mut iter = points.iter().enumerate();
   let (id, &p2) = iter.next().unwrap();
-  let mut min_dist = manhattan_distance(p, p2);
+  let mut min_dist = city_dist(p, p2);
   let mut min_id = id;
   let mut count = 1usize;
   for (id, &p2) in iter {
-    let dist = manhattan_distance(p, p2);
+    let dist = city_dist(p, p2);
     match dist.cmp(&min_dist) {
       Ordering::Less => {
         min_dist = dist;
@@ -71,8 +71,7 @@ pub fn p2(s: &str) -> usize {
   (0..height)
     .flat_map(|y| (0..width).map(move |x| [x, y]))
     .filter(|&p1| {
-      let dist: usize =
-        points.iter().map(|&p2| manhattan_distance(p1, p2)).sum();
+      let dist: usize = points.iter().map(|&p2| city_dist(p1, p2)).sum();
       dist < MIN_DIST
     })
     .count()
