@@ -7,10 +7,17 @@ if [ "$#" -gt 1 ]; then
   exit 1
 fi
 
-if ! command -v fix-ws > /dev/null; then
-  echo 'install fix-ws: https://github.com/azdavis/fix-ws.git'
-  exit 1
-fi
+need_cmd() {
+  if ! command -v "$1" > /dev/null; then
+    echo "$2"
+    exit 1
+  fi
+}
+
+need_cmd fix-ws 'missing fix-ws: https://github.com/azdavis/fix-ws.git'
+need_cmd cargo 'missing cargo: https://rustup.rs'
+need_cmd rustfmt 'missing rustfmt: https://rustup.rs'
+need_cmd pbpaste 'missing pbpaste: only available on macOS'
 
 if [ "$#" -eq 0 ]; then
   YEAR="$(date +%Y)"
@@ -44,9 +51,9 @@ pub fn p2(s: &str) -> usize {
 
 #[test]
 fn t() {
-  // let s = include_str!("input/d$DAY.txt");
-  // assert_eq!(p1(s), ___);
-  // assert_eq!(p2(s), ___);
+  let s = include_str!("input/d$DAY.txt");
+  assert_eq!(p1(s), 0);
+  assert_eq!(p2(s), 0);
 }
 EOF
 
@@ -56,12 +63,11 @@ fix-ws "$SRC/input/d$DAY.txt"
 echo "pub mod d$DAY;" >> "$SRC/lib.rs"
 rustfmt "$SRC/lib.rs"
 
-cat <<EOF > runner/src/main.rs
-fn main() {
-  let s = include_str!("../../$SRC/input/d$DAY.txt");
-  println!("p1: {}", y$YEAR::d$DAY::p1(s));
-  println!("p2: {}", y$YEAR::d$DAY::p2(s));
-}
+cat <<EOF > run.sh
+#!/bin/sh
+set -eux
+cargo t -p y$YEAR -- d$DAY
 EOF
+chmod +x run.sh
 
 "$EDITOR" "$SRC/input/d$DAY.txt" "$SRC/d$DAY.rs"
