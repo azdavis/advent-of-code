@@ -20,7 +20,7 @@ fn manhattan_distance([xa, ya]: Vec2, [xb, yb]: Vec2) -> usize {
   (xa.max(xb) - xa.min(xb)) + (ya.max(yb) - ya.min(yb))
 }
 
-/// returns the index of the unique points with minimum distance to `p` or None
+/// returns the index of the unique point with minimum distance to `p` or None
 /// if no unique point exists.
 fn min_point(points: &[Vec2], p: Vec2) -> Option<usize> {
   let mut iter = points.iter().enumerate();
@@ -48,11 +48,11 @@ pub fn p1(s: &str) -> usize {
   let mut sizes = vec![Infinitable::Finite(0usize); points.len()];
   for y in 0..height {
     for x in 0..width {
-      if let Some(id) = min_point(&points, [x, y]) {
+      if let Some(idx) = min_point(&points, [x, y]) {
         if x == 0 || x == width - 1 || y == 0 || y == height - 1 {
-          sizes[id] = Infinitable::PosInf;
+          sizes[idx] = Infinitable::PosInf;
         } else {
-          sizes[id] += 1;
+          sizes[idx] += 1;
         }
       }
     }
