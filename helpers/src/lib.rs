@@ -27,6 +27,7 @@ pub use once_cell::sync::Lazy;
 pub use permute::permute;
 pub use regex::Regex;
 pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
+pub use topo_sort;
 pub use vec2::Vec2;
 
 /// Returns a hash set of the given items.
