@@ -9,9 +9,10 @@ where
 {
   let c = iter.next().unwrap();
   let m = iter.next().unwrap();
-  let children: Vec<_> = (0..c).map(|_| parse_tree(iter)).collect();
-  let metadata: Vec<_> = (0..m).map(|_| iter.next().unwrap()).collect();
-  Tree { children, metadata }
+  Tree {
+    children: (0..c).map(|_| parse_tree(iter)).collect(),
+    metadata: (0..m).map(|_| iter.next().unwrap()).collect(),
+  }
 }
 
 fn parse(s: &str) -> Tree {
