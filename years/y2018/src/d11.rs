@@ -54,7 +54,7 @@ fn get_biggest(grid: &[Vec<isize>]) -> (Vec2, isize) {
 }
 
 #[allow(clippy::needless_range_loop)]
-fn run_p2(serial: usize) -> (Vec3, isize) {
+fn run_p2_dp(serial: usize) -> (Vec3, isize) {
   let grid = mk_grid(serial);
   let ([x, y], mut max_power): (Vec2, isize) = get_biggest(&grid);
   let mut max_point: Vec3 = [x, y, 1usize];
@@ -102,7 +102,7 @@ pub fn p1(s: &str) -> String {
 }
 
 pub fn p2(s: &str) -> String {
-  let ([x, y, sq_dim], _) = run_p2(s.trim().parse().unwrap());
+  let ([x, y, sq_dim], _) = run_p2_dp(s.trim().parse().unwrap());
   format!("{},{},{}", x, y, sq_dim)
 }
 
@@ -130,10 +130,10 @@ fn ex2() {
 
 #[test]
 fn ex3() {
-  assert_eq!(run_p2(18), ([90, 269, 16], 113));
+  assert_eq!(run_p2_dp(18), ([90, 269, 16], 113));
 }
 
 #[test]
 fn ex4() {
-  assert_eq!(run_p2(42), ([232, 251, 12], 119));
+  assert_eq!(run_p2_dp(42), ([232, 251, 12], 119));
 }
