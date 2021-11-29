@@ -57,13 +57,36 @@ fn t() {
 }
 
 #[cfg(test)]
-#[rustfmt::skip]
 mod examples {
   use super::run;
-  #[test] fn ex1() { assert_eq!(run(9, 25), 32); }
-  #[test] fn ex2() { assert_eq!(run(10, 1618), 8317); }
-  #[test] fn ex3() { assert_eq!(run(13, 7999), 146373); }
-  #[test] fn ex4() { assert_eq!(run(17, 1104), 2764); }
-  #[test] fn ex5() { assert_eq!(run(21, 6111), 54718); }
-  #[test] fn ex6() { assert_eq!(run(30, 5807), 37305); }
+
+  #[test]
+  fn ex1() {
+    assert_eq!(run(9, 25), 32);
+  }
+
+  #[test]
+  fn ex2() {
+    assert_eq!(run(10, 1618), 8317);
+  }
+
+  #[test]
+  fn ex3() {
+    assert_eq!(run(13, 7999), 146373);
+  }
+
+  #[test]
+  fn ex4() {
+    assert_eq!(run(17, 1104), 2764);
+  }
+
+  #[test]
+  fn ex5() {
+    assert_eq!(run(21, 6111), 54718);
+  }
+
+  #[test]
+  fn ex6() {
+    assert_eq!(run(30, 5807), 37305);
+  }
 }

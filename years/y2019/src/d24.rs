@@ -246,7 +246,6 @@ mod examples {
     |  U  |  V  |    W    |  X  |  Y  |
     |     |     |         |     |     |
     |-----+-----+---------+-----+-----|
-
      */
 
     type Coord2 = (usize, usize);
