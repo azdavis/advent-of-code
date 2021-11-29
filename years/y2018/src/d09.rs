@@ -22,13 +22,18 @@ impl<T> CycleZipper<T> {
     }
   }
 
-  fn rearrange(&mut self) {
+  fn rearrange(&mut self, bias: usize) {
     self.front.extend(self.rear.drain(..).rev());
+    let half = self.front.len() / 2;
+    let new_front = self.front.split_off(half + bias);
+    std::mem::swap(&mut self.rear, &mut self.front);
+    self.rear.reverse();
+    self.front = new_front;
   }
 
   fn move_next(&mut self) {
     if self.front.is_empty() {
-      self.rearrange();
+      self.rearrange(0);
     }
     let v = self.front.pop().unwrap();
     self.rear.push(v);
@@ -36,8 +41,7 @@ impl<T> CycleZipper<T> {
 
   fn move_prev(&mut self) {
     if self.rear.is_empty() {
-      self.front.reverse();
-      std::mem::swap(&mut self.front, &mut self.rear);
+      self.rearrange(1);
     }
     let v = self.rear.pop().unwrap();
     self.front.push(v);
@@ -49,7 +53,7 @@ impl<T> CycleZipper<T> {
 
   fn pop(&mut self) -> T {
     if self.front.is_empty() {
-      self.rearrange();
+      self.rearrange(0);
     }
     self.front.pop().unwrap()
   }
