@@ -1,3 +1,6 @@
+mod cycle_zipper;
+
+use cycle_zipper::CycleZipper;
 use helpers::{Lazy, Regex};
 
 static RE: Lazy<Regex> = Lazy::new(|| {
@@ -7,56 +10,6 @@ static RE: Lazy<Regex> = Lazy::new(|| {
 fn parse(s: &str) -> (usize, u32) {
   let caps = RE.captures(s.trim()).unwrap();
   (caps[1].parse().unwrap(), caps[2].parse().unwrap())
-}
-
-struct CycleZipper<T> {
-  front: Vec<T>,
-  rear: Vec<T>,
-}
-
-impl<T> CycleZipper<T> {
-  fn new(init: T) -> CycleZipper<T> {
-    CycleZipper {
-      front: vec![init],
-      rear: vec![],
-    }
-  }
-
-  fn move_next(&mut self) {
-    if self.front.is_empty() {
-      self.rearrange(0);
-    }
-    let v = self.front.pop().unwrap();
-    self.rear.push(v);
-  }
-
-  fn move_prev(&mut self) {
-    if self.rear.is_empty() {
-      self.rearrange(1);
-    }
-    let v = self.rear.pop().unwrap();
-    self.front.push(v);
-  }
-
-  fn push(&mut self, v: T) {
-    self.front.push(v);
-  }
-
-  fn pop(&mut self) -> T {
-    if self.front.is_empty() {
-      self.rearrange(0);
-    }
-    self.front.pop().unwrap()
-  }
-
-  fn rearrange(&mut self, bias: usize) {
-    self.front.extend(self.rear.drain(..).rev());
-    let half = self.front.len() / 2;
-    let new_front = self.front.split_off(half + bias);
-    std::mem::swap(&mut self.rear, &mut self.front);
-    self.rear.reverse();
-    self.front = new_front;
-  }
 }
 
 fn run(n_players: usize, last: u32) -> u32 {
