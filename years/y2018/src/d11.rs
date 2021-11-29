@@ -53,6 +53,8 @@ fn get_biggest(grid: &[Vec<isize>]) -> (Vec2, isize) {
     .unwrap()
 }
 
+/// a naive solution would just run `most_powerful` for every sq_dim in
+/// `1..GRID_DIM`, but we can do better by using previous results.
 #[allow(clippy::needless_range_loop)]
 fn run_p2_dp(serial: usize) -> (Vec3, isize) {
   let grid = mk_grid(serial);
@@ -82,18 +84,6 @@ fn run_p2_dp(serial: usize) -> (Vec3, isize) {
     }
   }
   (max_point, max_power)
-}
-
-#[allow(dead_code)]
-fn run_p2_naive(serial: usize) -> (Vec3, isize) {
-  let grid = mk_grid(serial);
-  (1..GRID_DIM)
-    .map(|sq_dim| {
-      let ([x, y], p) = most_powerful(&grid, sq_dim);
-      ([x, y, sq_dim], p)
-    })
-    .max_by_key(|&(_, p)| p)
-    .unwrap()
 }
 
 pub fn p1(s: &str) -> String {
