@@ -9,23 +9,27 @@ fn parse(s: &str) -> (usize, u32) {
   (caps[1].parse().unwrap(), caps[2].parse().unwrap())
 }
 
-struct CycleZipper {
-  front: Vec<u32>,
-  rear: Vec<u32>,
+struct CycleZipper<T> {
+  front: Vec<T>,
+  rear: Vec<T>,
 }
 
-impl CycleZipper {
-  fn new() -> CycleZipper {
+impl<T> CycleZipper<T> {
+  fn new(init: T) -> CycleZipper<T> {
     CycleZipper {
-      front: vec![0],
+      front: vec![init],
       rear: vec![],
     }
   }
 
+  fn rearrange(&mut self) {
+    self.rear.reverse();
+    std::mem::swap(&mut self.front, &mut self.rear);
+  }
+
   fn move_next(&mut self) {
     if self.front.is_empty() {
-      self.rear.reverse();
-      std::mem::swap(&mut self.front, &mut self.rear);
+      self.rearrange();
     }
     let v = self.front.pop().unwrap();
     self.rear.push(v);
@@ -40,21 +44,20 @@ impl CycleZipper {
     self.front.push(v);
   }
 
-  fn push(&mut self, n: u32) {
-    self.front.push(n);
+  fn push(&mut self, v: T) {
+    self.front.push(v);
   }
 
-  fn pop(&mut self) -> u32 {
+  fn pop(&mut self) -> T {
     if self.front.is_empty() {
-      self.rear.reverse();
-      std::mem::swap(&mut self.front, &mut self.rear);
+      self.rearrange();
     }
     self.front.pop().unwrap()
   }
 }
 
 fn run(n_players: usize, last: u32) -> u32 {
-  let mut marbles = CycleZipper::new();
+  let mut marbles = CycleZipper::<u32>::new(0);
   let mut scores = vec![0u32; n_players];
   let mut next_marble = 1u32;
   let mut cur_player = 0usize;
