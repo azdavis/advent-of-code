@@ -15,9 +15,8 @@ fn parse(s: &str) -> (usize, u32) {
 fn run(n_players: usize, last: u32) -> u32 {
   let mut marbles = CycleZipper::<u32>::new(0);
   let mut scores = vec![0u32; n_players];
-  let mut next_marble = 1u32;
   let mut cur_player = 0usize;
-  loop {
+  for next_marble in 1u32..=last {
     if next_marble % 23 == 0 {
       for _ in 0..7 {
         marbles.move_prev();
@@ -30,13 +29,10 @@ fn run(n_players: usize, last: u32) -> u32 {
       }
       marbles.push(next_marble);
     }
-    if next_marble == last {
-      return scores.iter().copied().max().unwrap();
-    }
-    next_marble += 1;
     cur_player += 1;
     cur_player %= n_players;
   }
+  scores.iter().copied().max().unwrap()
 }
 
 pub fn p1(s: &str) -> u32 {
