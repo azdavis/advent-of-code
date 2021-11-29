@@ -39,7 +39,53 @@ fn run_p1(serial: usize) -> (Vec2, isize) {
   most_powerful(&mk_grid(serial), 3)
 }
 
+fn get_biggest(grid: &[Vec<isize>]) -> (Vec2, isize) {
+  grid
+    .iter()
+    .enumerate()
+    .flat_map(|(y, row)| {
+      row
+        .iter()
+        .enumerate()
+        .map(move |(x, &p)| ([x + 1, y + 1], p))
+    })
+    .max_by_key(|&(_, p)| p)
+    .unwrap()
+}
+
+#[allow(clippy::needless_range_loop)]
 fn run_p2(serial: usize) -> (Vec3, isize) {
+  let grid = mk_grid(serial);
+  let ([x, y], mut max_power): (Vec2, isize) = get_biggest(&grid);
+  let mut max_point: Vec3 = [x, y, 1usize];
+  let mut prev = grid.clone();
+  for sq_dim in 2..GRID_DIM {
+    prev.pop().unwrap();
+    for row in prev.iter_mut() {
+      row.pop().unwrap();
+    }
+    let dim_max = GRID_DIM - sq_dim;
+    for y in 0..dim_max {
+      for x in 0..dim_max {
+        for ya in 0..sq_dim {
+          prev[y][x] += grid[y + ya][x + sq_dim - 1];
+        }
+        for xa in 0..sq_dim - 1 {
+          prev[y][x] += grid[y + sq_dim - 1][x + xa];
+        }
+      }
+    }
+    let ([x, y], new_max_power) = get_biggest(&prev);
+    if new_max_power > max_power {
+      max_power = new_max_power;
+      max_point = [x, y, sq_dim];
+    }
+  }
+  (max_point, max_power)
+}
+
+#[allow(dead_code)]
+fn run_p2_naive(serial: usize) -> (Vec3, isize) {
   let grid = mk_grid(serial);
   (1..GRID_DIM)
     .map(|sq_dim| {
