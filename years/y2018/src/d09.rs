@@ -23,8 +23,7 @@ impl<T> CycleZipper<T> {
   }
 
   fn rearrange(&mut self) {
-    self.rear.reverse();
-    std::mem::swap(&mut self.front, &mut self.rear);
+    self.front.extend(self.rear.drain(..).rev());
   }
 
   fn move_next(&mut self) {
