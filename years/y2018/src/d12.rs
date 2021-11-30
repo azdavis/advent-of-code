@@ -53,8 +53,8 @@ fn run(s: &str, rounds: usize) -> isize {
   let window_2 = window / 2;
   for _ in 0..rounds {
     let mut next = HashSet::default();
-    let min = cur.iter().copied().min().unwrap() - window;
-    let max = cur.iter().copied().max().unwrap() + window;
+    let min = cur.iter().copied().min().unwrap() - window_2;
+    let max = cur.iter().copied().max().unwrap() + window_2;
     for idx in min..=max {
       let neighbors =
         (idx - window_2..=idx + window_2).map(|i| cur.contains(&i));
