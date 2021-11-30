@@ -66,7 +66,7 @@ rustfmt "$SRC/lib.rs"
 cat <<EOF > run.sh
 #!/bin/sh
 set -eux
-cargo test -p y$YEAR -- d$DAY
+cargo test --release -p y$YEAR -- --nocapture d$DAY
 EOF
 chmod +x run.sh
 
