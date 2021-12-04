@@ -1,3 +1,5 @@
+#![allow(clippy::ptr_arg)]
+
 type Tile = u32;
 type Board = Vec<Vec<(Tile, bool)>>;
 
@@ -37,13 +39,11 @@ fn play(draw: Tile, board: &mut Board) {
   }
 }
 
-#[allow(clippy::ptr_arg)]
 fn is_win(board: &Board) -> bool {
   board.iter().any(|row| row.iter().all(|x| x.1))
     || (0..board.len()).any(|i| board.iter().all(|row| row[i].1))
 }
 
-#[allow(clippy::ptr_arg)]
 fn score(draw: Tile, board: &Board) -> u32 {
   let s: u32 = board
     .iter()
