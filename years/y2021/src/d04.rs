@@ -12,11 +12,11 @@ fn parse(s: &str) -> (Vec<Tile>, Vec<Board>) {
   let mut boards = Vec::<Board>::new();
   while let Some(blank) = iter.next() {
     assert!(blank.is_empty());
-    let board: Board = (0..5)
-      .map(|_| {
-        iter
-          .next()
-          .unwrap()
+    let board: Board = iter
+      .by_ref()
+      .take(5)
+      .map(|line| {
+        line
           .split_ascii_whitespace()
           .map(|x| (x.parse().unwrap(), false))
           .collect()
