@@ -25,64 +25,51 @@ where
   (min..=max).map(f)
 }
 
-fn add_points<I>(iter: I, counts: &mut Counts)
-where
-  I: Iterator<Item = Coord>,
-{
-  for coord in iter {
-    *counts.entry(coord).or_default() += 1
-  }
-}
-
-fn add_straight(line: Line, counts: &mut Counts) -> bool {
+fn straight(line: Line) -> Option<Box<dyn Iterator<Item = Coord>>> {
   let [[sx, sy], [ex, ey]] = line;
   if sx == ex {
-    add_points(mk_straight(sy, ey, |y| [sx, y]), counts);
-    true
+    Some(Box::new(mk_straight(sy, ey, move |y| [sx, y])))
   } else if sy == ey {
-    add_points(mk_straight(sx, ex, |x| [x, sy]), counts);
-    true
+    Some(Box::new(mk_straight(sx, ex, move |x| [x, sy])))
   } else {
-    false
+    None
   }
 }
 
-fn run<F>(s: &str, f: &mut F) -> usize
+fn run<F, I>(s: &str, f: &mut F) -> usize
 where
-  F: FnMut(Line, &mut Counts),
+  F: FnMut(Line) -> I,
+  I: Iterator<Item = Coord>,
 {
   let mut counts = Counts::default();
   for line in parse(s) {
-    f(line, &mut counts);
+    for coord in f(line) {
+      *counts.entry(coord).or_default() += 1
+    }
   }
   counts.values().filter(|&&x| x > 1).count()
 }
 
 pub fn p1(s: &str) -> usize {
-  run(s, &mut |line, counts| {
-    add_straight(line, counts);
-  })
+  run(s, &mut |line| straight(line).into_iter().flatten())
 }
 
 pub fn p2(s: &str) -> usize {
-  run(s, &mut |line, counts| {
-    if add_straight(line, counts) {
-      return;
-    }
-    let [[sx, sy], [ex, ey]] = line;
-    let (sx, sy, ex, ey) = if sx < ex {
-      (sx, sy, ex, ey)
-    } else {
-      (ex, ey, sx, sy)
-    };
-    add_points(
-      (sx..=ex).enumerate().map(|(idx, x)| {
+  run(s, &mut |line| match straight(line) {
+    Some(x) => x,
+    None => {
+      let [[sx, sy], [ex, ey]] = line;
+      let (sx, sy, ex, ey) = if sx < ex {
+        (sx, sy, ex, ey)
+      } else {
+        (ex, ey, sx, sy)
+      };
+      Box::new((sx..=ex).enumerate().map(move |(idx, x)| {
         let dy = u32::try_from(idx).unwrap();
         let y = if sy < ey { sy + dy } else { sy - dy };
         [x, y]
-      }),
-      counts,
-    )
+      }))
+    }
   })
 }
 
