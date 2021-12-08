@@ -1,5 +1,6 @@
 /.vscode/cspell.json
 /Cargo.lock
 /run.sh
+/session.txt
 /target
 /thoughts.md

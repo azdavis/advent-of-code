@@ -17,7 +17,7 @@ need_cmd() {
 need_cmd fix-ws 'missing fix-ws: https://github.com/azdavis/fix-ws.git'
 need_cmd cargo 'missing cargo: https://rustup.rs'
 need_cmd rustfmt 'missing rustfmt: https://rustup.rs'
-need_cmd pbpaste 'missing pbpaste: only available on macOS'
+need_cmd curl 'missing curl: https://curl.se'
 
 if [ "$#" -eq 0 ]; then
   YEAR="$(date +%Y)"
@@ -57,7 +57,11 @@ fn t() {
 }
 EOF
 
-pbpaste > "$SRC/input/d$DAY.txt"
+SESSION="$(cat session.txt)"
+curl -# --cookie "session=$SESSION" \
+  "https://adventofcode.com/$YEAR/day/$i/input" \
+  > "$SRC/input/d$DAY.txt"
+
 fix-ws "$SRC/input/d$DAY.txt"
 
 # extra line for day 1, removed on other days by rustfmt
