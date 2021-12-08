@@ -21,6 +21,8 @@ cd ..
 mkdir -p "years/y$YEAR/src"
 
 echo '#![deny(rust_2018_idioms)]' > "years/y$YEAR/src/lib.rs"
+# extra blank line
+echo > "years/y$YEAR/src/lib.rs"
 
 cat <<EOF > "years/y$YEAR/Cargo.toml"
 [package]

@@ -64,8 +64,6 @@ curl -# --cookie "session=$SESSION" \
 
 fix-ws "$SRC/input/d$DAY.txt"
 
-# extra line for day 1, removed on other days by rustfmt
-echo >> "$SRC/lib.rs"
 echo "pub mod d$DAY;" >> "$SRC/lib.rs"
 rustfmt "$SRC/lib.rs"
 
