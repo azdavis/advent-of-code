@@ -59,9 +59,10 @@ fn help(
       if visited.contains(&node) {
         return None;
       }
-      let mut visited = visited.clone();
       visited.insert(node);
-      Some(edges[&edge(at, node)] + help(op, max, edges, &mut visited, node))
+      let ret = edges[&edge(at, node)] + help(op, max, edges, visited, node);
+      visited.remove(&node);
+      Some(ret)
     })
     .reduce(op)
     .unwrap_or(0)
