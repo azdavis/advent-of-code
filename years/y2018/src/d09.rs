@@ -1,11 +1,9 @@
 mod cycle_zipper;
 
 use cycle_zipper::CycleZipper;
-use helpers::{Lazy, Regex};
+use helpers::static_regex;
 
-static RE: Lazy<Regex> = Lazy::new(|| {
-  Regex::new(r#"^(\d+) players; last marble is worth (\d+) points$"#).unwrap()
-});
+static_regex!(RE = r#"^(\d+) players; last marble is worth (\d+) points$"#);
 
 fn parse(s: &str) -> (usize, u32) {
   let caps = RE.captures(s.trim()).unwrap();

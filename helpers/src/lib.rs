@@ -45,3 +45,13 @@ where
 {
   xs.into_iter().collect()
 }
+
+/// `static_regex!($name = $s)` expands to a `static` named `$name` with type
+/// `Lazy<Regex>` with the given content `$s`.
+#[macro_export]
+macro_rules! static_regex {
+  ($name:ident = $s:expr) => {
+    static $name: ::helpers::Lazy<::helpers::Regex> =
+      ::helpers::Lazy::new(|| ::helpers::Regex::new($s).unwrap());
+  };
+}

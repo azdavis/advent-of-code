@@ -1,12 +1,11 @@
+use helpers::static_regex;
 use helpers::topo_sort::{self, Graph};
-use helpers::{Lazy, Regex};
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 
-static RE: Lazy<Regex> = Lazy::new(|| {
-  Regex::new(r#"^Step (\w) must be finished before step (\w) can begin.$"#)
-    .unwrap()
-});
+static_regex!(
+  RE = r#"^Step (\w) must be finished before step (\w) can begin.$"#
+);
 
 type JobId = u8;
 

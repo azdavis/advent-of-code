@@ -1,5 +1,5 @@
 use helpers::matrix::{bot, left, right, rotate_left, top, transpose};
-use helpers::{HashMap, HashSet, Lazy, Regex};
+use helpers::{static_regex, HashMap, HashSet};
 use std::cmp::Ordering;
 
 pub fn p1(s: &str) -> u64 {
@@ -271,7 +271,7 @@ fn parse(s: &str) -> Vec<(u64, Tile)> {
   s.split("\n\n").map(parse_one).collect()
 }
 
-static TILE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^Tile (\d+):$").unwrap());
+static_regex!(TILE = r"^Tile (\d+):$");
 
 fn parse_one(s: &str) -> (u64, Tile) {
   let mut lines = s.lines();

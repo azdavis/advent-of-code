@@ -1,4 +1,4 @@
-use helpers::{HashMap, Lazy, Regex};
+use helpers::{static_regex, HashMap};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 struct Date {
@@ -16,12 +16,8 @@ enum Action {
   Sleep,
 }
 
-static LINE: Lazy<Regex> = Lazy::new(|| {
-  Regex::new(r"^\[(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})\] (.+)$").unwrap()
-});
-
-static BEGIN_SHIFT: Lazy<Regex> =
-  Lazy::new(|| Regex::new(r"^Guard #(\d+) begins shift$").unwrap());
+static_regex!(LINE = r"^\[(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})\] (.+)$");
+static_regex!(BEGIN_SHIFT = r"^Guard #(\d+) begins shift$");
 
 fn parse(s: &str) -> Vec<(Date, Action)> {
   s.lines()

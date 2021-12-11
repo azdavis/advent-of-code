@@ -1,4 +1,4 @@
-use helpers::{Lazy, Regex};
+use helpers::static_regex;
 
 type Vec2 = [usize; 2];
 
@@ -9,8 +9,7 @@ struct Claim {
 }
 
 const DIM: usize = 1000;
-static RE: Lazy<Regex> =
-  Lazy::new(|| Regex::new(r"^#(\d+) @ (\d+),(\d+): (\d+)x(\d+)$").unwrap());
+static_regex!(RE = r"^#(\d+) @ (\d+),(\d+): (\d+)x(\d+)$");
 
 fn parse(s: &str) -> Vec<Claim> {
   s.lines()

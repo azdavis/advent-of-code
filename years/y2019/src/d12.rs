@@ -1,4 +1,4 @@
-use helpers::{lcm, Lazy, Regex};
+use helpers::{lcm, static_regex};
 use std::cmp::Ordering;
 
 pub fn p1(s: &str) -> u32 {
@@ -79,8 +79,7 @@ fn evolve(dim: &[Moon]) -> Vec<Moon> {
   ret
 }
 
-static RE: Lazy<Regex> =
-  Lazy::new(|| Regex::new(r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$").unwrap());
+static_regex!(RE = r"^<x=(-?\d+), y=(-?\d+), z=(-?\d+)>$");
 
 fn parse(s: &str) -> [Vec<Moon>; 3] {
   let mut xs = Vec::new();

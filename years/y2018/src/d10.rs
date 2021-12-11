@@ -1,13 +1,10 @@
 use helpers::block_char::{EMPTY, FILLED};
-use helpers::{HashSet, Lazy, Regex};
+use helpers::{static_regex, HashSet};
 use std::io::{self, Write};
 
-static RE: Lazy<Regex> = Lazy::new(|| {
-  Regex::new(
-    r#"^position=< *(-?\d+), *(-?\d+)> velocity=< *(-?\d+), *(-?\d+)>$"#,
-  )
-  .unwrap()
-});
+static_regex!(
+  RE = r#"^position=< *(-?\d+), *(-?\d+)> velocity=< *(-?\d+), *(-?\d+)>$"#
+);
 
 type Vec2 = [isize; 2];
 

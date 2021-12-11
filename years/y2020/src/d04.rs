@@ -1,4 +1,4 @@
-use helpers::{hash_set, Lazy, Regex};
+use helpers::{hash_set, static_regex};
 
 pub fn p1(s: &str) -> usize {
   go(s, |_, _| true)
@@ -15,10 +15,9 @@ fn is_num_in_range(val: &str, lo: u32, hi: u32) -> bool {
   }
 }
 
-static HEIGHT: Lazy<Regex> = Lazy::new(|| Regex::new(r"^(\d+)(\w+)$").unwrap());
-static HAIR_COLOR: Lazy<Regex> =
-  Lazy::new(|| Regex::new(r"^#[0-9a-f]{6}$").unwrap());
-static PASSPORT_ID: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\d{9}$").unwrap());
+static_regex!(HEIGHT = r"^(\d+)(\w+)$");
+static_regex!(HAIR_COLOR = r"^#[0-9a-f]{6}$");
+static_regex!(PASSPORT_ID = r"^\d{9}$");
 
 fn is_p2_valid_key(key: Key, val: &str) -> bool {
   match key {
