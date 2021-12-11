@@ -9,3 +9,4 @@ doctest = false
 [dependencies]
 helpers = { path = "../../helpers" }
 md5 = "0.7"
+serde_json = "1"
