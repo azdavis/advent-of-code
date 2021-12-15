@@ -18,12 +18,14 @@ pub trait Graph {
   fn neighbors(&self, node: Self::Node) -> HashSet<Self::Node>;
 }
 
-/// The algorithm. Don't need to store predecessors info (cf wikipedia).
+/// Returns the length of the shortest path from `start` to `end` in `graph`, or
+/// `None` if there is no such path.
 pub fn dijkstra<G>(graph: &G, start: G::Node, end: G::Node) -> Option<usize>
 where
   G: Graph,
   G::Node: Hash + Ord + Copy,
 {
+  // Don't need to store predecessors info (cf wikipedia).
   let mut distances = HashMap::default();
   distances.insert(start, Infinitable::Finite(0));
   let mut pq: BinaryHeap<_> = distances
