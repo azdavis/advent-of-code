@@ -94,7 +94,7 @@ where
   xs.iter().map(|x| *x.last().unwrap()).collect()
 }
 
-/// A pair of usizes.
+/// A pair of `usize`s.
 pub type Coord = [usize; 2];
 
 fn neighbors_help<'a, M, R, T, const N: usize>(
