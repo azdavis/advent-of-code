@@ -1,5 +1,4 @@
-use helpers::block_char::{EMPTY, FILLED};
-use helpers::{static_regex, HashSet};
+use helpers::{block_char, static_regex, HashSet};
 use std::io::{self, Write};
 
 static_regex!(
@@ -36,8 +35,7 @@ fn draw(
   let [[min_x, min_y], [max_x, max_y]] = corners;
   for y in min_y..=max_y {
     for x in min_x..=max_x {
-      let c = if set.contains(&[x, y]) { FILLED } else { EMPTY };
-      write!(w, "{}", c)?;
+      write!(w, "{}", block_char::get(set.contains(&[x, y])))?;
     }
     writeln!(w)?;
   }

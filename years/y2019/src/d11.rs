@@ -1,6 +1,5 @@
 use crate::intcode::{Intcode, Res};
-use helpers::block_char::{EMPTY, FILLED};
-use helpers::{hash_set, Compass, HashSet, Vec2};
+use helpers::{block_char, hash_set, Compass, HashSet, Vec2};
 
 pub fn p1(s: &str) -> usize {
   go(s, &mut HashSet::default())
@@ -16,12 +15,7 @@ pub fn p2(s: &str) -> String {
   let mut ret = String::new();
   for y in (min_y..=max_y).rev() {
     for x in min_x..=max_x {
-      let c = if white.contains(&Vec2::new(x, y)) {
-        EMPTY
-      } else {
-        FILLED
-      };
-      ret.push(c);
+      ret.push(block_char::get(!white.contains(&Vec2::new(x, y))));
     }
     ret.push('\n');
   }
