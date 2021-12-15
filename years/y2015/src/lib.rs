@@ -12,5 +12,6 @@ pub mod d09;
 pub mod d10;
 pub mod d11;
 pub mod d12;
+pub mod d13;
 
 mod intern;
