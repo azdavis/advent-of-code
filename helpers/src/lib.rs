@@ -5,9 +5,7 @@
 #![deny(missing_docs)]
 #![deny(rust_2018_idioms)]
 
-mod bit_set;
 pub mod block_char;
-mod ceil_div;
 mod compass;
 pub mod digits;
 pub mod dijkstra;
@@ -17,8 +15,6 @@ pub mod matrix;
 mod permute;
 mod vec2;
 
-pub use bit_set::BitSet;
-pub use ceil_div::ceil_div;
 pub use compass::Compass;
 pub use float_ord::{sort, FloatOrd};
 pub use gcd::{gcd, lcm};

@@ -1,4 +1,4 @@
-use helpers::{ceil_div, hash_map, HashMap, HashSet};
+use helpers::{hash_map, HashMap, HashSet};
 use std::hash::Hash;
 
 pub fn p1(s: &str) -> usize {
@@ -20,6 +20,28 @@ pub fn p2(s: &str) -> usize {
     }
   }
   lo
+}
+
+/// Returns `ceil(a / b)`.
+pub fn ceil_div(a: usize, b: usize) -> usize {
+  let mut ret = a / b;
+  if a % b != 0 {
+    ret += 1;
+  }
+  ret
+}
+
+#[test]
+fn t_ceil_div() {
+  assert_eq!(ceil_div(5, 1), 5);
+  assert_eq!(ceil_div(2, 1), 2);
+  assert_eq!(ceil_div(6, 2), 3);
+  assert_eq!(ceil_div(5, 2), 3);
+  assert_eq!(ceil_div(4, 2), 2);
+  assert_eq!(ceil_div(5, 3), 2);
+  assert_eq!(ceil_div(3, 3), 1);
+  assert_eq!(ceil_div(2, 3), 1);
+  assert_eq!(ceil_div(0, 3), 0);
 }
 
 const MAX_ORE: usize = 1_000_000_000_000;

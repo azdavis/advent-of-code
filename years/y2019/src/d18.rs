@@ -1,4 +1,7 @@
-use helpers::{BitSet, HashMap, HashSet};
+mod bit_set;
+
+use bit_set::BitSet;
+use helpers::{HashMap, HashSet};
 use std::collections::VecDeque;
 
 pub fn p1(s: &str) -> usize {
