@@ -1,25 +1,31 @@
 //! Permutations.
 
-/// Returns the permutations of `xs` in an arbitrary order.
-pub fn permute<I, T>(xs: I) -> Vec<Vec<T>>
+/// Runs [Heap's algorithm][1], which generates the permutations of `xs`.
+///
+/// [1]: https://en.wikipedia.org/wiki/Heap%27s_algorithm
+pub fn permute<I, T>(iter: I) -> Vec<Vec<T>>
 where
   I: IntoIterator<Item = T>,
   T: Clone,
 {
-  let mut ret = vec![vec![]];
-  for x in xs {
-    ret = ret
-      .into_iter()
-      .flat_map(|ys| {
-        // eh, not great
-        let x = x.clone();
-        (0..=ys.len()).map(move |i| {
-          let mut ys = ys.clone();
-          ys.insert(i, x.clone());
-          ys
-        })
-      })
-      .collect();
+  let mut xs: Vec<_> = iter.into_iter().collect();
+  let mut ret = vec![xs.clone()];
+  let mut c = vec![0; xs.len()];
+  let mut i = 0;
+  while i < xs.len() {
+    if c[i] < i {
+      if i % 2 == 0 {
+        xs.swap(0, i);
+      } else {
+        xs.swap(c[i], i);
+      }
+      ret.push(xs.clone());
+      c[i] += 1;
+      i = 0;
+    } else {
+      c[i] = 0;
+      i += 1;
+    }
   }
   ret
 }
@@ -28,16 +34,16 @@ where
 fn t() {
   assert_eq!(permute(Vec::<u32>::new()), [[]]);
   assert_eq!(permute(vec![3]), [[3]]);
-  assert_eq!(permute(vec![1, 2]), [[2, 1], [1, 2]]);
+  assert_eq!(permute(vec![1, 2]), [[1, 2], [2, 1]]);
   assert_eq!(
     permute(vec![1, 2, 3]),
     [
-      [3, 2, 1],
-      [2, 3, 1],
+      [1, 2, 3],
       [2, 1, 3],
       [3, 1, 2],
       [1, 3, 2],
-      [1, 2, 3],
+      [2, 3, 1],
+      [3, 2, 1]
     ]
   );
 }
