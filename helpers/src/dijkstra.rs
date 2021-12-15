@@ -16,6 +16,13 @@ pub trait Graph {
 
   /// Returns the neighbors of `node` in the graph.
   fn neighbors(&self, node: Self::Node) -> HashSet<Self::Node>;
+
+  /// Returns the distance between the nodes in the graph.
+  ///
+  /// The default implementation always returns 1.
+  fn distance(&self, _: Self::Node, _: Self::Node) -> usize {
+    1
+  }
 }
 
 /// Returns the length of the shortest path from `start` to `end` in `graph`, or
@@ -46,10 +53,10 @@ where
     if u.dist.0 > u_dist {
       continue;
     }
-    let new_dist = u_dist + 1;
     for node in graph.neighbors(u.node) {
       let old_dist =
         distances.get(&node).copied().unwrap_or(Infinitable::PosInf);
+      let new_dist = u_dist + graph.distance(u.node, node);
       if new_dist >= old_dist {
         continue;
       }
