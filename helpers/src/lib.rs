@@ -13,7 +13,6 @@ mod gcd;
 mod infinitable;
 pub mod matrix;
 mod permute;
-mod vec2;
 
 pub use compass::Compass;
 pub use float_ord::{sort, FloatOrd};
@@ -24,7 +23,6 @@ pub use permute::permute;
 pub use regex::Regex;
 pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
 pub use topo_sort;
-pub use vec2::Vec2;
 
 /// Returns a hash set of the given items.
 pub fn hash_set<T, const N: usize>(xs: [T; N]) -> HashSet<T>

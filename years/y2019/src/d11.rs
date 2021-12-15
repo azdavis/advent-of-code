@@ -1,5 +1,7 @@
 use crate::intcode::{Intcode, Res};
-use helpers::{block_char, hash_set, Compass, HashSet, Vec2};
+use helpers::{block_char, hash_set, Compass, HashSet};
+
+type Vec2 = [i32; 2];
 
 pub fn p1(s: &str) -> usize {
   go(s, &mut HashSet::default())
@@ -8,14 +10,14 @@ pub fn p1(s: &str) -> usize {
 pub fn p2(s: &str) -> String {
   let mut white = hash_set([Vec2::default()]);
   go(s, &mut white);
-  let min_x = white.iter().map(|p| p.x).min().unwrap();
-  let min_y = white.iter().map(|p| p.y).min().unwrap();
-  let max_x = white.iter().map(|p| p.x).max().unwrap();
-  let max_y = white.iter().map(|p| p.y).max().unwrap();
+  let min_x = white.iter().map(|&[x, _]| x).min().unwrap();
+  let min_y = white.iter().map(|&[_, y]| y).min().unwrap();
+  let max_x = white.iter().map(|&[x, _]| x).max().unwrap();
+  let max_y = white.iter().map(|&[_, y]| y).max().unwrap();
   let mut ret = String::new();
   for y in (min_y..=max_y).rev() {
     for x in min_x..=max_x {
-      ret.push(block_char::get(!white.contains(&Vec2::new(x, y))));
+      ret.push(block_char::get(!white.contains(&[x, y])));
     }
     ret.push('\n');
   }
@@ -25,7 +27,7 @@ pub fn p2(s: &str) -> String {
 fn go(s: &str, white: &mut HashSet<Vec2>) -> usize {
   let mut p = Intcode::parse(s);
   let mut did_paint = HashSet::<Vec2>::default();
-  let mut cur = Vec2::default();
+  let mut cur = [0i32; 2];
   let mut facing = Compass::North;
   let mut output = Vec::with_capacity(2);
   loop {
@@ -52,8 +54,8 @@ fn go(s: &str, white: &mut HashSet<Vec2>) -> usize {
           _ => panic!("bad dir: {}", dir),
         };
         let [dx, dy] = facing.dx_dy();
-        cur.x += dx;
-        cur.y += dy;
+        cur[0] += dx;
+        cur[1] += dy;
         output.clear();
       }
       _ => panic!("bad output len: {}", output.len()),

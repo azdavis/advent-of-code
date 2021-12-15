@@ -1,7 +1,8 @@
 use crate::intcode::{parse, Intcode};
 use helpers::digits::{digits, to_char, Digits};
-use helpers::{hash_map, HashMap, HashSet};
-use helpers::{Compass, Vec2};
+use helpers::{hash_map, Compass, HashMap, HashSet};
+
+type Vec2 = [i32; 2];
 
 pub fn p1(s: &str) -> u32 {
   let scaffold = {
@@ -12,11 +13,11 @@ pub fn p1(s: &str) -> u32 {
   };
   scaffold
     .iter()
-    .filter_map(|&sc| {
-      neighbors(sc)
+    .filter_map(|&[x, y]| {
+      neighbors([x, y])
         .iter()
         .all(|&n| scaffold.contains(&n))
-        .then(|| (sc.x * sc.y) as u32)
+        .then(|| (x * y) as u32)
     })
     .sum()
 }
@@ -201,25 +202,18 @@ fn decompose(route: &[Move]) -> Option<Res> {
 }
 
 fn neighbors(v: Vec2) -> [Vec2; 4] {
-  let x = v.x;
-  let y = v.y;
-  [
-    Vec2::new(x, y - 1),
-    Vec2::new(x - 1, y),
-    Vec2::new(x + 1, y),
-    Vec2::new(x, y + 1),
-  ]
+  let [x, y] = v;
+  [[x, y - 1], [x - 1, y], [x + 1, y], [x, y + 1]]
 }
 
 fn neighbor(v: Vec2, compass: Compass) -> Vec2 {
-  let x = v.x;
-  let y = v.y;
+  let [x, y] = v;
   // y increases to the south
   match compass {
-    Compass::North => Vec2::new(x, y - 1),
-    Compass::West => Vec2::new(x - 1, y),
-    Compass::East => Vec2::new(x + 1, y),
-    Compass::South => Vec2::new(x, y + 1),
+    Compass::North => [x, y - 1],
+    Compass::West => [x - 1, y],
+    Compass::East => [x + 1, y],
+    Compass::South => [x, y + 1],
   }
 }
 
@@ -266,25 +260,26 @@ struct Screen {
 fn parse_screen(output: &[i64]) -> Screen {
   let mut scaffold = HashSet::default();
   let mut robot: Option<(Vec2, Compass)> = None;
-  let mut cur = Vec2::default();
+  let mut x = 0i32;
+  let mut y = 0i32;
   for &n in output.iter() {
     match u8::try_from(n).unwrap() {
       b'\n' => {
-        cur.x = 0;
-        cur.y += 1;
+        x = 0;
+        y += 1;
         continue;
       }
       b'#' => {
-        scaffold.insert(cur);
+        scaffold.insert([x, y]);
       }
       b'.' => {}
-      b'^' => robot = Some((cur, Compass::North)),
-      b'v' => robot = Some((cur, Compass::South)),
-      b'<' => robot = Some((cur, Compass::West)),
-      b'>' => robot = Some((cur, Compass::East)),
+      b'^' => robot = Some(([x, y], Compass::North)),
+      b'v' => robot = Some(([x, y], Compass::South)),
+      b'<' => robot = Some(([x, y], Compass::West)),
+      b'>' => robot = Some(([x, y], Compass::East)),
       b => panic!("bad output: {}", b),
     }
-    cur.x += 1;
+    x += 1;
   }
   let (loc, facing) = robot.unwrap();
   Screen {

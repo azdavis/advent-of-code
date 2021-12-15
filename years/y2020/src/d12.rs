@@ -1,11 +1,13 @@
-use helpers::{Compass, Vec2};
+use helpers::Compass;
+
+type Vec2 = [i32; 2];
 
 pub fn p1(s: &str) -> u32 {
   let mut st = State::new();
   for ac in parse(s) {
     st.evolve(ac);
   }
-  st.ship.to_origin()
+  to_origin(st.ship)
 }
 
 pub fn p2(s: &str) -> u32 {
@@ -13,7 +15,12 @@ pub fn p2(s: &str) -> u32 {
   for ac in parse(s) {
     st.evolve(ac);
   }
-  st.ship.to_origin()
+  to_origin(st.ship)
+}
+
+fn to_origin(v: Vec2) -> u32 {
+  let [x, y] = v;
+  (x.abs() + y.abs()) as u32
 }
 
 struct StateP2 {
@@ -24,8 +31,8 @@ struct StateP2 {
 impl StateP2 {
   fn new() -> Self {
     Self {
-      ship: Vec2::new(0, 0),
-      waypoint: Vec2::new(10, 1),
+      ship: [0, 0],
+      waypoint: [10, 1],
     }
   }
 
@@ -35,22 +42,21 @@ impl StateP2 {
       ActionKind::Left => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
-          let old = self.waypoint;
-          self.waypoint.x = -old.y;
-          self.waypoint.y = old.x;
+          let [x, y] = self.waypoint;
+          self.waypoint = [-y, x];
         }
       }
       ActionKind::Right => {
         assert_eq!(ac.num % 90, 0);
         for _ in 0..(ac.num / 90) % 4 {
-          let old = self.waypoint;
-          self.waypoint.x = old.y;
-          self.waypoint.y = -old.x;
+          let [x, y] = self.waypoint;
+          self.waypoint = [y, -x];
         }
       }
       ActionKind::Forward => {
-        self.ship.x += self.waypoint.x * ac.num;
-        self.ship.y += self.waypoint.y * ac.num;
+        for (dim, chg) in self.ship.iter_mut().zip(self.waypoint.iter()) {
+          *dim += chg * ac.num;
+        }
       }
     }
   }
@@ -91,10 +97,10 @@ impl State {
 
 fn adjust(p: &mut Vec2, d: Compass, n: i32) {
   match d {
-    Compass::North => p.y += n,
-    Compass::South => p.y -= n,
-    Compass::East => p.x += n,
-    Compass::West => p.x -= n,
+    Compass::North => p[1] += n,
+    Compass::South => p[1] -= n,
+    Compass::East => p[0] += n,
+    Compass::West => p[0] -= n,
   }
 }
 

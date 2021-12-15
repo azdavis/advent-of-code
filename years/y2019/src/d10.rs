@@ -1,5 +1,7 @@
-use helpers::{gcd, FloatOrd, HashMap, HashSet, Vec2};
+use helpers::{gcd, FloatOrd, HashMap, HashSet};
 use std::cmp::Reverse;
+
+type Vec2 = [i32; 2];
 
 pub fn p1(s: &str) -> usize {
   let points = parse(s);
@@ -29,9 +31,9 @@ pub fn p2(s: &str) -> u32 {
   let mut idx = 1;
   loop {
     for (_, ps) in points.iter_mut() {
-      if let Some(p) = ps.pop() {
+      if let Some([x, y]) = ps.pop() {
         if idx == 200 {
-          return to_u32((p.x * 100) + p.y);
+          return to_u32((x * 100) + y);
         } else {
           idx += 1;
         }
@@ -60,7 +62,7 @@ fn parse(s: &str) -> HashSet<Vec2> {
     .flat_map(|(y, line)| {
       line.chars().enumerate().filter_map(move |(x, c)| match c {
         '.' => None,
-        '#' => Some(Vec2::new(to_i32(x), to_i32(y))),
+        '#' => Some([to_i32(x), to_i32(y)]),
         _ => panic!("bad tile: {}", c),
       })
     })
@@ -69,30 +71,35 @@ fn parse(s: &str) -> HashSet<Vec2> {
 
 /// returns the square of the distance between `a` and `b`
 fn magnitude(a: Vec2, b: Vec2) -> u32 {
-  to_u32((b.x - a.x).pow(2) + (b.y - a.y).pow(2))
+  let [ax, ay] = a;
+  let [bx, by] = b;
+  to_u32((bx - ax).pow(2) + (by - ay).pow(2))
 }
 
 fn diff_gcd(a: Vec2, b: Vec2) -> (i32, i32) {
-  let dx = b.x - a.x;
-  let dy = b.y - a.y;
+  let [ax, ay] = a;
+  let [bx, by] = b;
+  let dx = bx - ax;
+  let dy = by - ay;
   let g = to_i32(gcd(to_usize(dx.abs()), to_usize(dy.abs())));
   (dx / g, dy / g)
 }
 
 /// returns whether `a` has a line of sight to `b` based on `points`
-fn can_see(mut a: Vec2, b: Vec2, points: &HashSet<Vec2>) -> bool {
+fn can_see(a: Vec2, b: Vec2, points: &HashSet<Vec2>) -> bool {
   if a == b {
     // special-case this
     return false;
   }
   let (dx, dy) = diff_gcd(a, b);
+  let [mut x, mut y] = a;
   loop {
-    a.x += dx;
-    a.y += dy;
-    if a == b {
+    x += dx;
+    y += dy;
+    if [x, y] == b {
       return true;
     }
-    if points.contains(&a) {
+    if points.contains(&[x, y]) {
       return false;
     }
   }

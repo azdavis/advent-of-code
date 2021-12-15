@@ -1,4 +1,6 @@
-use helpers::{Compass, HashMap, HashSet, Vec2};
+use helpers::{Compass, HashMap, HashSet};
+
+type Vec2 = [i32; 2];
 
 pub fn p1(s: &str) -> i32 {
   let [fst, snd] = parse(s);
@@ -6,7 +8,7 @@ pub fn p1(s: &str) -> i32 {
   let snd_set: HashSet<_> = evolve(&snd).into_iter().map(|x| x.0).collect();
   fst_set
     .intersection(&snd_set)
-    .map(|p| p.x.abs() + p.y.abs())
+    .map(|&[x, y]| x.abs() + y.abs())
     .min()
     .unwrap()
 }
@@ -25,16 +27,17 @@ pub fn p2(s: &str) -> usize {
 }
 
 fn evolve(xs: &[Action]) -> HashMap<Vec2, usize> {
-  let mut cur = Vec2::default();
+  let mut x = 0i32;
+  let mut y = 0i32;
   let mut ret = HashMap::default();
   let mut idx = 0;
   for ac in xs {
     let [dx, dy] = ac.direction.dx_dy();
     for _ in 0..ac.num {
-      cur.x += dx;
-      cur.y += dy;
+      x += dx;
+      y += dy;
       idx += 1;
-      ret.entry(cur).or_insert(idx);
+      ret.entry([x, y]).or_insert(idx);
     }
   }
   ret

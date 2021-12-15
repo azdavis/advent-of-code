@@ -1,6 +1,8 @@
 use crate::intcode::Intcode;
-use helpers::{Compass, HashSet, Vec2};
+use helpers::{Compass, HashSet};
 use std::collections::VecDeque;
+
+type Vec2 = [i32; 2];
 
 pub fn p1(s: &str) -> usize {
   match go(Intcode::parse(s)) {
@@ -63,13 +65,12 @@ fn go(prog: Intcode) -> Res {
 }
 
 fn neighbors(v: Vec2) -> [(Compass, Vec2); 4] {
-  let x = v.x;
-  let y = v.y;
+  let [x, y] = v;
   [
-    (Compass::North, Vec2::new(x, y + 1)),
-    (Compass::West, Vec2::new(x - 1, y)),
-    (Compass::East, Vec2::new(x + 1, y)),
-    (Compass::South, Vec2::new(x, y - 1)),
+    (Compass::North, [x, y + 1]),
+    (Compass::West, [x - 1, y]),
+    (Compass::East, [x + 1, y]),
+    (Compass::South, [x, y - 1]),
   ]
 }
 
