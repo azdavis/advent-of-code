@@ -1,17 +1,17 @@
-use helpers::HashMap;
+use helpers::Counter;
 
 pub fn p1(s: &str) -> usize {
   let mut has_2 = 0usize;
   let mut has_3 = 0usize;
   for line in s.lines() {
-    let mut map = HashMap::<char, usize>::default();
+    let mut map = Counter::<char>::default();
     for c in line.chars() {
-      *map.entry(c).or_default() += 1;
+      map.inc(c);
     }
-    if map.values().any(|&v| v == 2) {
+    if map.iter().any(|(_, v)| v == 2) {
       has_2 += 1;
     }
-    if map.values().any(|&v| v == 3) {
+    if map.iter().any(|(_, v)| v == 3) {
       has_3 += 1;
     }
   }

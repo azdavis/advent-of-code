@@ -1,8 +1,8 @@
-use helpers::HashMap;
+use helpers::Counter;
 
 type Coord = [u32; 2];
 type Line = [Coord; 2];
-type Counts = HashMap<Coord, usize>;
+type Counts = Counter<Coord>;
 
 fn parse_coord(s: &str) -> Coord {
   let (x, y) = s.split_once(',').unwrap();
@@ -44,10 +44,10 @@ where
   let mut counts = Counts::default();
   for line in parse(s) {
     for coord in f(line) {
-      *counts.entry(coord).or_default() += 1
+      counts.inc(coord);
     }
   }
-  counts.values().filter(|&&x| x > 1).count()
+  counts.iter().filter(|&(_, x)| x > 1).count()
 }
 
 pub fn p1(s: &str) -> usize {

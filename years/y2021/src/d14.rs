@@ -1,4 +1,4 @@
-use helpers::HashMap;
+use helpers::{Counter, HashMap};
 
 fn parse(s: &str) -> (&[u8], HashMap<[u8; 2], u8>) {
   let mut lines = s.lines();
@@ -15,32 +15,32 @@ fn parse(s: &str) -> (&[u8], HashMap<[u8; 2], u8>) {
 
 fn run(s: &str, rounds: usize) -> usize {
   let (polymer, rules) = parse(s);
-  let mut active = HashMap::<[u8; 2], usize>::default();
+  let mut active = Counter::<[u8; 2]>::default();
   // NOTE could use array_windows here.
   for w in polymer.windows(2) {
     let w: [u8; 2] = w.try_into().unwrap();
-    *active.entry(w).or_default() += 1;
+    active.inc(w);
   }
   for _ in 0..rounds {
-    let mut new_active = HashMap::<[u8; 2], usize>::default();
+    let mut new_active = Counter::<[u8; 2]>::default();
     for (pair, count) in active {
       let [a, c] = pair;
       let b = rules[&pair];
-      *new_active.entry([a, b]).or_default() += count;
-      *new_active.entry([b, c]).or_default() += count;
+      new_active.add([a, b], count);
+      new_active.add([b, c], count);
     }
     active = new_active;
   }
-  let mut counts = HashMap::<u8, usize>::default();
+  let mut counts = Counter::<u8>::default();
   for ([a, _], count) in active {
-    *counts.entry(a).or_default() += count;
+    counts.add(a, count);
     // skip the other char to not double-count
   }
   // fix last char
   let &last = polymer.last().unwrap();
-  *counts.entry(last).or_default() += 1;
-  let min = counts.values().copied().min().unwrap();
-  let max = counts.values().copied().max().unwrap();
+  counts.inc(last);
+  let min = counts.iter().map(|(_, c)| c).min().unwrap();
+  let max = counts.iter().map(|(_, c)| c).max().unwrap();
   max - min
 }
 
@@ -59,12 +59,12 @@ fn run_naive(s: &str, rounds: usize) -> usize {
     new_polymer.push(polymer.pop().unwrap());
     polymer = new_polymer;
   }
-  let mut counts = HashMap::<u8, usize>::default();
+  let mut counts = Counter::<u8>::default();
   for b in polymer {
-    *counts.entry(b).or_default() += 1;
+    counts.inc(b);
   }
-  let min = counts.values().copied().min().unwrap();
-  let max = counts.values().copied().max().unwrap();
+  let min = counts.iter().map(|(_, c)| c).min().unwrap();
+  let max = counts.iter().map(|(_, c)| c).max().unwrap();
   max - min
 }
 

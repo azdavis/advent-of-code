@@ -7,6 +7,7 @@
 
 pub mod block_char;
 mod compass;
+mod counter;
 pub mod digits;
 pub mod dijkstra;
 mod gcd;
@@ -15,6 +16,7 @@ pub mod matrix;
 mod permute;
 
 pub use compass::Compass;
+pub use counter::Counter;
 pub use float_ord::{sort, FloatOrd};
 pub use gcd::{gcd, lcm};
 pub use infinitable::Infinitable;

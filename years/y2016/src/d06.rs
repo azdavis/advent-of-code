@@ -1,14 +1,14 @@
-use helpers::HashMap;
+use helpers::Counter;
 
 fn run<F>(s: &str, f: F) -> String
 where
-  F: FnMut(HashMap<char, usize>) -> char,
+  F: FnMut(Counter<char>) -> char,
 {
   let len = s.lines().next().unwrap().len();
-  let mut counts = vec![HashMap::<char, usize>::default(); len];
+  let mut counts = vec![Counter::<char>::default(); len];
   for line in s.lines() {
     for (idx, c) in line.chars().enumerate() {
-      *counts[idx].entry(c).or_default() += 1;
+      counts[idx].inc(c);
     }
   }
   counts.into_iter().map(f).collect()

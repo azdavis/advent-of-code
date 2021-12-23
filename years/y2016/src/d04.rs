@@ -1,4 +1,4 @@
-use helpers::{static_regex, HashMap};
+use helpers::{static_regex, Counter};
 use std::cmp::Reverse;
 
 static_regex!(RE = r"^([a-z\-]+)-(\d+)\[([a-z]+)\]$");
@@ -16,12 +16,12 @@ fn parse(s: &str) -> impl Iterator<Item = (&str, usize, &str)> + '_ {
 pub fn p1(s: &str) -> usize {
   parse(s)
     .filter_map(|(name, id, ck_sum)| {
-      let mut counts = HashMap::<char, usize>::default();
+      let mut counts = Counter::<char>::default();
       for c in name.chars() {
         if c == '-' {
           continue;
         };
-        *counts.entry(c).or_default() += 1;
+        counts.inc(c);
       }
       let mut order: Vec<_> = counts
         .into_iter()
