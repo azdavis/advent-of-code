@@ -1,4 +1,4 @@
-use helpers::matrix::Coord;
+use helpers::neighbors::Coord;
 use helpers::{Compass, HashMap, HashSet};
 
 enum Tile {

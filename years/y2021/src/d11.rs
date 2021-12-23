@@ -1,4 +1,4 @@
-use helpers::matrix::{neighbors_diag, Coord};
+use helpers::neighbors::{neighbors_diag, Coord};
 use helpers::HashSet;
 
 type Grid = Vec<Vec<u8>>;

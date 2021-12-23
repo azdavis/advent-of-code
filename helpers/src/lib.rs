@@ -12,7 +12,7 @@ pub mod digits;
 pub mod dijkstra;
 mod gcd;
 mod infinitable;
-pub mod matrix;
+pub mod neighbors;
 mod permute;
 
 pub use compass::Compass;

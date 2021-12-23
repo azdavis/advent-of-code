@@ -1,5 +1,5 @@
 use helpers::dijkstra::{dijkstra, Graph};
-use helpers::matrix::neighbors;
+use helpers::neighbors::neighbors;
 
 fn parse(s: &str) -> Vec<Vec<u8>> {
   s.lines()

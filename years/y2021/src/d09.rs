@@ -1,4 +1,4 @@
-use helpers::matrix::{neighbors, Coord};
+use helpers::neighbors::{neighbors, Coord};
 use helpers::HashSet;
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;

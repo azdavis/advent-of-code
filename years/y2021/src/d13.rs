@@ -1,4 +1,4 @@
-use helpers::{block_char, matrix::Coord, static_regex, HashSet};
+use helpers::{block_char, neighbors::Coord, static_regex, HashSet};
 use std::io::{self, Write};
 
 type Coords = HashSet<Coord>;

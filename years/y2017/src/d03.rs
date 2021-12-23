@@ -1,6 +1,6 @@
 mod spiral;
 
-use helpers::matrix::{signed_neighbors, SignedCoord};
+use helpers::neighbors::{signed_neighbors, SignedCoord};
 use helpers::HashMap;
 
 pub fn p1(s: &str) -> u32 {

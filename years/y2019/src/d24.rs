@@ -1,4 +1,4 @@
-use helpers::matrix::neighbors;
+use helpers::neighbors::neighbors;
 use helpers::{hash_map, hash_set};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

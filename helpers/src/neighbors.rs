@@ -1,4 +1,4 @@
-//! Matrix-y operations.
+//! Neighbor-y operations.
 
 use std::ops::Deref;
 

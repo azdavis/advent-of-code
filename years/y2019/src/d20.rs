@@ -1,5 +1,5 @@
 use helpers::dijkstra::{dijkstra, Graph};
-use helpers::matrix::{neighbors, Coord};
+use helpers::neighbors::{neighbors, Coord};
 use helpers::{HashMap, HashSet};
 use std::ascii::escape_default;
 
