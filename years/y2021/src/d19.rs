@@ -31,6 +31,7 @@ fn all_translations(sc: &Scanner) -> impl Iterator<Item = Scanner> + '_ {
     .map(|f| sc.iter().map(|&c| f(c)).collect())
 }
 
+/// linear algebra? _shrug_
 const COORD_TRANSLATIONS: [fn(Coord) -> Coord; 24] = [
   |[x, y, z]| [x, y, z],
   |[x, y, z]| [x, z, -y],
@@ -74,11 +75,11 @@ fn align(sc: &Scanner, a: Coord, b: Coord) -> (Coord, Scanner) {
 
 const THRESHOLD: usize = 12;
 
+/// slow AF.
 fn run(s: &str) -> Vec<(Coord, Scanner)> {
   let mut scanners = parse(s);
   let mut ret: Vec<(Coord, Scanner)> =
     vec![([0, 0, 0], scanners.remove(&0).unwrap())];
-  // slow AF.
   while !scanners.is_empty() {
     let (idx, offset, sc) = scanners
       .iter()
