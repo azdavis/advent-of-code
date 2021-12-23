@@ -70,3 +70,21 @@ where
   ];
   neighbors_help(matrix, coords)
 }
+
+/// A signed coordinate.
+pub type SignedCoord = [isize; 2];
+
+/// Returns the signed neighbors of the coord.
+pub fn signed_neighbors(coord: SignedCoord) -> [SignedCoord; 8] {
+  let [x, y] = coord;
+  [
+    [x - 1, y - 1],
+    [x, y - 1],
+    [x + 1, y - 1],
+    [x - 1, y],
+    [x + 1, y],
+    [x - 1, y + 1],
+    [x, y + 1],
+    [x + 1, y + 1],
+  ]
+}

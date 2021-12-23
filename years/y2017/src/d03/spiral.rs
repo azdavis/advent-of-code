@@ -11,8 +11,8 @@ enum Dir {
 #[derive(Debug)]
 pub(super) struct Spiral {
   level: usize,
-  x: i32,
-  y: i32,
+  x: isize,
+  y: isize,
   cur: usize,
   dir: Dir,
 }
@@ -30,7 +30,7 @@ impl Default for Spiral {
 }
 
 impl Iterator for Spiral {
-  type Item = [i32; 2];
+  type Item = [isize; 2];
 
   fn next(&mut self) -> Option<Self::Item> {
     let ret = [self.x, self.y];
