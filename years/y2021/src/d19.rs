@@ -25,45 +25,38 @@ fn parse(s: &str) -> HashMap<u8, Scanner> {
   ret
 }
 
-fn all_translations(sc: &Scanner) -> [Scanner; 24] {
-  let mut ret = vec![Scanner::default(); 24];
-  for &coord in sc {
-    for (set, coord) in ret.iter_mut().zip(all_translations_coord(coord)) {
-      set.insert(coord);
-    }
-  }
-  ret.try_into().unwrap()
+fn all_translations(sc: &Scanner) -> impl Iterator<Item = Scanner> + '_ {
+  COORD_TRANSLATIONS
+    .into_iter()
+    .map(|f| sc.iter().map(|&c| f(c)).collect())
 }
 
-fn all_translations_coord(coord: Coord) -> [Coord; 24] {
-  let [x, y, z] = coord;
-  [
-    [x, y, z],
-    [x, z, -y],
-    [x, -y, -z],
-    [x, -z, y],
-    [-x, y, -z],
-    [-x, -z, -y],
-    [-x, -y, z],
-    [-x, z, y],
-    [y, -x, z],
-    [y, z, x],
-    [y, x, -z],
-    [y, -z, -x],
-    [-y, x, z],
-    [-y, z, -x],
-    [-y, -x, -z],
-    [-y, -z, x],
-    [z, y, -x],
-    [z, -x, -y],
-    [z, -y, x],
-    [z, x, y],
-    [-z, y, x],
-    [-z, x, -y],
-    [-z, -y, -x],
-    [-z, -x, y],
-  ]
-}
+const COORD_TRANSLATIONS: [fn(Coord) -> Coord; 24] = [
+  |[x, y, z]| [x, y, z],
+  |[x, y, z]| [x, z, -y],
+  |[x, y, z]| [x, -y, -z],
+  |[x, y, z]| [x, -z, y],
+  |[x, y, z]| [-x, y, -z],
+  |[x, y, z]| [-x, -z, -y],
+  |[x, y, z]| [-x, -y, z],
+  |[x, y, z]| [-x, z, y],
+  |[x, y, z]| [y, -x, z],
+  |[x, y, z]| [y, z, x],
+  |[x, y, z]| [y, x, -z],
+  |[x, y, z]| [y, -z, -x],
+  |[x, y, z]| [-y, x, z],
+  |[x, y, z]| [-y, z, -x],
+  |[x, y, z]| [-y, -x, -z],
+  |[x, y, z]| [-y, -z, x],
+  |[x, y, z]| [z, y, -x],
+  |[x, y, z]| [z, -x, -y],
+  |[x, y, z]| [z, -y, x],
+  |[x, y, z]| [z, x, y],
+  |[x, y, z]| [-z, y, x],
+  |[x, y, z]| [-z, x, -y],
+  |[x, y, z]| [-z, -y, -x],
+  |[x, y, z]| [-z, -x, y],
+];
 
 fn align(sc: &Scanner, a: Coord, b: Coord) -> (Coord, Scanner) {
   assert!(sc.contains(&a));
@@ -90,7 +83,7 @@ fn run(s: &str) -> Vec<(Coord, Scanner)> {
     let (idx, offset, sc) = scanners
       .iter()
       .find_map(|(&idx, sc)| {
-        all_translations(sc).into_iter().find_map(|tr_sc| {
+        all_translations(sc).find_map(|tr_sc| {
           ret.iter().find_map(|(_, kn_sc)| {
             kn_sc.iter().find_map(|&kn_sc_pt| {
               tr_sc.iter().find_map(|&tr_sc_pt| {
