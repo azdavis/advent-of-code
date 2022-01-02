@@ -58,7 +58,7 @@ fn t() {
 EOF
 
 SESSION="$(cat session.txt)"
-curl -# --cookie "session=$SESSION" \
+curl --cookie "session=$SESSION" \
   "https://adventofcode.com/$YEAR/day/$i/input" \
   > "$SRC/input/d$DAY.txt"
 
