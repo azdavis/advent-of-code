@@ -1,5 +1,3 @@
-use helpers::HashMap;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Letter {
   A,
@@ -30,23 +28,24 @@ impl Letter {
   }
 }
 
-type Loc = [u8; 2];
+type Loc = [usize; 2];
 
 #[derive(Debug, Clone)]
 struct State {
-  map: HashMap<Loc, Letter>,
+  map: Vec<Vec<Option<Letter>>>,
 }
 
 impl State {
-  fn desired_loc(&self, loc: Loc, mut bottom_row: u8) -> Loc {
-    let &letter = self.map.get(&loc).unwrap();
+  fn desired_loc(&self, loc: Loc) -> Loc {
+    let letter = self.map[loc[0]][loc[1]].unwrap();
     let want_col = letter_to_col(letter);
+    let mut bottom_row = self.map.len() - 1;
     loop {
       let want = [bottom_row, want_col];
       if want == loc {
         return want;
       }
-      if let Some(&this_letter) = self.map.get(&want) {
+      if let Some(this_letter) = self.map[bottom_row][want_col] {
         if letter == this_letter {
           bottom_row -= 1;
           continue;
@@ -58,8 +57,8 @@ impl State {
 
   fn try_move(&self, cur: Loc, dst: Loc) -> Option<(Self, usize)> {
     let mut steps = 0usize;
-    assert!(self.map.contains_key(&cur));
     let [mut cur_row, mut cur_col] = cur;
+    assert!(self.map[cur_row][cur_col].is_some());
     let [dst_row, dst_col] = dst;
     loop {
       if cur_col == dst_col {
@@ -76,23 +75,28 @@ impl State {
       } else {
         cur_row -= 1;
       }
-      if self.map.contains_key(&[cur_row, cur_col]) {
+      if self.map[cur_row][cur_col].is_some() {
         return None;
       }
       steps += 1;
     }
     let mut ret = self.clone();
-    let letter = ret.map.remove(&cur).unwrap();
-    ret.map.insert(dst, letter);
+    let letter = ret.map[cur[0]][cur[1]].take().unwrap();
+    ret.map[dst_row][dst_col] = Some(letter);
     Some((ret, steps * letter.energy()))
   }
 
   fn all_locs(&self) -> impl Iterator<Item = Loc> + '_ {
-    self.map.keys().copied()
+    self.map.iter().enumerate().flat_map(|(row_idx, row)| {
+      row
+        .iter()
+        .enumerate()
+        .filter_map(move |(col, letter)| letter.map(|_| [row_idx, col]))
+    })
   }
 }
 
-fn letter_to_col(letter: Letter) -> u8 {
+fn letter_to_col(letter: Letter) -> usize {
   match letter {
     Letter::A => 3,
     Letter::B => 5,
@@ -101,16 +105,16 @@ fn letter_to_col(letter: Letter) -> u8 {
   }
 }
 
-const HALLWAY_ROW: u8 = 1;
-const HALLWAY_COLS: [u8; 7] = [1, 2, 4, 6, 8, 10, 11];
+const HALLWAY_ROW: usize = 1;
+const HALLWAY_COLS: [usize; 7] = [1, 2, 4, 6, 8, 10, 11];
 
-fn run(state: State, bottom_row: u8) -> usize {
+fn run(state: State) -> usize {
   let mut ret = None::<usize>;
   let mut cur = vec![(state, 0usize)];
   while let Some((state, energy)) = cur.pop() {
     let mut done = true;
     for loc in state.all_locs() {
-      let desired = state.desired_loc(loc, bottom_row);
+      let desired = state.desired_loc(loc);
       if loc == desired {
         continue;
       }
@@ -140,21 +144,16 @@ fn run(state: State, bottom_row: u8) -> usize {
 }
 
 fn parse(s: &str) -> State {
-  let map: HashMap<[u8; 2], Letter> = s
+  let mut map: Vec<Vec<Option<Letter>>> = s
     .lines()
-    .enumerate()
-    .flat_map(|(row, line)| {
-      line.chars().enumerate().filter_map(move |(col, c)| {
-        Letter::from_char(c)
-          .map(|l| ([row.try_into().unwrap(), col.try_into().unwrap()], l))
-      })
-    })
+    .map(|line| line.chars().map(Letter::from_char).collect())
     .collect();
+  map.pop().unwrap();
   State { map }
 }
 
 pub fn p1(s: &str) -> usize {
-  run(parse(s), 3)
+  run(parse(s))
 }
 
 pub fn p2(s: &str) -> usize {
