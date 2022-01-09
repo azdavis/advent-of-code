@@ -1,3 +1,5 @@
+use helpers::HashMap;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Letter {
   A,
@@ -30,7 +32,7 @@ impl Letter {
 
 type Loc = [usize; 2];
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct State {
   map: Vec<Vec<Option<Letter>>>,
 }
@@ -104,10 +106,39 @@ impl State {
 const HALLWAY_ROW: usize = 1;
 const HALLWAY_COLS: [usize; 7] = [1, 2, 4, 6, 8, 10, 11];
 
+struct CacheStack {
+  cur: Vec<(State, usize)>,
+  cache: HashMap<State, usize>,
+}
+
+impl CacheStack {
+  fn new(init: State) -> Self {
+    let cur = vec![(init, 0usize)];
+    let cache: HashMap<_, _> = cur.iter().cloned().collect();
+    Self { cur, cache }
+  }
+
+  fn add(&mut self, energy: usize, state: &State, cur: Loc, dst: Loc) -> bool {
+    let (new_state, add_energy) = match state.try_move(cur, dst) {
+      Some(x) => x,
+      None => return false,
+    };
+    let new_energy = energy + add_energy;
+    if let Some(&old_energy) = self.cache.get(&new_state) {
+      if old_energy <= new_energy {
+        return false;
+      }
+    }
+    self.cache.insert(new_state.clone(), new_energy);
+    self.cur.push((new_state, new_energy));
+    true
+  }
+}
+
 fn run(state: State) -> usize {
   let mut ret = None::<usize>;
-  let mut cur = vec![(state, 0usize)];
-  while let Some((state, energy)) = cur.pop() {
+  let mut runner = CacheStack::new(state);
+  while let Some((state, energy)) = runner.cur.pop() {
     let mut done = true;
     for loc in state.all_locs() {
       let desired = state.desired_loc(loc);
@@ -115,18 +146,14 @@ fn run(state: State) -> usize {
         continue;
       }
       done = false;
-      if let Some((new_state, new_energy)) = state.try_move(loc, desired) {
-        cur.push((new_state, energy + new_energy));
+      if runner.add(energy, &state, loc, desired) {
         continue;
       }
       if loc[0] == HALLWAY_ROW {
         continue;
       }
       for col in HALLWAY_COLS {
-        let new_pos = [HALLWAY_ROW, col];
-        if let Some((new_state, new_energy)) = state.try_move(loc, new_pos) {
-          cur.push((new_state, energy + new_energy));
-        }
+        runner.add(energy, &state, loc, [HALLWAY_ROW, col]);
       }
     }
     if done {
