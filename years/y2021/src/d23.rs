@@ -8,28 +8,6 @@ enum Letter {
   D,
 }
 
-impl Letter {
-  fn from_char(c: char) -> Option<Self> {
-    let ret = match c {
-      'A' => Self::A,
-      'B' => Self::B,
-      'C' => Self::C,
-      'D' => Self::D,
-      _ => return None,
-    };
-    Some(ret)
-  }
-
-  fn energy(&self) -> usize {
-    match self {
-      Self::A => 1,
-      Self::B => 10,
-      Self::C => 100,
-      Self::D => 1000,
-    }
-  }
-}
-
 type Loc = [usize; 2];
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -90,7 +68,13 @@ impl State {
     let mut ret = self.clone();
     let letter = ret.map[cur[0]][cur[1]].take().unwrap();
     ret.map[dst_row][dst_col] = Some(letter);
-    Some((ret, steps * letter.energy()))
+    let energy = match letter {
+      Letter::A => 1,
+      Letter::B => 10,
+      Letter::C => 100,
+      Letter::D => 1000,
+    };
+    Some((ret, steps * energy))
   }
 
   fn all_locs(&self) -> impl Iterator<Item = Loc> + '_ {
@@ -171,7 +155,19 @@ fn run(state: State) -> usize {
 }
 
 fn parse_line(line: &str) -> Vec<Option<Letter>> {
-  line.chars().map(Letter::from_char).collect()
+  line
+    .chars()
+    .map(|c| {
+      let ret = match c {
+        'A' => Letter::A,
+        'B' => Letter::B,
+        'C' => Letter::C,
+        'D' => Letter::D,
+        _ => return None,
+      };
+      Some(ret)
+    })
+    .collect()
 }
 
 fn parse(s: &str) -> State {
