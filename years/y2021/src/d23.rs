@@ -76,14 +76,14 @@ impl PodData {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Pods {
-  a: [PodData; 2],
-  b: [PodData; 2],
-  c: [PodData; 2],
-  d: [PodData; 2],
+struct Pods<const N: usize> {
+  a: [PodData; N],
+  b: [PodData; N],
+  c: [PodData; N],
+  d: [PodData; N],
 }
 
-impl Pods {
+impl<const N: usize> Pods<N> {
   fn iter(&self) -> impl Iterator<Item = (Pod, PodData)> + '_ {
     Letter::ALL.into_iter().flat_map(|letter| {
       self
@@ -107,7 +107,7 @@ impl Pods {
     }
   }
 
-  fn get_letter(&self, letter: Letter) -> [PodData; 2] {
+  fn get_letter(&self, letter: Letter) -> [PodData; N] {
     match letter {
       Letter::A => self.a,
       Letter::B => self.b,
@@ -128,7 +128,7 @@ impl Pods {
   }
 }
 
-impl fmt::Display for Pods {
+impl<const N: usize> fmt::Display for Pods<N> {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     writeln!(f, "#############")?;
     let map: HashMap<_, _> = self
@@ -149,24 +149,13 @@ impl fmt::Display for Pods {
       write!(f, "{}", get_char(Loc::Hall(i)))?;
     }
     writeln!(f, "#")?;
-    write!(f, "###")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::A, 0)))?;
-    write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::B, 0)))?;
-    write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::C, 0)))?;
-    write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::D, 0)))?;
-    writeln!(f, "###")?;
-    write!(f, "  #")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::A, 1)))?;
-    write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::B, 1)))?;
-    write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::C, 1)))?;
-    write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::D, 1)))?;
-    writeln!(f, "#")?;
+    for idx in 0..N {
+      write!(f, "  #")?;
+      for letter in Letter::ALL {
+        write!(f, "{}#", get_char(Loc::Room(letter, idx)))?;
+      }
+      writeln!(f)?;
+    }
     write!(f, "  #########")?;
     Ok(())
   }
@@ -179,8 +168,8 @@ enum MustMoveReason {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct State {
-  pods: Pods,
+struct State<const N: usize> {
+  pods: Pods<N>,
   must_move: Option<(Pod, MustMoveReason)>,
 }
 
@@ -249,7 +238,7 @@ fn mk_pod(val: &(Letter, Letter, usize)) -> PodData {
   PodData::new(Loc::Room(letter, room_pos))
 }
 
-fn parse(s: &str) -> Pods {
+fn parse(s: &str) -> Pods<2> {
   let mut lines = s.lines();
   assert_eq!(lines.next().unwrap().len(), 13);
   assert_eq!(lines.next().unwrap().len(), 13);
@@ -269,10 +258,10 @@ fn parse(s: &str) -> Pods {
   }
 }
 
-fn maybe_add_new_state(
-  visited: &mut HashMap<Pods, usize>,
-  new_cur: &mut Vec<(State, usize)>,
-  mut state: State,
+fn maybe_add_new_state<const N: usize>(
+  visited: &mut HashMap<Pods<N>, usize>,
+  new_cur: &mut Vec<(State<N>, usize)>,
+  mut state: State<N>,
   pod: Pod,
   loc: Loc,
   energy: usize,
@@ -292,12 +281,12 @@ fn maybe_add_new_state(
   new_cur.push((state, new_energy));
 }
 
-fn is_in_final_loc(pods: &Pods, pod: Pod) -> bool {
+fn is_in_final_loc<const N: usize>(pods: &Pods<N>, pod: Pod) -> bool {
   match pods.get(pod).loc {
     Loc::Hall(_) => false,
     Loc::Room(room_letter, pos) => {
       if room_letter == pod.letter {
-        let mut set = vec![false; 2];
+        let mut set = vec![false; N];
         for data in pods.get_letter(room_letter) {
           if let Loc::Room(letter, idx) = data.loc {
             if letter == room_letter {
@@ -313,8 +302,8 @@ fn is_in_final_loc(pods: &Pods, pod: Pod) -> bool {
   }
 }
 
-fn is_valid_move(
-  pods: &Pods,
+fn is_valid_move<const N: usize>(
+  pods: &Pods<N>,
   letter: Letter,
   old_loc: Loc,
   new_loc: Loc,
@@ -329,7 +318,7 @@ fn is_valid_move(
 
 pub fn p1(s: &str) -> usize {
   let pods = parse(s);
-  let mut visited = HashMap::<Pods, usize>::default();
+  let mut visited = HashMap::<Pods<2>, usize>::default();
   visited.insert(pods, 0);
   let mut cur = vec![(
     State {
@@ -342,7 +331,7 @@ pub fn p1(s: &str) -> usize {
     if cur.is_empty() {
       break;
     }
-    let mut new_cur = Vec::<(State, usize)>::default();
+    let mut new_cur = Vec::<(State<2>, usize)>::default();
     for (state, energy) in cur {
       match state.must_move {
         Some((pod, reason)) => {
