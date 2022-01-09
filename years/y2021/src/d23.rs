@@ -38,7 +38,7 @@ enum Loc {
 }
 
 impl Loc {
-  fn is_directly_outside_hallway(&self) -> bool {
+  fn is_outside_hallway(&self) -> bool {
     matches!(*self, Loc::Hall(2 | 4 | 6 | 8))
   }
 }
@@ -395,7 +395,7 @@ pub fn p1(s: &str) -> usize {
               let mut new_state = state;
               let reason = if data.locked {
                 Some(MustMoveReason::MovingToFinalHallway)
-              } else if new_loc.is_directly_outside_hallway() {
+              } else if new_loc.is_outside_hallway() {
                 Some(MustMoveReason::OutsideHallway)
               } else {
                 None
