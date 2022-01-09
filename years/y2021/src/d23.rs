@@ -186,7 +186,7 @@ struct State {
 
 const HALL_WIDTH: u8 = 10;
 
-fn moves(loc: Loc) -> Vec<Loc> {
+fn moves(loc: Loc, max: usize) -> Vec<Loc> {
   match loc {
     Loc::Hall(n) => {
       let mut ret = Vec::with_capacity(1);
@@ -206,8 +206,8 @@ fn moves(loc: Loc) -> Vec<Loc> {
       ret.push(Loc::Room(letter, 0));
       ret
     }
-    Loc::Room(letter, room_pos) => match room_pos {
-      0 => {
+    Loc::Room(letter, rp) => match rp.checked_sub(1) {
+      None => {
         let hall_num = match letter {
           Letter::A => 2,
           Letter::B => 4,
@@ -216,8 +216,13 @@ fn moves(loc: Loc) -> Vec<Loc> {
         };
         vec![Loc::Hall(hall_num), Loc::Room(letter, 1)]
       }
-      1 => vec![Loc::Room(letter, 0)],
-      _ => unreachable!(),
+      Some(rp_m1) => {
+        let mut ret = vec![Loc::Room(letter, rp_m1)];
+        if rp + 1 != max {
+          ret.push(Loc::Room(letter, rp + 1))
+        }
+        ret
+      }
     },
   }
 }
@@ -340,7 +345,7 @@ pub fn p1(s: &str) -> usize {
       match state.must_move {
         Some((pod, reason)) => {
           let data = state.pods.get(pod);
-          for new_loc in moves(data.loc) {
+          for new_loc in moves(data.loc, 2) {
             if !is_valid_move(&state.pods, pod.letter, data.loc, new_loc) {
               continue;
             }
@@ -363,7 +368,7 @@ pub fn p1(s: &str) -> usize {
             if is_in_final_loc(&state.pods, pod) {
               continue;
             }
-            for new_loc in moves(data.loc) {
+            for new_loc in moves(data.loc, 2) {
               if !is_valid_move(&state.pods, pod.letter, data.loc, new_loc) {
                 continue;
               }
