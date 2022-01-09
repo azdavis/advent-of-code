@@ -38,7 +38,12 @@ struct State {
 impl State {
   fn desired_loc(&self, loc: Loc) -> Loc {
     let letter = self.map[loc[0]][loc[1]].unwrap();
-    let want_col = letter_to_col(letter);
+    let want_col = match letter {
+      Letter::A => 3,
+      Letter::B => 5,
+      Letter::C => 7,
+      Letter::D => 9,
+    };
     let mut bottom_row = self.map.len() - 1;
     loop {
       let want = [bottom_row, want_col];
@@ -93,15 +98,6 @@ impl State {
         .enumerate()
         .filter_map(move |(col, letter)| letter.map(|_| [row_idx, col]))
     })
-  }
-}
-
-fn letter_to_col(letter: Letter) -> usize {
-  match letter {
-    Letter::A => 3,
-    Letter::B => 5,
-    Letter::C => 7,
-    Letter::D => 9,
   }
 }
 
