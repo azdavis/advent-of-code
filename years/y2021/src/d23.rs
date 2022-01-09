@@ -86,7 +86,7 @@ struct Pods {
 }
 
 impl Pods {
-  fn as_array(&self) -> [(Pod, PodData); 8] {
+  fn iter(&self) -> impl Iterator<Item = (Pod, PodData)> + '_ {
     [
       (Pod::new(Letter::A, 0), self.a1),
       (Pod::new(Letter::A, 1), self.a2),
@@ -97,19 +97,7 @@ impl Pods {
       (Pod::new(Letter::D, 0), self.d1),
       (Pod::new(Letter::D, 1), self.d2),
     ]
-  }
-
-  fn as_mut_array(&mut self) -> [(Pod, &mut PodData); 8] {
-    [
-      (Pod::new(Letter::A, 0), &mut self.a1),
-      (Pod::new(Letter::A, 1), &mut self.a2),
-      (Pod::new(Letter::B, 0), &mut self.b1),
-      (Pod::new(Letter::B, 1), &mut self.b2),
-      (Pod::new(Letter::C, 0), &mut self.c1),
-      (Pod::new(Letter::C, 1), &mut self.c2),
-      (Pod::new(Letter::D, 0), &mut self.d1),
-      (Pod::new(Letter::D, 1), &mut self.d2),
-    ]
+    .into_iter()
   }
 
   fn get(&self, pod: Pod) -> PodData {
@@ -141,9 +129,14 @@ impl Pods {
   }
 
   fn maybe_lock_all(&mut self) {
-    for (_, data) in self.as_mut_array() {
-      data.maybe_lock();
-    }
+    self.a1.maybe_lock();
+    self.a2.maybe_lock();
+    self.b1.maybe_lock();
+    self.b2.maybe_lock();
+    self.c1.maybe_lock();
+    self.c2.maybe_lock();
+    self.d1.maybe_lock();
+    self.d2.maybe_lock();
   }
 }
 
@@ -151,8 +144,7 @@ impl fmt::Display for Pods {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     writeln!(f, "#############")?;
     let map: HashMap<_, _> = self
-      .as_array()
-      .into_iter()
+      .iter()
       .map(|(pod, data)| (data.loc, pod.letter))
       .collect();
     let get_char = |loc: Loc| match map.get(&loc) {
@@ -317,7 +309,7 @@ fn is_in_final_loc(pods: &Pods, pod: Pod) -> bool {
     Loc::Room(room_letter, pos) => {
       if room_letter == pod.letter {
         match pos {
-          0 => pods.as_array().into_iter().any(|(pod, data)| {
+          0 => pods.iter().any(|(pod, data)| {
             pod.letter == room_letter && data.loc == Loc::Room(room_letter, 1)
           }),
           1 => true,
@@ -341,8 +333,7 @@ fn is_valid_move(
       return false;
     }
   }
-  let ret = pods.as_array().iter().all(|&(_, data)| data.loc != new_loc);
-  ret
+  pods.iter().all(|(_, data)| data.loc != new_loc)
 }
 
 pub fn p1(s: &str) -> usize {
@@ -384,7 +375,7 @@ pub fn p1(s: &str) -> usize {
           }
         }
         None => {
-          for (pod, data) in state.pods.as_array() {
+          for (pod, data) in state.pods.iter() {
             if is_in_final_loc(&state.pods, pod) {
               continue;
             }
@@ -419,14 +410,10 @@ pub fn p1(s: &str) -> usize {
   visited
     .into_iter()
     .filter_map(|(pods, energy)| {
-      let all_in_room =
-        pods
-          .as_array()
-          .into_iter()
-          .all(|(pod, data)| match data.loc {
-            Loc::Hall(_) => false,
-            Loc::Room(room_letter, _) => pod.letter == room_letter,
-          });
+      let all_in_room = pods.iter().all(|(pod, data)| match data.loc {
+        Loc::Hall(_) => false,
+        Loc::Room(room_letter, _) => pod.letter == room_letter,
+      });
       all_in_room.then(|| energy)
     })
     .min()
