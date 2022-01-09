@@ -10,6 +10,8 @@ enum Letter {
 }
 
 impl Letter {
+  const ALL: [Self; 4] = [Self::A, Self::B, Self::C, Self::D];
+
   fn from_char(c: char) -> Option<Self> {
     let ret = match c {
       'A' => Self::A,
@@ -83,56 +85,46 @@ struct Pods {
 
 impl Pods {
   fn iter(&self) -> impl Iterator<Item = (Pod, PodData)> + '_ {
-    [
-      (Pod::new(Letter::A, 0), self.a[0]),
-      (Pod::new(Letter::A, 1), self.a[1]),
-      (Pod::new(Letter::B, 0), self.b[0]),
-      (Pod::new(Letter::B, 1), self.b[1]),
-      (Pod::new(Letter::C, 0), self.c[0]),
-      (Pod::new(Letter::C, 1), self.c[1]),
-      (Pod::new(Letter::D, 0), self.d[0]),
-      (Pod::new(Letter::D, 1), self.d[1]),
-    ]
-    .into_iter()
+    Letter::ALL.into_iter().flat_map(|letter| {
+      self
+        .get_letter(letter)
+        .into_iter()
+        .enumerate()
+        .map(move |(idx, data)| (Pod::new(letter, idx), data))
+    })
   }
 
   fn get(&self, pod: Pod) -> PodData {
-    match (pod.letter, pod.idx) {
-      (Letter::A, 0) => self.a[0],
-      (Letter::A, 1) => self.a[1],
-      (Letter::B, 0) => self.b[0],
-      (Letter::B, 1) => self.b[1],
-      (Letter::C, 0) => self.c[0],
-      (Letter::C, 1) => self.c[1],
-      (Letter::D, 0) => self.d[0],
-      (Letter::D, 1) => self.d[1],
-      _ => unreachable!(),
-    }
+    self.get_letter(pod.letter)[pod.idx]
   }
 
   fn set(&mut self, pod: Pod, data: PodData) {
-    match (pod.letter, pod.idx) {
-      (Letter::A, 0) => self.a[0] = data,
-      (Letter::A, 1) => self.a[1] = data,
-      (Letter::B, 0) => self.b[0] = data,
-      (Letter::B, 1) => self.b[1] = data,
-      (Letter::C, 0) => self.c[0] = data,
-      (Letter::C, 1) => self.c[1] = data,
-      (Letter::D, 0) => self.d[0] = data,
-      (Letter::D, 1) => self.d[1] = data,
-      _ => unreachable!(),
+    match pod.letter {
+      Letter::A => self.a[pod.idx] = data,
+      Letter::B => self.b[pod.idx] = data,
+      Letter::C => self.c[pod.idx] = data,
+      Letter::D => self.d[pod.idx] = data,
+    }
+  }
+
+  fn get_letter(&self, letter: Letter) -> [PodData; 2] {
+    match letter {
+      Letter::A => self.a,
+      Letter::B => self.b,
+      Letter::C => self.c,
+      Letter::D => self.d,
     }
   }
 
   fn maybe_lock_all(&mut self) {
-    self.a[0].maybe_lock();
-    self.a[1].maybe_lock();
-    self.b[0].maybe_lock();
-    self.b[1].maybe_lock();
-    self.c[0].maybe_lock();
-    self.c[1].maybe_lock();
-    self.d[0].maybe_lock();
-    self.d[1].maybe_lock();
+    let all_data = std::iter::empty()
+      .chain(self.a.iter_mut())
+      .chain(self.b.iter_mut())
+      .chain(self.c.iter_mut())
+      .chain(self.d.iter_mut());
+    for data in all_data {
+      data.maybe_lock();
+    }
   }
 }
 
