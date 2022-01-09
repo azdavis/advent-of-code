@@ -40,7 +40,7 @@ struct State {
 impl State {
   fn desired_loc(&self, loc: Loc) -> Loc {
     let letter = self.map[loc[0]][loc[1]].unwrap();
-    let want_col = match letter {
+    let want_col: usize = match letter {
       Letter::A => 3,
       Letter::B => 5,
       Letter::C => 7,
@@ -166,12 +166,12 @@ fn run(state: State) -> usize {
   ret.unwrap()
 }
 
+fn parse_line(line: &str) -> Vec<Option<Letter>> {
+  line.chars().map(Letter::from_char).collect()
+}
+
 fn parse(s: &str) -> State {
-  let mut map: Vec<Vec<Option<Letter>>> = s
-    .lines()
-    .skip(1)
-    .map(|line| line.chars().map(Letter::from_char).collect())
-    .collect();
+  let mut map: Vec<_> = s.lines().skip(1).map(parse_line).collect();
   map.pop().unwrap();
   State { map }
 }
@@ -181,12 +181,17 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> usize {
-  s.len()
+  let mut state = parse(s);
+  let mut extra = include_str!("d23_p2_extra.txt").lines().map(parse_line);
+  state.map.insert(2, extra.next().unwrap());
+  state.map.insert(3, extra.next().unwrap());
+  assert!(extra.next().is_none());
+  run(state)
 }
 
 #[test]
 fn t() {
   let s = include_str!("input/d23.txt");
   assert_eq!(p1(s), 13556);
-  assert_eq!(p2(s), s.len());
+  assert_eq!(p2(s), 54200);
 }
