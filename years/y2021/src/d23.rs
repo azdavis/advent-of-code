@@ -63,10 +63,10 @@ impl State {
   }
 
   fn try_move(&self, cur: Loc, dst: Loc) -> Option<(Self, usize)> {
-    let mut steps = 0usize;
     let [mut cur_row, mut cur_col] = cur;
     assert!(self.map[cur_row][cur_col].is_some());
     let [dst_row, dst_col] = dst;
+    let mut steps = 0usize;
     loop {
       if cur_col == dst_col {
         if cur_row == dst_row {
