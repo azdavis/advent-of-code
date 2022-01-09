@@ -297,13 +297,15 @@ fn is_in_final_loc(pods: &Pods, pod: Pod) -> bool {
     Loc::Hall(_) => false,
     Loc::Room(room_letter, pos) => {
       if room_letter == pod.letter {
-        match pos {
-          0 => pods.iter().any(|(pod, data)| {
-            pod.letter == room_letter && data.loc == Loc::Room(room_letter, 1)
-          }),
-          1 => true,
-          _ => unreachable!(),
+        let mut set = vec![false; 2];
+        for data in pods.get_letter(room_letter) {
+          if let Loc::Room(letter, idx) = data.loc {
+            if letter == room_letter {
+              set[idx] = true;
+            }
+          }
         }
+        set[pos..].iter().all(|&it| it)
       } else {
         false
       }
