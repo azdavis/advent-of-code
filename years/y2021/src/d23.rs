@@ -10,12 +10,12 @@ enum Letter {
 }
 
 impl Letter {
-  fn from_char(c: char) -> Option<Letter> {
+  fn from_char(c: char) -> Option<Self> {
     let ret = match c {
-      'A' => Letter::A,
-      'B' => Letter::B,
-      'C' => Letter::C,
-      'D' => Letter::D,
+      'A' => Self::A,
+      'B' => Self::B,
+      'C' => Self::C,
+      'D' => Self::D,
       _ => return None,
     };
     Some(ret)
@@ -23,10 +23,10 @@ impl Letter {
 
   fn energy(&self) -> usize {
     match self {
-      Letter::A => 1,
-      Letter::B => 10,
-      Letter::C => 100,
-      Letter::D => 1000,
+      Self::A => 1,
+      Self::B => 10,
+      Self::C => 100,
+      Self::D => 1000,
     }
   }
 }
