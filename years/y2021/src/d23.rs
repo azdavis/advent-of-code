@@ -32,12 +32,6 @@ impl Letter {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum RoomLoc {
-  N0,
-  N1,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum HallLoc {
   N0,
   N1,
@@ -91,7 +85,7 @@ impl HallLoc {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Loc {
   Hall(HallLoc),
-  Room(Letter, RoomLoc),
+  Room(Letter, usize),
 }
 
 impl Loc {
@@ -104,19 +98,13 @@ impl Loc {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum Idx {
-  N0,
-  N1,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Pod {
   letter: Letter,
-  idx: Idx,
+  idx: usize,
 }
 
 impl Pod {
-  fn new(letter: Letter, idx: Idx) -> Self {
+  fn new(letter: Letter, idx: usize) -> Self {
     Self { letter, idx }
   }
 }
@@ -154,53 +142,55 @@ struct Pods {
 impl Pods {
   fn as_array(&self) -> [(Pod, PodData); 8] {
     [
-      (Pod::new(Letter::A, Idx::N0), self.a1),
-      (Pod::new(Letter::A, Idx::N1), self.a2),
-      (Pod::new(Letter::B, Idx::N0), self.b1),
-      (Pod::new(Letter::B, Idx::N1), self.b2),
-      (Pod::new(Letter::C, Idx::N0), self.c1),
-      (Pod::new(Letter::C, Idx::N1), self.c2),
-      (Pod::new(Letter::D, Idx::N0), self.d1),
-      (Pod::new(Letter::D, Idx::N1), self.d2),
+      (Pod::new(Letter::A, 0), self.a1),
+      (Pod::new(Letter::A, 1), self.a2),
+      (Pod::new(Letter::B, 0), self.b1),
+      (Pod::new(Letter::B, 1), self.b2),
+      (Pod::new(Letter::C, 0), self.c1),
+      (Pod::new(Letter::C, 1), self.c2),
+      (Pod::new(Letter::D, 0), self.d1),
+      (Pod::new(Letter::D, 1), self.d2),
     ]
   }
 
   fn as_mut_array(&mut self) -> [(Pod, &mut PodData); 8] {
     [
-      (Pod::new(Letter::A, Idx::N0), &mut self.a1),
-      (Pod::new(Letter::A, Idx::N1), &mut self.a2),
-      (Pod::new(Letter::B, Idx::N0), &mut self.b1),
-      (Pod::new(Letter::B, Idx::N1), &mut self.b2),
-      (Pod::new(Letter::C, Idx::N0), &mut self.c1),
-      (Pod::new(Letter::C, Idx::N1), &mut self.c2),
-      (Pod::new(Letter::D, Idx::N0), &mut self.d1),
-      (Pod::new(Letter::D, Idx::N1), &mut self.d2),
+      (Pod::new(Letter::A, 0), &mut self.a1),
+      (Pod::new(Letter::A, 1), &mut self.a2),
+      (Pod::new(Letter::B, 0), &mut self.b1),
+      (Pod::new(Letter::B, 1), &mut self.b2),
+      (Pod::new(Letter::C, 0), &mut self.c1),
+      (Pod::new(Letter::C, 1), &mut self.c2),
+      (Pod::new(Letter::D, 0), &mut self.d1),
+      (Pod::new(Letter::D, 1), &mut self.d2),
     ]
   }
 
   fn get(&self, pod: Pod) -> PodData {
     match (pod.letter, pod.idx) {
-      (Letter::A, Idx::N0) => self.a1,
-      (Letter::A, Idx::N1) => self.a2,
-      (Letter::B, Idx::N0) => self.b1,
-      (Letter::B, Idx::N1) => self.b2,
-      (Letter::C, Idx::N0) => self.c1,
-      (Letter::C, Idx::N1) => self.c2,
-      (Letter::D, Idx::N0) => self.d1,
-      (Letter::D, Idx::N1) => self.d2,
+      (Letter::A, 0) => self.a1,
+      (Letter::A, 1) => self.a2,
+      (Letter::B, 0) => self.b1,
+      (Letter::B, 1) => self.b2,
+      (Letter::C, 0) => self.c1,
+      (Letter::C, 1) => self.c2,
+      (Letter::D, 0) => self.d1,
+      (Letter::D, 1) => self.d2,
+      _ => unreachable!(),
     }
   }
 
   fn set(&mut self, pod: Pod, data: PodData) {
     match (pod.letter, pod.idx) {
-      (Letter::A, Idx::N0) => self.a1 = data,
-      (Letter::A, Idx::N1) => self.a2 = data,
-      (Letter::B, Idx::N0) => self.b1 = data,
-      (Letter::B, Idx::N1) => self.b2 = data,
-      (Letter::C, Idx::N0) => self.c1 = data,
-      (Letter::C, Idx::N1) => self.c2 = data,
-      (Letter::D, Idx::N0) => self.d1 = data,
-      (Letter::D, Idx::N1) => self.d2 = data,
+      (Letter::A, 0) => self.a1 = data,
+      (Letter::A, 1) => self.a2 = data,
+      (Letter::B, 0) => self.b1 = data,
+      (Letter::B, 1) => self.b2 = data,
+      (Letter::C, 0) => self.c1 = data,
+      (Letter::C, 1) => self.c2 = data,
+      (Letter::D, 0) => self.d1 = data,
+      (Letter::D, 1) => self.d2 = data,
+      _ => unreachable!(),
     }
   }
 
@@ -242,22 +232,22 @@ impl fmt::Display for Pods {
     write!(f, "{}", get_char(Loc::Hall(HallLoc::N10)))?;
     writeln!(f, "#")?;
     write!(f, "###")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::A, RoomLoc::N0)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::A, 0)))?;
     write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::B, RoomLoc::N0)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::B, 0)))?;
     write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::C, RoomLoc::N0)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::C, 0)))?;
     write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::D, RoomLoc::N0)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::D, 0)))?;
     writeln!(f, "###")?;
     write!(f, "  #")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::A, RoomLoc::N1)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::A, 1)))?;
     write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::B, RoomLoc::N1)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::B, 1)))?;
     write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::C, RoomLoc::N1)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::C, 1)))?;
     write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Room(Letter::D, RoomLoc::N1)))?;
+    write!(f, "{}", get_char(Loc::Room(Letter::D, 1)))?;
     writeln!(f, "#")?;
     write!(f, "  #########")?;
     Ok(())
@@ -293,20 +283,21 @@ fn moves(loc: Loc) -> Vec<Loc> {
         HallLoc::N8 => Letter::D,
         _ => return ret,
       };
-      ret.push(Loc::Room(letter, RoomLoc::N0));
+      ret.push(Loc::Room(letter, 0));
       ret
     }
     Loc::Room(letter, room_pos) => match room_pos {
-      RoomLoc::N0 => {
+      0 => {
         let hall_num = match letter {
           Letter::A => HallLoc::N2,
           Letter::B => HallLoc::N4,
           Letter::C => HallLoc::N6,
           Letter::D => HallLoc::N8,
         };
-        vec![Loc::Hall(hall_num), Loc::Room(letter, RoomLoc::N1)]
+        vec![Loc::Hall(hall_num), Loc::Room(letter, 1)]
       }
-      RoomLoc::N1 => vec![Loc::Room(letter, RoomLoc::N0)],
+      1 => vec![Loc::Room(letter, 0)],
+      _ => unreachable!(),
     },
   }
 }
@@ -328,7 +319,7 @@ fn mk_line(line: &str) -> impl Iterator<Item = [Letter; 2]> + '_ {
     })
 }
 
-fn mk_pod(val: &(Letter, Letter, RoomLoc)) -> PodData {
+fn mk_pod(val: &(Letter, Letter, usize)) -> PodData {
   let &(_, letter, room_pos) = val;
   PodData::new(Loc::Room(letter, room_pos))
 }
@@ -338,8 +329,8 @@ fn parse(s: &str) -> Pods {
   assert_eq!(lines.next().unwrap().len(), 13);
   assert_eq!(lines.next().unwrap().len(), 13);
   let list: Vec<_> = std::iter::empty()
-    .chain(mk_line(lines.next().unwrap()).map(|[a, b]| (a, b, RoomLoc::N0)))
-    .chain(mk_line(lines.next().unwrap()).map(|[a, b]| (a, b, RoomLoc::N1)))
+    .chain(mk_line(lines.next().unwrap()).map(|[a, b]| (a, b, 0)))
+    .chain(mk_line(lines.next().unwrap()).map(|[a, b]| (a, b, 1)))
     .collect();
   let mut a = list.iter().filter(|&&(a, _, _)| matches!(a, Letter::A));
   let mut b = list.iter().filter(|&&(a, _, _)| matches!(a, Letter::B));
@@ -386,11 +377,11 @@ fn is_in_final_loc(pods: &Pods, pod: Pod) -> bool {
     Loc::Room(room_letter, pos) => {
       if room_letter == pod.letter {
         match pos {
-          RoomLoc::N0 => pods.as_array().into_iter().any(|(pod, data)| {
-            pod.letter == room_letter
-              && data.loc == Loc::Room(room_letter, RoomLoc::N1)
+          0 => pods.as_array().into_iter().any(|(pod, data)| {
+            pod.letter == room_letter && data.loc == Loc::Room(room_letter, 1)
           }),
-          RoomLoc::N1 => true,
+          1 => true,
+          _ => unreachable!(),
         }
       } else {
         false
