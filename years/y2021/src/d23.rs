@@ -103,7 +103,7 @@ impl State {
   }
 }
 
-const HALLWAY_ROW: usize = 1;
+const HALLWAY_ROW: usize = 0;
 const HALLWAY_COLS: [usize; 7] = [1, 2, 4, 6, 8, 10, 11];
 
 struct CacheStack {
@@ -169,6 +169,7 @@ fn run(state: State) -> usize {
 fn parse(s: &str) -> State {
   let mut map: Vec<Vec<Option<Letter>>> = s
     .lines()
+    .skip(1)
     .map(|line| line.chars().map(Letter::from_char).collect())
     .collect();
   map.pop().unwrap();
