@@ -75,68 +75,64 @@ impl PodData {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Pods {
-  a1: PodData,
-  a2: PodData,
-  b1: PodData,
-  b2: PodData,
-  c1: PodData,
-  c2: PodData,
-  d1: PodData,
-  d2: PodData,
+  a: [PodData; 2],
+  b: [PodData; 2],
+  c: [PodData; 2],
+  d: [PodData; 2],
 }
 
 impl Pods {
   fn iter(&self) -> impl Iterator<Item = (Pod, PodData)> + '_ {
     [
-      (Pod::new(Letter::A, 0), self.a1),
-      (Pod::new(Letter::A, 1), self.a2),
-      (Pod::new(Letter::B, 0), self.b1),
-      (Pod::new(Letter::B, 1), self.b2),
-      (Pod::new(Letter::C, 0), self.c1),
-      (Pod::new(Letter::C, 1), self.c2),
-      (Pod::new(Letter::D, 0), self.d1),
-      (Pod::new(Letter::D, 1), self.d2),
+      (Pod::new(Letter::A, 0), self.a[0]),
+      (Pod::new(Letter::A, 1), self.a[1]),
+      (Pod::new(Letter::B, 0), self.b[0]),
+      (Pod::new(Letter::B, 1), self.b[1]),
+      (Pod::new(Letter::C, 0), self.c[0]),
+      (Pod::new(Letter::C, 1), self.c[1]),
+      (Pod::new(Letter::D, 0), self.d[0]),
+      (Pod::new(Letter::D, 1), self.d[1]),
     ]
     .into_iter()
   }
 
   fn get(&self, pod: Pod) -> PodData {
     match (pod.letter, pod.idx) {
-      (Letter::A, 0) => self.a1,
-      (Letter::A, 1) => self.a2,
-      (Letter::B, 0) => self.b1,
-      (Letter::B, 1) => self.b2,
-      (Letter::C, 0) => self.c1,
-      (Letter::C, 1) => self.c2,
-      (Letter::D, 0) => self.d1,
-      (Letter::D, 1) => self.d2,
+      (Letter::A, 0) => self.a[0],
+      (Letter::A, 1) => self.a[1],
+      (Letter::B, 0) => self.b[0],
+      (Letter::B, 1) => self.b[1],
+      (Letter::C, 0) => self.c[0],
+      (Letter::C, 1) => self.c[1],
+      (Letter::D, 0) => self.d[0],
+      (Letter::D, 1) => self.d[1],
       _ => unreachable!(),
     }
   }
 
   fn set(&mut self, pod: Pod, data: PodData) {
     match (pod.letter, pod.idx) {
-      (Letter::A, 0) => self.a1 = data,
-      (Letter::A, 1) => self.a2 = data,
-      (Letter::B, 0) => self.b1 = data,
-      (Letter::B, 1) => self.b2 = data,
-      (Letter::C, 0) => self.c1 = data,
-      (Letter::C, 1) => self.c2 = data,
-      (Letter::D, 0) => self.d1 = data,
-      (Letter::D, 1) => self.d2 = data,
+      (Letter::A, 0) => self.a[0] = data,
+      (Letter::A, 1) => self.a[1] = data,
+      (Letter::B, 0) => self.b[0] = data,
+      (Letter::B, 1) => self.b[1] = data,
+      (Letter::C, 0) => self.c[0] = data,
+      (Letter::C, 1) => self.c[1] = data,
+      (Letter::D, 0) => self.d[0] = data,
+      (Letter::D, 1) => self.d[1] = data,
       _ => unreachable!(),
     }
   }
 
   fn maybe_lock_all(&mut self) {
-    self.a1.maybe_lock();
-    self.a2.maybe_lock();
-    self.b1.maybe_lock();
-    self.b2.maybe_lock();
-    self.c1.maybe_lock();
-    self.c2.maybe_lock();
-    self.d1.maybe_lock();
-    self.d2.maybe_lock();
+    self.a[0].maybe_lock();
+    self.a[1].maybe_lock();
+    self.b[0].maybe_lock();
+    self.b[1].maybe_lock();
+    self.c[0].maybe_lock();
+    self.c[1].maybe_lock();
+    self.d[0].maybe_lock();
+    self.d[1].maybe_lock();
   }
 }
 
@@ -269,14 +265,10 @@ fn parse(s: &str) -> Pods {
   let mut c = list.iter().filter(|&&(a, _, _)| matches!(a, Letter::C));
   let mut d = list.iter().filter(|&&(a, _, _)| matches!(a, Letter::D));
   Pods {
-    a1: mk_pod(a.next().unwrap()),
-    a2: mk_pod(a.next().unwrap()),
-    b1: mk_pod(b.next().unwrap()),
-    b2: mk_pod(b.next().unwrap()),
-    c1: mk_pod(c.next().unwrap()),
-    c2: mk_pod(c.next().unwrap()),
-    d1: mk_pod(d.next().unwrap()),
-    d2: mk_pod(d.next().unwrap()),
+    a: [mk_pod(a.next().unwrap()), mk_pod(a.next().unwrap())],
+    b: [mk_pod(b.next().unwrap()), mk_pod(b.next().unwrap())],
+    c: [mk_pod(c.next().unwrap()), mk_pod(c.next().unwrap())],
+    d: [mk_pod(d.next().unwrap()), mk_pod(d.next().unwrap())],
   }
 }
 
