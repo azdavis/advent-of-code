@@ -135,6 +135,10 @@ impl CacheStack {
   }
 }
 
+/// got some hints from reddit about the general idea:
+/// - go directly to an actual location (final location, hallway waiting spot)
+///   instead of iterating 1 move at a time
+/// - this lets you avoid tracking 'locked' for each location
 fn run(state: State) -> usize {
   let mut ret = None::<usize>;
   let mut runner = CacheStack::new(state);
