@@ -32,68 +32,14 @@ impl Letter {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum HallLoc {
-  N0,
-  N1,
-  N2,
-  N3,
-  N4,
-  N5,
-  N6,
-  N7,
-  N8,
-  N9,
-  N10,
-}
-
-impl HallLoc {
-  fn inc(self) -> Option<Self> {
-    let ret = match self {
-      HallLoc::N0 => HallLoc::N1,
-      HallLoc::N1 => HallLoc::N2,
-      HallLoc::N2 => HallLoc::N3,
-      HallLoc::N3 => HallLoc::N4,
-      HallLoc::N4 => HallLoc::N5,
-      HallLoc::N5 => HallLoc::N6,
-      HallLoc::N6 => HallLoc::N7,
-      HallLoc::N7 => HallLoc::N8,
-      HallLoc::N8 => HallLoc::N9,
-      HallLoc::N9 => HallLoc::N10,
-      HallLoc::N10 => return None,
-    };
-    Some(ret)
-  }
-
-  fn dec(self) -> Option<Self> {
-    let ret = match self {
-      HallLoc::N0 => return None,
-      HallLoc::N1 => HallLoc::N0,
-      HallLoc::N2 => HallLoc::N1,
-      HallLoc::N3 => HallLoc::N2,
-      HallLoc::N4 => HallLoc::N3,
-      HallLoc::N5 => HallLoc::N4,
-      HallLoc::N6 => HallLoc::N5,
-      HallLoc::N7 => HallLoc::N6,
-      HallLoc::N8 => HallLoc::N7,
-      HallLoc::N9 => HallLoc::N8,
-      HallLoc::N10 => HallLoc::N9,
-    };
-    Some(ret)
-  }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Loc {
-  Hall(HallLoc),
+  Hall(u8),
   Room(Letter, usize),
 }
 
 impl Loc {
   fn is_directly_outside_hallway(&self) -> bool {
-    matches!(
-      *self,
-      Loc::Hall(HallLoc::N2 | HallLoc::N4 | HallLoc::N6 | HallLoc::N8)
-    )
+    matches!(*self, Loc::Hall(2 | 4 | 6 | 8))
   }
 }
 
@@ -219,17 +165,9 @@ impl fmt::Display for Pods {
       },
     };
     write!(f, "#")?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N0)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N1)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N2)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N3)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N4)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N5)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N6)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N7)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N8)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N9)))?;
-    write!(f, "{}", get_char(Loc::Hall(HallLoc::N10)))?;
+    for i in 0..=HALL_WIDTH {
+      write!(f, "{}", get_char(Loc::Hall(i)))?;
+    }
     writeln!(f, "#")?;
     write!(f, "###")?;
     write!(f, "{}", get_char(Loc::Room(Letter::A, 0)))?;
@@ -266,21 +204,23 @@ struct State {
   must_move: Option<(Pod, MustMoveReason)>,
 }
 
+const HALL_WIDTH: u8 = 10;
+
 fn moves(loc: Loc) -> Vec<Loc> {
   match loc {
     Loc::Hall(n) => {
       let mut ret = Vec::with_capacity(1);
-      if let Some(n_m1) = n.dec() {
+      if let Some(n_m1) = n.checked_sub(1) {
         ret.push(Loc::Hall(n_m1));
       }
-      if let Some(n_p1) = n.inc() {
-        ret.push(Loc::Hall(n_p1));
+      if n != HALL_WIDTH {
+        ret.push(Loc::Hall(n + 1));
       }
       let letter = match n {
-        HallLoc::N2 => Letter::A,
-        HallLoc::N4 => Letter::B,
-        HallLoc::N6 => Letter::C,
-        HallLoc::N8 => Letter::D,
+        2 => Letter::A,
+        4 => Letter::B,
+        6 => Letter::C,
+        8 => Letter::D,
         _ => return ret,
       };
       ret.push(Loc::Room(letter, 0));
@@ -289,10 +229,10 @@ fn moves(loc: Loc) -> Vec<Loc> {
     Loc::Room(letter, room_pos) => match room_pos {
       0 => {
         let hall_num = match letter {
-          Letter::A => HallLoc::N2,
-          Letter::B => HallLoc::N4,
-          Letter::C => HallLoc::N6,
-          Letter::D => HallLoc::N8,
+          Letter::A => 2,
+          Letter::B => 4,
+          Letter::C => 6,
+          Letter::D => 8,
         };
         vec![Loc::Hall(hall_num), Loc::Room(letter, 1)]
       }
