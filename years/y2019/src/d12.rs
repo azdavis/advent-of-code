@@ -47,8 +47,10 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
     .zip(ys)
     .zip(zs)
     .map(|((x, y), z)| {
-      let pos = abs(x.pos) + abs(y.pos) + abs(z.pos);
-      let vel = abs(x.vel) + abs(y.vel) + abs(z.vel);
+      let pos =
+        x.pos.unsigned_abs() + y.pos.unsigned_abs() + z.pos.unsigned_abs();
+      let vel =
+        x.vel.unsigned_abs() + y.vel.unsigned_abs() + z.vel.unsigned_abs();
       pos * vel
     })
     .sum()
@@ -95,10 +97,6 @@ fn parse(s: &str) -> [Vec<Moon>; 3] {
     zs.push(Moon { pos: z, vel: 0 });
   }
   [xs, ys, zs]
-}
-
-fn abs(n: i32) -> u32 {
-  n.abs() as u32
 }
 
 #[test]

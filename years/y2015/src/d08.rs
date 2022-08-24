@@ -11,8 +11,8 @@ fn decode_len(s: &str) -> usize {
       '\\' => match iter.next().unwrap() {
         '"' | '\\' => {}
         'x' => {
-          assert!(iter.next().unwrap().is_digit(16));
-          assert!(iter.next().unwrap().is_digit(16));
+          assert!(iter.next().unwrap().is_ascii_hexdigit());
+          assert!(iter.next().unwrap().is_ascii_hexdigit());
         }
         c => panic!("unknown escape: {}", c),
       },

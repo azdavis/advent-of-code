@@ -38,7 +38,7 @@ impl Num {
     }
     let mut val = String::with_capacity(1);
     while let Some(&c) = it.peek() {
-      if !c.is_digit(10) {
+      if !c.is_ascii_digit() {
         break;
       }
       it.next().unwrap();
