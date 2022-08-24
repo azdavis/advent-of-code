@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "words": [
+    "consts",
+    "deque",
+    "hasher",
+    "hexdigit",
+    "horiz",
+    "infinitable",
+    "instrs",
+    "intcode",
+    "northpole",
+    "peekable",
+    "repr",
+    "rustc",
+    "rustfmt",
+    "topo"
+  ]
+}
