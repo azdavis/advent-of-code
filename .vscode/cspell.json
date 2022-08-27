@@ -11,6 +11,7 @@
     "intcode",
     "northpole",
     "peekable",
+    "replacen",
     "repr",
     "rustc",
     "rustfmt",
