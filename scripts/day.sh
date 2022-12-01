@@ -9,15 +9,15 @@ fi
 
 need_cmd() {
   if ! command -v "$1" > /dev/null; then
-    echo "$2"
+    echo "need $1: check $2"
     exit 1
   fi
 }
 
-need_cmd fix-ws 'missing fix-ws: https://github.com/azdavis/fix-ws.git'
-need_cmd cargo 'missing cargo: https://rustup.rs'
-need_cmd rustfmt 'missing rustfmt: https://rustup.rs'
-need_cmd curl 'missing curl: https://curl.se'
+need_cmd fix-ws 'https://github.com/azdavis/fix-ws.git'
+need_cmd cargo 'https://rustup.rs'
+need_cmd rustfmt 'https://rustup.rs'
+need_cmd curl 'https://curl.se'
 
 if [ "$#" -eq 0 ]; then
   YEAR="$(date +%Y)"
