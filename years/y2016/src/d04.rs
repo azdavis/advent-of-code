@@ -32,7 +32,7 @@ pub fn p1(s: &str) -> usize {
         .chars()
         .zip(order)
         .all(|(a, (_, b))| a == b)
-        .then(|| id)
+        .then_some(id)
     })
     .sum()
 }
@@ -53,7 +53,7 @@ pub fn p2(s: &str) -> usize {
         .collect();
       (shifted_name, id)
     })
-    .find_map(|(name, id)| (name == "northpole object storage").then(|| id))
+    .find_map(|(name, id)| (name == "northpole object storage").then_some(id))
     .unwrap()
 }
 

@@ -14,14 +14,8 @@ fn num_paths<'a>(
   if cur == END {
     return match re_visit {
       None => 1,
-      Some(x) => {
-        if visited.contains(x) {
-          1
-        } else {
-          // don't double-count, will be handled in the second case
-          0
-        }
-      }
+      // don't double-count in false case. will be handled in the second case.
+      Some(x) => usize::from(visited.contains(x)),
     };
   }
   if visited.contains(&cur) {

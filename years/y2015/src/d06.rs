@@ -71,14 +71,7 @@ where
 }
 
 pub fn p1(s: &str) -> usize {
-  run(
-    s,
-    false,
-    |_| true,
-    |_| false,
-    |x| !x,
-    |x| if x { 1 } else { 0 },
-  )
+  run(s, false, |_| true, |_| false, |x| !x, usize::from)
 }
 
 pub fn p2(s: &str) -> usize {

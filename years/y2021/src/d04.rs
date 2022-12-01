@@ -48,7 +48,7 @@ fn score(draw: Tile, board: &Board) -> u32 {
   let s: u32 = board
     .iter()
     .flatten()
-    .filter_map(|&(n, chosen)| (!chosen).then(|| n))
+    .filter_map(|&(n, chosen)| (!chosen).then_some(n))
     .sum();
   s * draw
 }

@@ -40,7 +40,7 @@ fn min_point(points: &[Vec2], p: Vec2) -> Option<usize> {
       Ordering::Greater => {}
     }
   }
-  (count == 1).then(|| min_id)
+  (count == 1).then_some(min_id)
 }
 
 pub fn p1(s: &str) -> usize {

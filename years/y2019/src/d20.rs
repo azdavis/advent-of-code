@@ -65,7 +65,7 @@ impl Graph for RecursiveBoard {
           PortalLoc::Inner => true,
         },
       };
-      ok.then(|| [x, y, z])
+      ok.then_some([x, y, z])
     });
     let warp = self.0.tiles.get(y).and_then(|r| match r.get(x)? {
       Tile::Portal(p, loc) => {
@@ -119,7 +119,7 @@ fn parse(text: &str) -> (Board, Coord, Coord) {
         continue;
       }
       let (b2, [x2, y2]) = neighbors(&lines, [x1, y1])
-        .find_map(|(&b, xy)| b.is_ascii_alphabetic().then(|| (b, xy)))
+        .find_map(|(&b, xy)| b.is_ascii_alphabetic().then_some((b, xy)))
         .unwrap();
       let (_, [x, y]) = neighbors(&lines, [x1, y1])
         .chain(neighbors(&lines, [x2, y2]))

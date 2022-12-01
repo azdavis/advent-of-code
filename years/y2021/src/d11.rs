@@ -29,7 +29,7 @@ fn evolve(grid: &mut Grid) -> usize {
         row.iter().enumerate().map(move |(x, &sq)| ([x, y], sq))
       })
       .filter_map(|(xy, sq)| {
-        (!flashed_overall.contains(&xy) && sq > 9).then(|| xy)
+        (!flashed_overall.contains(&xy) && sq > 9).then_some(xy)
       })
       .collect();
     if flashed.is_empty() {

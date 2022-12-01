@@ -142,7 +142,7 @@ fn reduce_one(num: Num) -> (Num, Option<ReduceKind>) {
         (n, Some(ReduceKind::Explode))
       } else {
         let (n, did) = split(n);
-        (n, did.then(|| ReduceKind::Split))
+        (n, did.then_some(ReduceKind::Split))
       }
     }
     Ret::ExplodeBoth(_, _) => unreachable!(),

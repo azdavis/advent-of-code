@@ -36,7 +36,7 @@ fn go(s: &str, white: &mut HashSet<Vec2>) -> usize {
       Res::NeedInput => {}
     }
     match output[..] {
-      [] => p.input(if white.contains(&cur) { 1 } else { 0 }),
+      [] => p.input(i64::from(white.contains(&cur))),
       [color, dir] => {
         match color {
           0 => {

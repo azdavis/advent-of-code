@@ -17,7 +17,7 @@ pub fn p1(s: &str) -> u32 {
       neighbors([x, y])
         .iter()
         .all(|&n| scaffold.contains(&n))
-        .then(|| (x * y) as u32)
+        .then_some(u32::try_from(x * y).unwrap())
     })
     .sum()
 }
@@ -37,7 +37,7 @@ pub fn p2(s: &str) -> i64 {
       .iter()
       .enumerate()
       .find_map(|(idx, &n)| {
-        (n == nl && output[idx.checked_sub(1)?] == nl).then(|| idx)
+        (n == nl && output[idx.checked_sub(1)?] == nl).then_some(idx)
       })
       .unwrap();
     output.truncate(idx);

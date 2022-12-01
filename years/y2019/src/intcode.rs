@@ -97,14 +97,14 @@ impl Intcode {
           let a = self.arg(1, modes);
           let b = self.arg(2, modes);
           let c = self.pos_arg(3, modes);
-          self.mem.write(c, if a < b { 1 } else { 0 });
+          self.mem.write(c, i64::from(a < b));
           self.cur_addr + 4
         }
         8 => {
           let a = self.arg(1, modes);
           let b = self.arg(2, modes);
           let c = self.pos_arg(3, modes);
-          self.mem.write(c, if a == b { 1 } else { 0 });
+          self.mem.write(c, i64::from(a == b));
           self.cur_addr + 4
         }
         9 => {

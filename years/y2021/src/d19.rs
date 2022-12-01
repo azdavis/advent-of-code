@@ -90,7 +90,7 @@ fn run(s: &str) -> Vec<(Coord, Scanner)> {
               tr_sc.iter().find_map(|&tr_sc_pt| {
                 let (offset, new_tr_sc) = align(&tr_sc, tr_sc_pt, kn_sc_pt);
                 let overlaps = kn_sc.intersection(&new_tr_sc).count();
-                (overlaps >= THRESHOLD).then(|| (idx, offset, new_tr_sc))
+                (overlaps >= THRESHOLD).then_some((idx, offset, new_tr_sc))
               })
             })
           })

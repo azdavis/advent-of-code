@@ -56,7 +56,7 @@ fn p2_help(s: &str, mut workers: usize, extra_duration: usize) -> usize {
   loop {
     let can_start: Vec<_> = dependencies
       .iter()
-      .filter_map(|(&id, ds)| ds.is_empty().then(|| id))
+      .filter_map(|(&id, ds)| ds.is_empty().then_some(id))
       .take(workers)
       .collect();
     workers -= can_start.len();

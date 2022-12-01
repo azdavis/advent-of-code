@@ -15,7 +15,7 @@ type Counts = HashMap<char, u8>;
 fn get_count(counts: &Counts, want: u8) -> impl Iterator<Item = char> + '_ {
   counts
     .iter()
-    .filter_map(move |(&c, &count)| (count == want).then(|| c))
+    .filter_map(move |(&c, &count)| (count == want).then_some(c))
 }
 
 fn get_digit<F>(all_digits: &[&str], len: usize, pred: F) -> char
@@ -67,7 +67,7 @@ fn get_one_line(line: &str) -> usize {
       digit_mapping
         .iter()
         .enumerate()
-        .find_map(|(idx, ds)| (num_digit == *ds).then(|| idx))
+        .find_map(|(idx, ds)| (num_digit == *ds).then_some(idx))
         .unwrap()
     })
     .fold(0usize, |ac, x| (ac * 10) + x)

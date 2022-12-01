@@ -32,7 +32,7 @@ pub fn p2(s: &str) -> String {
         return w1
           .iter()
           .zip(w2.iter())
-          .filter_map(|(&c1, &c2)| (c1 == c2).then(|| c1))
+          .filter_map(|(&c1, &c2)| (c1 == c2).then_some(c1))
           .collect();
       }
     }

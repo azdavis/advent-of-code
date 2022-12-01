@@ -9,7 +9,7 @@ pub fn p1(s: &str) -> u32 {
   digits
     .windows(2)
     .filter_map(|w| (w[0] == w[1]).then(|| w[0]))
-    .chain((first == last).then(|| first))
+    .chain((first == last).then_some(first))
     .sum()
 }
 
@@ -22,7 +22,7 @@ pub fn p2(s: &str) -> u32 {
     .iter()
     .take(n2)
     .enumerate()
-    .filter_map(|(idx, &a)| (a == digits[idx + n2]).then(|| a))
+    .filter_map(|(idx, &a)| (a == digits[idx + n2]).then_some(a))
     .sum();
   s * 2
 }
