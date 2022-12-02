@@ -91,13 +91,31 @@ pub fn p1(s: &str) -> u32 {
   })
 }
 
-pub fn p2(s: &str) -> usize {
-  s.len()
+pub fn p2(s: &str) -> u32 {
+  get(s, |opponent, snd| {
+    let outcome = match snd {
+      SecondColumn::X => Outcome::Lose,
+      SecondColumn::Y => Outcome::Tie,
+      SecondColumn::Z => Outcome::Win,
+    };
+    let me = match (outcome, opponent) {
+      (Outcome::Lose, Hand::Paper)
+      | (Outcome::Tie, Hand::Rock)
+      | (Outcome::Win, Hand::Scissors) => Hand::Rock,
+      (Outcome::Lose, Hand::Rock)
+      | (Outcome::Tie, Hand::Scissors)
+      | (Outcome::Win, Hand::Paper) => Hand::Scissors,
+      (Outcome::Lose, Hand::Scissors)
+      | (Outcome::Tie, Hand::Paper)
+      | (Outcome::Win, Hand::Rock) => Hand::Paper,
+    };
+    me.score() + outcome.score()
+  })
 }
 
 #[test]
 fn t() {
   let s = include_str!("input/d02.txt");
   assert_eq!(p1(s), 12740);
-  assert_eq!(p2(s), 0);
+  assert_eq!(p2(s), 11980);
 }
