@@ -59,12 +59,13 @@ fn parse_line(line: &str) -> (Hand, SecondColumn) {
 
 fn get<F>(s: &str, mut f: F) -> u32
 where
-  F: FnMut(Hand, SecondColumn) -> u32,
+  F: FnMut(Hand, SecondColumn) -> (Hand, Outcome),
 {
   s.lines()
     .map(|line| {
       let (opponent, snd) = parse_line(line);
-      f(opponent, snd)
+      let (me, outcome) = f(opponent, snd);
+      me.score() + outcome.score()
     })
     .sum()
 }
@@ -87,7 +88,7 @@ pub fn p1(s: &str) -> u32 {
       | (Hand::Rock, Hand::Paper)
       | (Hand::Paper, Hand::Scissors) => Outcome::Lose,
     };
-    me.score() + outcome.score()
+    (me, outcome)
   })
 }
 
@@ -109,7 +110,7 @@ pub fn p2(s: &str) -> u32 {
       | (Outcome::Tie, Hand::Paper)
       | (Outcome::Win, Hand::Rock) => Hand::Paper,
     };
-    me.score() + outcome.score()
+    (me, outcome)
   })
 }
 
