@@ -41,12 +41,12 @@ done
 DAY="$(printf '%02d' "$i")"
 
 cat <<EOF > "$SRC/d$DAY.rs"
-pub fn p1(s: &str) -> usize {
-  s.len()
+pub fn p1(_: &str) -> u32 {
+  0
 }
 
-pub fn p2(s: &str) -> usize {
-  s.len()
+pub fn p2(_: &str) -> u32 {
+  0
 }
 
 #[test]
