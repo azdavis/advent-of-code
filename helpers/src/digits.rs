@@ -2,9 +2,12 @@
 
 /// Returns an iterator over the decimal digits of `n` from left to right.
 pub fn digits(n: u32) -> Digits {
-  let mut div = 1;
+  let mut div = 1u32;
   loop {
-    let next = div * 10;
+    let next = match div.checked_mul(10) {
+      None => return Digits { div, n },
+      Some(n) => n,
+    };
     if next > n {
       return Digits { div, n };
     }
