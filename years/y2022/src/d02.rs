@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Hand {
   Rock,
   Paper,
@@ -11,6 +11,22 @@ impl Hand {
       Hand::Rock => 1,
       Hand::Paper => 2,
       Hand::Scissors => 3,
+    }
+  }
+
+  fn beat_by(self) -> Self {
+    match self {
+      Hand::Rock => Hand::Paper,
+      Hand::Paper => Hand::Scissors,
+      Hand::Scissors => Hand::Rock,
+    }
+  }
+
+  fn beats(self) -> Self {
+    match self {
+      Hand::Paper => Hand::Rock,
+      Hand::Scissors => Hand::Paper,
+      Hand::Rock => Hand::Scissors,
     }
   }
 }
@@ -77,16 +93,12 @@ pub fn p1(s: &str) -> u32 {
       SecondColumn::Y => Hand::Paper,
       SecondColumn::Z => Hand::Scissors,
     };
-    let outcome = match (me, opponent) {
-      (Hand::Rock, Hand::Rock)
-      | (Hand::Paper, Hand::Paper)
-      | (Hand::Scissors, Hand::Scissors) => Outcome::Tie,
-      (Hand::Rock, Hand::Scissors)
-      | (Hand::Paper, Hand::Rock)
-      | (Hand::Scissors, Hand::Paper) => Outcome::Win,
-      (Hand::Scissors, Hand::Rock)
-      | (Hand::Rock, Hand::Paper)
-      | (Hand::Paper, Hand::Scissors) => Outcome::Lose,
+    let outcome = if me.beat_by() == opponent {
+      Outcome::Lose
+    } else if me == opponent {
+      Outcome::Tie
+    } else {
+      Outcome::Win
     };
     (me, outcome)
   })
@@ -99,16 +111,10 @@ pub fn p2(s: &str) -> u32 {
       SecondColumn::Y => Outcome::Tie,
       SecondColumn::Z => Outcome::Win,
     };
-    let me = match (outcome, opponent) {
-      (Outcome::Lose, Hand::Paper)
-      | (Outcome::Tie, Hand::Rock)
-      | (Outcome::Win, Hand::Scissors) => Hand::Rock,
-      (Outcome::Lose, Hand::Rock)
-      | (Outcome::Tie, Hand::Scissors)
-      | (Outcome::Win, Hand::Paper) => Hand::Scissors,
-      (Outcome::Lose, Hand::Scissors)
-      | (Outcome::Tie, Hand::Paper)
-      | (Outcome::Win, Hand::Rock) => Hand::Paper,
+    let me = match outcome {
+      Outcome::Lose => opponent.beats(),
+      Outcome::Tie => opponent,
+      Outcome::Win => opponent.beat_by(),
     };
     (me, outcome)
   })
