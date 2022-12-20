@@ -1,7 +1,7 @@
 use helpers::HashMap;
 
 pub fn p1(s: &str) -> usize {
-  go(s).into_iter().map(|(_, v)| v).sum()
+  go(s).into_values().sum()
 }
 
 pub fn p2(s: &str) -> usize {
