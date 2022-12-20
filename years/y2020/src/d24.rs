@@ -7,8 +7,7 @@ pub fn p1(s: &str) -> usize {
 pub fn p2(s: &str) -> usize {
   let mut set = parse(s);
   for _ in 0..100 {
-    let to_consider: HashSet<_> =
-      set.iter().flat_map(|&c| Vec::from(neighbors(c))).collect();
+    let to_consider: HashSet<_> = set.iter().flat_map(|&c| Vec::from(neighbors(c))).collect();
     set = to_consider
       .into_iter()
       .filter(|&c| {

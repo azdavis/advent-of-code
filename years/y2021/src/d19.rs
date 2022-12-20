@@ -78,8 +78,7 @@ const THRESHOLD: usize = 12;
 /// slow AF.
 fn run(s: &str) -> Vec<(Coord, Scanner)> {
   let mut scanners = parse(s);
-  let mut ret: Vec<(Coord, Scanner)> =
-    vec![([0, 0, 0], scanners.remove(&0).unwrap())];
+  let mut ret: Vec<(Coord, Scanner)> = vec![([0, 0, 0], scanners.remove(&0).unwrap())];
   while !scanners.is_empty() {
     let (idx, offset, sc) = scanners
       .iter()

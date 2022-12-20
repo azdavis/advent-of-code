@@ -1,10 +1,6 @@
 use helpers::Counter;
 
-fn expand<'s>(
-  mut s: &'s str,
-  overall_count: usize,
-  map: &mut Counter<&'s str>,
-) {
+fn expand<'s>(mut s: &'s str, overall_count: usize, map: &mut Counter<&'s str>) {
   while let Some((before, after)) = s.split_once('(') {
     let (sigil, rest) = after.split_once(')').unwrap();
     let (len, count) = sigil.split_once('x').unwrap();

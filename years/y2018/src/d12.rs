@@ -56,8 +56,7 @@ fn run(s: &str, rounds: usize) -> isize {
     let min = cur.iter().copied().min().unwrap() - window_2;
     let max = cur.iter().copied().max().unwrap() + window_2;
     for idx in min..=max {
-      let neighbors =
-        (idx - window_2..=idx + window_2).map(|i| cur.contains(&i));
+      let neighbors = (idx - window_2..=idx + window_2).map(|i| cur.contains(&i));
       let rule_idx = bit_idx(neighbors);
       if rules[rule_idx] {
         next.insert(idx);

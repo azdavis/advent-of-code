@@ -56,9 +56,7 @@ fn enters_bounds(bounds: Bounds, mut dx: isize, mut dy: isize) -> bool {
 pub fn p2(s: &str) -> usize {
   let bounds @ [[_, x_max], [y_min, _]] = parse(s);
   (1isize..=x_max)
-    .flat_map(|dx| {
-      (y_min..=dy_max(y_min)).filter(move |&dy| enters_bounds(bounds, dx, dy))
-    })
+    .flat_map(|dx| (y_min..=dy_max(y_min)).filter(move |&dy| enters_bounds(bounds, dx, dy)))
     .count()
 }
 

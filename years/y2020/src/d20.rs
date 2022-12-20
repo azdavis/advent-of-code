@@ -97,10 +97,7 @@ pub fn p1(s: &str) -> u64 {
   let board = go(s);
   let top = board.first().unwrap();
   let bot = board.last().unwrap();
-  top.first().unwrap().0
-    * top.last().unwrap().0
-    * bot.first().unwrap().0
-    * bot.last().unwrap().0
+  top.first().unwrap().0 * top.last().unwrap().0 * bot.first().unwrap().0 * bot.last().unwrap().0
 }
 
 pub fn p2(s: &str) -> usize {
@@ -175,8 +172,7 @@ pub fn p2(s: &str) -> usize {
       .collect();
     // if we found at least one sea monster, this orientation is the one.
     if !deleted.is_empty() {
-      let black_count =
-        board.iter().flatten().filter(|px| px.is_black()).count();
+      let black_count = board.iter().flatten().filter(|px| px.is_black()).count();
       return black_count - deleted.len();
     }
   }
@@ -304,11 +300,7 @@ fn sqrt(n: usize) -> usize {
 /// given a `board` under construction, a set of unused `tiles`, and the `edges`
 /// from the original set of tiles, returns an iterator of the possible pairs of
 /// (new board, remaining unused tiles).
-fn expand(
-  edges: &Edges,
-  board: Board,
-  tiles: Tiles,
-) -> impl Iterator<Item = (Board, Tiles)> {
+fn expand(edges: &Edges, board: Board, tiles: Tiles) -> impl Iterator<Item = (Board, Tiles)> {
   let row = board.len() - 1;
   let col = board[row].len();
   // get the sets of possible tile IDs, based on the restrictions from the tile

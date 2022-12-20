@@ -83,10 +83,7 @@ where
   T: Hash + Eq,
 {
   /// Returns an entry for this node.
-  pub fn entry(
-    &mut self,
-    node: T,
-  ) -> std::collections::hash_map::Entry<'_, T, HashSet<T>> {
+  pub fn entry(&mut self, node: T) -> std::collections::hash_map::Entry<'_, T, HashSet<T>> {
     self.0.entry(node)
   }
 }

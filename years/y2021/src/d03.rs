@@ -30,8 +30,7 @@ where
 
 pub fn p1(s: &str) -> usize {
   let mut lines = s.lines();
-  let mut ones: Vec<_> =
-    lines.next().unwrap().bytes().map(byte_to_digit).collect();
+  let mut ones: Vec<_> = lines.next().unwrap().bytes().map(byte_to_digit).collect();
   let mut n = 1usize;
   for line in lines {
     assert_eq!(ones.len(), line.len());

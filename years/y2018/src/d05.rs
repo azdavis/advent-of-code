@@ -1,7 +1,5 @@
 fn react(upper: u8, lower: u8) -> bool {
-  upper.is_ascii_uppercase()
-    && lower.is_ascii_lowercase()
-    && upper.to_ascii_lowercase() == lower
+  upper.is_ascii_uppercase() && lower.is_ascii_lowercase() && upper.to_ascii_lowercase() == lower
 }
 
 fn run(bs: &[u8]) -> Vec<u8> {

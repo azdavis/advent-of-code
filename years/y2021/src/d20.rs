@@ -17,9 +17,10 @@ fn parse(s: &str) -> (Vec<bool>, HashMap<Coord, bool>) {
   let set: HashMap<Coord, _> = lines
     .enumerate()
     .flat_map(|(y, line)| {
-      line.chars().enumerate().map(move |(x, c)| {
-        ([x.try_into().unwrap(), y.try_into().unwrap()], is_lit(c))
-      })
+      line
+        .chars()
+        .enumerate()
+        .map(move |(x, c)| ([x.try_into().unwrap(), y.try_into().unwrap()], is_lit(c)))
     })
     .collect();
   (alg, set)

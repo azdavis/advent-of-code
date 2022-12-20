@@ -23,10 +23,7 @@ where
 
 /// Returns the neighbors (up, down, left, right) of `coord` in `matrix`. The
 /// iterator will be at most 4 items long.
-pub fn neighbors<'a, M, R, T>(
-  matrix: &'a M,
-  coord: Coord,
-) -> impl Iterator<Item = (&'a T, Coord)>
+pub fn neighbors<'a, M, R, T>(matrix: &'a M, coord: Coord) -> impl Iterator<Item = (&'a T, Coord)>
 where
   M: Deref<Target = [R]>,
   R: 'a + Deref<Target = [T]>,

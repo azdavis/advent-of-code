@@ -15,12 +15,7 @@ fn go(s: &str) -> HashMap<usize, usize> {
   ac
 }
 
-fn go_rec(
-  ns: &mut Vec<u8>,
-  target: u8,
-  used: usize,
-  ac: &mut HashMap<usize, usize>,
-) {
+fn go_rec(ns: &mut Vec<u8>, target: u8, used: usize, ac: &mut HashMap<usize, usize>) {
   let num = match ns.pop() {
     None => {
       if target == 0 {

@@ -2,7 +2,8 @@ use helpers::static_regex;
 use std::ops::{Add, Mul};
 
 static_regex!(
-  RE = r"^\w+: capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (\d+)$"
+  RE =
+    r"^\w+: capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (\d+)$"
 );
 
 #[derive(Debug, Clone, Copy)]

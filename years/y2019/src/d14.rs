@@ -70,8 +70,7 @@ fn process(s: &str) -> Input<'_> {
     .lines()
     .map(|line| {
       let mut parts = line.split(" => ");
-      let ins: Vec<_> =
-        parts.next().unwrap().split(", ").map(parse_elem).collect();
+      let ins: Vec<_> = parts.next().unwrap().split(", ").map(parse_elem).collect();
       let out = parse_elem(parts.next().unwrap());
       assert!(parts.next().is_none());
       (out.chem, (out.count, ins))

@@ -73,20 +73,14 @@ fn explode(num: Num, depth: usize) -> Ret {
               Ret::ExplodeBoth(na, nb) => {
                 Ret::ExplodeRt(Num::pair(add_to_rt(a, na), Num::Val(0)), nb)
               }
-              Ret::ExplodeLt(na, b) => {
-                Ret::Normal(Num::pair(add_to_rt(a, na), b), true)
-              }
+              Ret::ExplodeLt(na, b) => Ret::Normal(Num::pair(add_to_rt(a, na), b), true),
               Ret::ExplodeRt(b, nb) => Ret::ExplodeRt(Num::pair(a, b), nb),
             }
           }
         }
-        Ret::ExplodeBoth(na, nb) => {
-          Ret::ExplodeLt(na, Num::pair(Num::Val(0), add_to_lt(*b, nb)))
-        }
+        Ret::ExplodeBoth(na, nb) => Ret::ExplodeLt(na, Num::pair(Num::Val(0), add_to_lt(*b, nb))),
         Ret::ExplodeLt(na, a) => Ret::ExplodeLt(na, Num::Pair(Box::new(a), b)),
-        Ret::ExplodeRt(a, nb) => {
-          Ret::Normal(Num::pair(a, add_to_lt(*b, nb)), true)
-        }
+        Ret::ExplodeRt(a, nb) => Ret::Normal(Num::pair(a, add_to_lt(*b, nb)), true),
       }
     }
   }
@@ -146,9 +140,7 @@ fn reduce_one(num: Num) -> (Num, Option<ReduceKind>) {
       }
     }
     Ret::ExplodeBoth(_, _) => unreachable!(),
-    Ret::ExplodeLt(_, num) | Ret::ExplodeRt(num, _) => {
-      (num, Some(ReduceKind::Explode))
-    }
+    Ret::ExplodeLt(_, num) | Ret::ExplodeRt(num, _) => (num, Some(ReduceKind::Explode)),
   }
 }
 

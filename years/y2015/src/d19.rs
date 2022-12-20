@@ -62,8 +62,7 @@ where
       while let Some(idx) = start.get(cursor..).and_then(|s| s.find(k)) {
         cursor += idx;
         // the `k` will be at the very front for the replacen.
-        let replaced =
-          format!("{}{}", &start[..cursor], start[cursor..].replacen(k, v, 1));
+        let replaced = format!("{}{}", &start[..cursor], start[cursor..].replacen(k, v, 1));
         f(replaced);
         cursor += 1;
       }

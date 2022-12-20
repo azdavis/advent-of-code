@@ -21,9 +21,7 @@ pub fn p2(s: &str) -> u64 {
     .iter()
     .map(|(&key, ranges)| {
       let set: HashSet<_> = (0..fields.len())
-        .filter(|&idx| {
-          nearby.iter().all(|ticket| ranges.contains(&ticket[idx]))
-        })
+        .filter(|&idx| nearby.iter().all(|ticket| ranges.contains(&ticket[idx])))
         .collect();
       (key, set)
     })

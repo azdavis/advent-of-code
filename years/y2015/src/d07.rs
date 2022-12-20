@@ -81,11 +81,7 @@ fn eval_op<'a>(
   f(eval_val(gates, cache, lhs), eval_val(gates, cache, rhs))
 }
 
-fn eval_expr<'a>(
-  gates: &Gates<'a>,
-  cache: &mut Cache<'a>,
-  expr: Expr<'a>,
-) -> u32 {
+fn eval_expr<'a>(gates: &Gates<'a>, cache: &mut Cache<'a>, expr: Expr<'a>) -> u32 {
   match expr {
     Expr::Val(val) => eval_val(gates, cache, val),
     Expr::Not(val) => !eval_val(gates, cache, val),

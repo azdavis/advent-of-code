@@ -1,9 +1,7 @@
 use helpers::{static_regex, HashMap};
 use std::str::FromStr;
 
-static_regex!(
-  BOT = r"^bot (\d+) gives low to (\w+) (\d+) and high to (\w+) (\d+)$"
-);
+static_regex!(BOT = r"^bot (\d+) gives low to (\w+) (\d+) and high to (\w+) (\d+)$");
 
 static_regex!(VALUE = r"^value (\d+) goes to bot (\d+)$");
 
@@ -67,14 +65,7 @@ fn parse(s: &str) -> (Rules, Ones, Twos) {
 
 type Out = HashMap<u16, u16>;
 
-fn do_give(
-  out: &mut Out,
-  ones: &mut Ones,
-  twos: &mut Twos,
-  give: Give,
-  idx: u16,
-  val: u16,
-) {
+fn do_give(out: &mut Out, ones: &mut Ones, twos: &mut Twos, give: Give, idx: u16, val: u16) {
   match give {
     Give::Bot => add_val(ones, twos, idx, val),
     Give::Out => assert!(out.insert(idx, val).is_none()),

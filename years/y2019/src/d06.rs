@@ -33,10 +33,7 @@ pub fn p2(s: &str) -> usize {
   dijkstra(&inp, "YOU", "SAN").unwrap() - 2
 }
 
-fn parse(
-  s: &str,
-  add: for<'a> fn(&mut MapGraph<&'a str>, &'a str, &'a str),
-) -> MapGraph<&str> {
+fn parse(s: &str, add: for<'a> fn(&mut MapGraph<&'a str>, &'a str, &'a str)) -> MapGraph<&str> {
   let mut ret = MapGraph::default();
   for line in s.lines() {
     let mut parts = line.split(')');

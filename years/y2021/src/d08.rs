@@ -45,8 +45,7 @@ fn get_one_line(line: &str) -> usize {
   let all_digits: Vec<_> = all_digits.split(' ').collect();
   let seg_c = get_digit(&all_digits, 2, |&c| c != seg_f);
   let seg_a = get_count(&counts, 8).find(|&c| c != seg_c).unwrap();
-  let seg_d =
-    get_digit(&all_digits, 4, |&c| c != seg_b && c != seg_c && c != seg_f);
+  let seg_d = get_digit(&all_digits, 4, |&c| c != seg_b && c != seg_c && c != seg_f);
   let seg_g = get_count(&counts, 7).find(|&c| c != seg_d).unwrap();
   let digit_mapping = [
     hash_set([seg_a, seg_b, seg_c, seg_e, seg_f, seg_g]),

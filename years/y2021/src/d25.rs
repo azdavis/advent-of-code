@@ -6,11 +6,7 @@ enum Dir {
 
 type Coord = [usize; 2];
 
-fn go(
-  state: &mut Vec<Vec<Option<Dir>>>,
-  want: Dir,
-  f: fn(Coord, Coord) -> Coord,
-) {
+fn go(state: &mut Vec<Vec<Option<Dir>>>, want: Dir, f: fn(Coord, Coord) -> Coord) {
   let w = state.first().unwrap().len();
   let h = state.len();
   let mut to_move = Vec::new();

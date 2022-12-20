@@ -36,9 +36,7 @@ pub fn p2(s: &str) -> i64 {
     let idx = output
       .iter()
       .enumerate()
-      .find_map(|(idx, &n)| {
-        (n == nl && output[idx.checked_sub(1)?] == nl).then_some(idx)
-      })
+      .find_map(|(idx, &n)| (n == nl && output[idx.checked_sub(1)?] == nl).then_some(idx))
       .unwrap();
     output.truncate(idx);
     parse_screen(&output)

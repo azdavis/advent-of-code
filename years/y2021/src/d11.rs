@@ -25,12 +25,8 @@ fn evolve(grid: &mut Grid) -> usize {
     let flashed: Vec<Coord> = grid
       .iter()
       .enumerate()
-      .flat_map(|(y, row)| {
-        row.iter().enumerate().map(move |(x, &sq)| ([x, y], sq))
-      })
-      .filter_map(|(xy, sq)| {
-        (!flashed_overall.contains(&xy) && sq > 9).then_some(xy)
-      })
+      .flat_map(|(y, row)| row.iter().enumerate().map(move |(x, &sq)| ([x, y], sq)))
+      .filter_map(|(xy, sq)| (!flashed_overall.contains(&xy) && sq > 9).then_some(xy))
       .collect();
     if flashed.is_empty() {
       break;

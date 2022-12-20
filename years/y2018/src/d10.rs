@@ -1,9 +1,7 @@
 use helpers::{block_char, static_regex, HashSet};
 use std::io::{self, Write};
 
-static_regex!(
-  RE = r#"^position=< *(-?\d+), *(-?\d+)> velocity=< *(-?\d+), *(-?\d+)>$"#
-);
+static_regex!(RE = r#"^position=< *(-?\d+), *(-?\d+)> velocity=< *(-?\d+), *(-?\d+)>$"#);
 
 type Vec2 = [isize; 2];
 
@@ -26,11 +24,7 @@ fn get_bounding_corners(position: &[Vec2]) -> [Vec2; 2] {
   [[min_x, min_y], [max_x, max_y]]
 }
 
-fn draw(
-  w: &mut dyn Write,
-  corners: [Vec2; 2],
-  position: &[Vec2],
-) -> io::Result<()> {
+fn draw(w: &mut dyn Write, corners: [Vec2; 2], position: &[Vec2]) -> io::Result<()> {
   let set: HashSet<_> = position.iter().copied().collect();
   let [[min_x, min_y], [max_x, max_y]] = corners;
   for y in min_y..=max_y {

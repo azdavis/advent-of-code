@@ -54,11 +54,7 @@ fn parse_expr(s: &str, f: PrecFn) -> Expr {
   parse_expr_prec(&mut tokens, 0, f)
 }
 
-fn parse_expr_prec(
-  tokens: &mut Vec<Token>,
-  min_prec: usize,
-  f: PrecFn,
-) -> Expr {
+fn parse_expr_prec(tokens: &mut Vec<Token>, min_prec: usize, f: PrecFn) -> Expr {
   let mut ret = match tokens.pop().unwrap() {
     Token::Num(n) => Expr::Num(n),
     Token::LRound => {

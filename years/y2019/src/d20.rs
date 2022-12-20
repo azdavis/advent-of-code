@@ -36,9 +36,8 @@ impl Graph for PortalBoard {
   type Node = Coord;
 
   fn neighbors(&self, [x, y]: Self::Node) -> HashSet<Self::Node> {
-    let nearby = neighbors(&self.0.tiles, [x, y]).filter_map(|(t, node)| {
-      matches!(t, Tile::Corridor | Tile::Portal(_, _)).then(|| node)
-    });
+    let nearby = neighbors(&self.0.tiles, [x, y])
+      .filter_map(|(t, node)| matches!(t, Tile::Corridor | Tile::Portal(_, _)).then(|| node));
     let warp = self.0.tiles.get(y).and_then(|r| match r.get(x)? {
       Tile::Portal(p, _) => {
         let set = self.0.portals.get(p)?;

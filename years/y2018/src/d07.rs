@@ -3,9 +3,7 @@ use helpers::topo_sort::{self, Graph};
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 
-static_regex!(
-  RE = r#"^Step (\w) must be finished before step (\w) can begin.$"#
-);
+static_regex!(RE = r#"^Step (\w) must be finished before step (\w) can begin.$"#);
 
 type JobId = u8;
 

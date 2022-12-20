@@ -47,10 +47,8 @@ fn p1_go(s: &str, rounds: usize) -> u32 {
     .zip(ys)
     .zip(zs)
     .map(|((x, y), z)| {
-      let pos =
-        x.pos.unsigned_abs() + y.pos.unsigned_abs() + z.pos.unsigned_abs();
-      let vel =
-        x.vel.unsigned_abs() + y.vel.unsigned_abs() + z.vel.unsigned_abs();
+      let pos = x.pos.unsigned_abs() + y.pos.unsigned_abs() + z.pos.unsigned_abs();
+      let vel = x.vel.unsigned_abs() + y.vel.unsigned_abs() + z.vel.unsigned_abs();
       pos * vel
     })
     .sum()

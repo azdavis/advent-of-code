@@ -11,8 +11,7 @@ pub fn p2(s: &str) -> String {
     .fold(0, |ac, &x| (ac * 10) + usize::from(x));
   let end = orig_ns.len() * NUM_COPIES;
   assert!(start >= (end + 1) / 2);
-  let mut ns: Vec<_> =
-    (start..end).map(|i| orig_ns[i % orig_ns.len()]).collect();
+  let mut ns: Vec<_> = (start..end).map(|i| orig_ns[i % orig_ns.len()]).collect();
   for _ in 0..NUM_ROUNDS {
     let mut sum = 0;
     for n in ns.iter_mut().rev() {

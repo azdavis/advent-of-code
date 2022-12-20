@@ -24,8 +24,7 @@ where
         ret
       })
       .filter(|&v| {
-        let ns_on =
-          neighbors(v).into_iter().filter(|n| set.contains(n)).count();
+        let ns_on = neighbors(v).into_iter().filter(|n| set.contains(n)).count();
         matches!((set.contains(&v), ns_on), (true, 2) | (_, 3))
       })
       .collect();

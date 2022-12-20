@@ -5,11 +5,7 @@ pub fn p1(s: &str) -> usize {
 
 pub fn p2(s: &str) -> usize {
   let grid = parse(s);
-  go(&grid, 1, 1)
-    * go(&grid, 3, 1)
-    * go(&grid, 5, 1)
-    * go(&grid, 7, 1)
-    * go(&grid, 1, 2)
+  go(&grid, 1, 1) * go(&grid, 3, 1) * go(&grid, 5, 1) * go(&grid, 7, 1) * go(&grid, 1, 2)
 }
 
 fn go(grid: &[&[u8]], right: usize, down: usize) -> usize {

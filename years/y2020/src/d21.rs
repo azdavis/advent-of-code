@@ -31,9 +31,9 @@ pub fn p2(s: &str) -> String {
           .flat_map(|r| r.allergens.iter())
           .filter(|&&a| {
             allergens.contains(a)
-              && recipes.iter().all(|r| {
-                !r.allergens.contains(a) || r.ingredients.contains(ing)
-              })
+              && recipes
+                .iter()
+                .all(|r| !r.allergens.contains(a) || r.ingredients.contains(ing))
           })
           .copied()
           .collect();

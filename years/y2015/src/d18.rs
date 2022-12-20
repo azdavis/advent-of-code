@@ -38,8 +38,7 @@ fn go(s: &str, corners_on: bool) -> usize {
             if corners_on && corners.contains(&coord) {
               return true;
             }
-            let on_neighbors =
-              neighbors_diag(&grid, coord).filter(|(&on, _)| on).count();
+            let on_neighbors = neighbors_diag(&grid, coord).filter(|(&on, _)| on).count();
             if on {
               matches!(on_neighbors, 2 | 3)
             } else {

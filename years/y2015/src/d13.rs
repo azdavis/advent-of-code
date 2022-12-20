@@ -2,9 +2,7 @@ use crate::intern::Intern;
 use helpers::HashMap;
 use helpers::{permute, static_regex};
 
-static_regex!(
-  RE = r"^(\w+) would (\w+) (\d+) happiness units by sitting next to (\w+).$"
-);
+static_regex!(RE = r"^(\w+) would (\w+) (\d+) happiness units by sitting next to (\w+).$");
 
 type Graph = HashMap<[usize; 2], i16>;
 

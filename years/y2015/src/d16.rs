@@ -31,12 +31,7 @@ fn run(s: &str, f: fn(HashMap<&str, usize>) -> bool) -> usize {
   idx + 1
 }
 
-fn has(
-  map: &HashMap<&str, usize>,
-  key: &str,
-  val: usize,
-  f: fn(&usize, &usize) -> bool,
-) -> bool {
+fn has(map: &HashMap<&str, usize>, key: &str, val: usize, f: fn(&usize, &usize) -> bool) -> bool {
   map.get(key).map_or(true, |it| f(it, &val))
 }
 
