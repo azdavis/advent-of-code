@@ -7,7 +7,7 @@ fn parse_range(s: &str) -> RangeInclusive<u16> {
 
 fn range_contains<T, F>(fst: &RangeInclusive<T>, snd: &RangeInclusive<T>, f: &mut F) -> bool
 where
-  T: Ord,
+  T: PartialOrd,
   F: FnMut(bool, bool) -> bool,
 {
   f(fst.contains(snd.start()), fst.contains(snd.end()))
