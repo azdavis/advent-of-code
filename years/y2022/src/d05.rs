@@ -46,14 +46,9 @@ pub fn p1(s: &str) -> String {
 
 pub fn p2(s: &str) -> String {
   go(s, &mut |stacks, count, from, to| {
-    let mut tmp = Vec::<char>::new();
-    for _ in 0..count {
-      let c = stacks[from].pop().unwrap();
-      tmp.push(c);
-    }
-    for c in tmp.into_iter().rev() {
-      stacks[to].push(c);
-    }
+    let at = stacks[from].len() - count;
+    let tmp = stacks[from].split_off(at);
+    stacks[to].extend(tmp);
   })
 }
 
