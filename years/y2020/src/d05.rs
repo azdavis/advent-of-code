@@ -6,7 +6,7 @@ pub fn p1(s: &str) -> u32 {
 
 pub fn p2(s: &str) -> u32 {
   let all_ids: HashSet<_> = seat_ids(s).collect();
-  let max_possible = seat_id(Seat {
+  let max_possible = seat_id(&Seat {
     row: MAX_ROW,
     col: MAX_COL,
   });
@@ -26,7 +26,7 @@ pub fn p2(s: &str) -> u32 {
 }
 
 fn seat_ids(s: &str) -> impl Iterator<Item = u32> + '_ {
-  s.lines().map(|s| seat_id(parse_seat(s)))
+  s.lines().map(|s| seat_id(&parse_seat(s)))
 }
 
 const MAX_ROW: u32 = 127;
@@ -47,7 +47,7 @@ fn parse_seat(s: &str) -> Seat {
     match bs[idx] {
       b'F' => hi = mid,
       b'B' => lo = mid + 1,
-      seat => panic!("bad seat: {}", seat),
+      seat => panic!("bad seat: {seat}"),
     }
     idx += 1;
   }
@@ -60,7 +60,7 @@ fn parse_seat(s: &str) -> Seat {
     match bs[idx] {
       b'L' => hi = mid,
       b'R' => lo = mid + 1,
-      seat => panic!("bad seat: {}", seat),
+      seat => panic!("bad seat: {seat}"),
     }
     idx += 1;
   }
@@ -68,7 +68,7 @@ fn parse_seat(s: &str) -> Seat {
   Seat { row, col: lo }
 }
 
-fn seat_id(s: Seat) -> u32 {
+fn seat_id(s: &Seat) -> u32 {
   s.row * (MAX_COL + 1) + s.col
 }
 

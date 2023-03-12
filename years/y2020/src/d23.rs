@@ -29,12 +29,12 @@ fn mk_map_p1(s: &str) -> (Vec<u32>, u32) {
   let first = *cups.first().unwrap();
   let last = *cups.last().unwrap();
   let max = *cups.iter().max().unwrap();
-  let mut map = vec![0; to_usize(max + 1)];
+  let mut m = vec![0; to_usize(max + 1)];
   for xs in cups.windows(2) {
-    map[to_usize(xs[0])] = xs[1];
+    m[to_usize(xs[0])] = xs[1];
   }
-  map[to_usize(last)] = first;
-  (map, first)
+  m[to_usize(last)] = first;
+  (m, first)
 }
 
 const MAX_ELEM_P2: u32 = 1_000_000;
@@ -44,16 +44,16 @@ fn mk_map_p2(s: &str) -> (Vec<u32>, u32) {
   let first = *cups.first().unwrap();
   let last = *cups.last().unwrap();
   let max = *cups.iter().max().unwrap();
-  let mut map = vec![0; to_usize(MAX_ELEM_P2 + 1)];
+  let mut m = vec![0; to_usize(MAX_ELEM_P2 + 1)];
   for xs in cups.windows(2) {
-    map[to_usize(xs[0])] = xs[1];
+    m[to_usize(xs[0])] = xs[1];
   }
-  map[to_usize(last)] = max + 1;
+  m[to_usize(last)] = max + 1;
   for x in max + 1..MAX_ELEM_P2 {
-    map[to_usize(x)] = x + 1;
+    m[to_usize(x)] = x + 1;
   }
-  map[to_usize(MAX_ELEM_P2)] = first;
-  (map, first)
+  m[to_usize(MAX_ELEM_P2)] = first;
+  (m, first)
 }
 
 // take advantage of the fact that there are no duplicate elements to avoid both
@@ -112,7 +112,7 @@ fn to_u32(n: usize) -> u32 {
 fn t() {
   let s = include_str!("input/d23.txt");
   assert_eq!(p1(s), "89372645");
-  assert_eq!(p2(s), 21273394210);
+  assert_eq!(p2(s), 21_273_394_210);
 }
 
 #[cfg(test)]
@@ -127,7 +127,7 @@ mod tests {
 
   #[test]
   fn t_p2() {
-    assert_eq!(p2("389125467"), 149245887792);
+    assert_eq!(p2("389125467"), 149_245_887_792);
   }
 
   #[test]

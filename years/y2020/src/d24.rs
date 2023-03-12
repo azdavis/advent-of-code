@@ -23,7 +23,7 @@ pub fn p2(s: &str) -> usize {
   set.len()
 }
 
-/// https://www.redblobgames.com/grids/hexagons/#coordinates-axial
+/// <https://www.redblobgames.com/grids/hexagons/#coordinates-axial>
 type AxialCoord = (i32, i32);
 
 fn neighbors(c: AxialCoord) -> [AxialCoord; 6] {
@@ -62,7 +62,7 @@ fn parse_axial_coord(s: &str) -> AxialCoord {
         match chars.next().unwrap() {
           'w' => {}
           'e' => q += 1,
-          bad => panic!("bad char after n: {}", bad),
+          bad => panic!("bad char after n: {bad}"),
         }
       }
       's' => {
@@ -70,12 +70,12 @@ fn parse_axial_coord(s: &str) -> AxialCoord {
         match chars.next().unwrap() {
           'w' => q -= 1,
           'e' => {}
-          bad => panic!("bad char after s: {}", bad),
+          bad => panic!("bad char after s: {bad}"),
         }
       }
       'w' => q -= 1,
       'e' => q += 1,
-      _ => panic!("bad char: {}", c),
+      _ => panic!("bad char: {c}"),
     }
   }
   (q, r)

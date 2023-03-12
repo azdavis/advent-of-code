@@ -57,11 +57,11 @@ fn simulate(instrs: &[Instr]) -> Res {
       InstrKind::Jmp => {
         // kind of awkward lol
         if instr.num < 0 {
-          let neg_n = -instr.num as usize;
+          let neg_n = usize::try_from(-instr.num).unwrap();
           assert!(idx >= neg_n);
           idx -= neg_n;
         } else {
-          idx += instr.num as usize;
+          idx += usize::try_from(instr.num).unwrap();
         }
       }
       InstrKind::Nop => idx += 1,
@@ -96,7 +96,7 @@ impl InstrKind {
       "acc" => Self::Acc,
       "jmp" => Self::Jmp,
       "nop" => Self::Nop,
-      _ => panic!("bad instr kind: {}", s),
+      _ => panic!("bad instr kind: {s}"),
     }
   }
 }

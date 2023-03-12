@@ -6,7 +6,7 @@ pub fn p1(s: &str) -> u64 {
 }
 
 const INIT: u64 = 7;
-const MOD: u64 = 20201227;
+const MOD: u64 = 20_201_227;
 
 fn get_loop_size(pub_key: u64) -> u64 {
   let mut ret = 0;
@@ -39,10 +39,10 @@ fn parse(s: &str) -> [u64; 2] {
 #[test]
 fn t() {
   let s = include_str!("input/d25.txt");
-  assert_eq!(p1(s), 1478097);
+  assert_eq!(p1(s), 1_478_097);
 }
 
 #[test]
 fn t_p1() {
-  assert_eq!(p1("5764801\n17807724"), 14897079);
+  assert_eq!(p1("5764801\n17807724"), 14_897_079);
 }

@@ -36,7 +36,7 @@ fn regular(mut d1: Deck, mut d2: Deck) -> Deck {
         d2.push_back(c2);
         d2.push_back(c1);
       }
-      Ordering::Equal => panic!("equal cards: {}", c1),
+      Ordering::Equal => panic!("equal cards: {c1}"),
       Ordering::Greater => {
         d1.push_back(c1);
         d1.push_back(c2);
@@ -66,7 +66,7 @@ fn recursive(mut d1: Deck, mut d2: Deck) -> (Player, Deck) {
     } else {
       match c1.cmp(&c2) {
         Ordering::Less => Player::P2,
-        Ordering::Equal => panic!("equal cards: {}", c1),
+        Ordering::Equal => panic!("equal cards: {c1}"),
         Ordering::Greater => Player::P1,
       }
     };

@@ -12,8 +12,7 @@ fn go(s: &str, f: fn(&str) -> u64) -> u64 {
 
 fn go_p1(s: &str) -> u64 {
   eval(parse_expr(s, |b| match b {
-    BinOp::Add => 1,
-    BinOp::Mul => 1,
+    BinOp::Add | BinOp::Mul => 1,
   }))
 }
 
@@ -62,7 +61,7 @@ fn parse_expr_prec(tokens: &mut Vec<Token>, min_prec: usize, f: PrecFn) -> Expr 
       assert_eq!(tokens.pop().unwrap(), Token::RRound);
       e
     }
-    tok => panic!("expected number or `(`, found {:?}", tok),
+    tok => panic!("expected number or `(`, found {tok:?}"),
   };
   loop {
     let op = match tokens.last() {
@@ -108,7 +107,7 @@ fn tokenize(s: &str) -> Vec<Token> {
       i += 1;
       continue 'outer;
     }
-    for &(tok_b, tok) in PUNCTUATION.iter() {
+    for &(tok_b, tok) in &PUNCTUATION {
       if b == tok_b {
         i += 1;
         ret.push(tok);
@@ -120,7 +119,7 @@ fn tokenize(s: &str) -> Vec<Token> {
       i += 1;
       while let Some(&b) = bs.get(i) {
         if b.is_ascii_digit() {
-          i += 1
+          i += 1;
         } else {
           break;
         }
@@ -130,7 +129,7 @@ fn tokenize(s: &str) -> Vec<Token> {
       ret.push(Token::Num(n));
       continue 'outer;
     }
-    panic!("bad byte: {}", b);
+    panic!("bad byte: {b}");
   }
   ret
 }
@@ -152,7 +151,7 @@ fn t_p2() {
   assert_eq!(go_p2("1 + (2 * 3) + (4 * (5 + 6))"), 51);
   assert_eq!(go_p2("2 * 3 + (4 * 5)"), 46);
   assert_eq!(go_p2("5 + (8 * 3 + 9 + 3 * 4 * 3)"), 1445);
-  assert_eq!(go_p2("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"), 669060);
+  assert_eq!(go_p2("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"), 669_060);
   assert_eq!(
     go_p2("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"),
     23340
@@ -162,6 +161,6 @@ fn t_p2() {
 #[test]
 fn t() {
   let s = include_str!("input/d18.txt");
-  assert_eq!(p1(s), 3159145843816);
-  assert_eq!(p2(s), 55699621957369);
+  assert_eq!(p1(s), 3_159_145_843_816);
+  assert_eq!(p2(s), 55_699_621_957_369);
 }

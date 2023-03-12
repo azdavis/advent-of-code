@@ -5,7 +5,7 @@ type Vec2 = [i32; 2];
 pub fn p1(s: &str) -> u32 {
   let mut st = State::new();
   for ac in parse(s) {
-    st.evolve(ac);
+    st.evolve(&ac);
   }
   to_origin(st.ship)
 }
@@ -13,14 +13,14 @@ pub fn p1(s: &str) -> u32 {
 pub fn p2(s: &str) -> u32 {
   let mut st = StateP2::new();
   for ac in parse(s) {
-    st.evolve(ac);
+    st.evolve(&ac);
   }
   to_origin(st.ship)
 }
 
 fn to_origin(v: Vec2) -> u32 {
   let [x, y] = v;
-  (x.abs() + y.abs()) as u32
+  x.unsigned_abs() + y.unsigned_abs()
 }
 
 struct StateP2 {
@@ -36,7 +36,7 @@ impl StateP2 {
     }
   }
 
-  fn evolve(&mut self, ac: Action) {
+  fn evolve(&mut self, ac: &Action) {
     match ac.kind {
       ActionKind::Compass(d) => adjust(&mut self.waypoint, d, ac.num),
       ActionKind::Left => {
@@ -75,7 +75,7 @@ impl State {
     }
   }
 
-  fn evolve(&mut self, ac: Action) {
+  fn evolve(&mut self, ac: &Action) {
     match ac.kind {
       ActionKind::Compass(d) => adjust(&mut self.ship, d, ac.num),
       ActionKind::Left => {
@@ -141,7 +141,7 @@ impl ActionKind {
       'L' => Self::Left,
       'R' => Self::Right,
       'F' => Self::Forward,
-      _ => panic!("bad action: {}", c),
+      _ => panic!("bad action: {c}"),
     }
   }
 }

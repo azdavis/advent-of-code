@@ -11,7 +11,7 @@ pub fn p1(s: &str) -> usize {
 pub fn p2(s: &str) -> usize {
   go(s, |mask, mem, addr, val| {
     let mut addrs = vec![addr | mask.on];
-    for &idx in mask.floating.iter() {
+    for &idx in &mask.floating {
       let mask = 1 << idx;
       addrs = addrs
         .into_iter()
@@ -76,7 +76,7 @@ impl Instr {
           }
           '0' => off |= 1 << idx,
           '1' => on |= 1 << idx,
-          _ => panic!("bad mask: {}", c),
+          _ => panic!("bad mask: {c}"),
         }
       }
       off = !off;
@@ -98,6 +98,6 @@ impl Instr {
 #[test]
 fn t() {
   let s = include_str!("input/d14.txt");
-  assert_eq!(p1(s), 11179633149677);
-  assert_eq!(p2(s), 4822600194774);
+  assert_eq!(p1(s), 11_179_633_149_677);
+  assert_eq!(p2(s), 4_822_600_194_774);
 }

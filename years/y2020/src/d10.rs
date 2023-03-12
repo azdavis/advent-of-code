@@ -13,7 +13,7 @@ pub fn p1(s: &str) -> usize {
       1 => gap_1 += 1,
       2 => {}
       3 => gap_3 += 1,
-      bad => panic!("bad gap: {}", bad),
+      bad => panic!("bad gap: {bad}"),
     }
   }
   gap_1 * gap_3
@@ -23,7 +23,7 @@ pub fn p2(s: &str) -> usize {
   let mut nums = parse(s);
   nums.sort_unstable();
   let mut dp = hash_map([(0, 1)]);
-  for &n in nums.iter() {
+  for &n in &nums {
     let ans: usize = [1, 2, 3]
       .iter()
       .filter_map(|&gap| dp.get(&n.checked_sub(gap)?))
@@ -41,5 +41,5 @@ fn parse(s: &str) -> Vec<u16> {
 fn t() {
   let s = include_str!("input/d10.txt");
   assert_eq!(p1(s), 1700);
-  assert_eq!(p2(s), 12401793332096);
+  assert_eq!(p2(s), 12_401_793_332_096);
 }

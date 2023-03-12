@@ -6,14 +6,14 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> usize {
-  go(s, 30000000)
+  go(s, 30_000_000)
 }
 
 fn go(s: &str, target: usize) -> usize {
   let nums = parse(s);
   let mut turn = 1;
   let mut map = Map::default();
-  for &num in nums.iter() {
+  for &num in &nums {
     update(&mut map, num, turn);
     turn += 1;
   }

@@ -100,7 +100,7 @@ impl Key {
       "ecl" => Self::EyeColor,
       "pid" => Self::PassportId,
       "cid" => Self::CountryId,
-      _ => panic!("bad key: {}", s),
+      _ => panic!("bad key: {s}"),
     }
   }
 }

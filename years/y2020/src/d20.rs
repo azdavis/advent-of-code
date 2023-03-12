@@ -103,7 +103,7 @@ pub fn p1(s: &str) -> u64 {
 pub fn p2(s: &str) -> usize {
   let mut board = go(s);
   // delete the edges of each tile.
-  for row in board.iter_mut() {
+  for row in &mut board {
     for (_, tile) in row.iter_mut() {
       tile.pop().unwrap();
       tile.remove(0);
@@ -140,7 +140,7 @@ pub fn p2(s: &str) -> usize {
       line.chars().enumerate().filter_map(move |(x, c)| match c {
         '#' => Some((y, x)),
         ' ' => None,
-        _ => panic!("bad char: {}", c),
+        _ => panic!("bad char: {c}"),
       })
     })
     .collect();
@@ -160,7 +160,7 @@ pub fn p2(s: &str) -> usize {
             board
               .get(y + sm_y)
               .and_then(|row| row.get(x + sm_x))
-              .map_or(false, Pixel::is_black)
+              .map_or(false, |x| x.is_black())
           })
           .then(|| {
             sea_monster
@@ -205,8 +205,8 @@ enum Pixel {
 }
 
 impl Pixel {
-  fn is_black(&self) -> bool {
-    matches!(*self, Self::Black)
+  fn is_black(self) -> bool {
+    matches!(self, Self::Black)
   }
 }
 
@@ -242,7 +242,7 @@ fn go(s: &str) -> Board {
     for row in 0..n {
       // need to add an empty row each time we start a new row.
       if row != 0 {
-        for (board, _) in candidates.iter_mut() {
+        for (board, _) in &mut candidates {
           board.push(vec![]);
         }
       }
@@ -269,7 +269,7 @@ fn mk_edges(tiles: &Tiles) -> Edges {
   let mut ret = Edges::default();
   for (&id_a, tile_translations) in tiles.iter() {
     for (id_b, tile) in tile_translations.iter().enumerate() {
-      for &(f, dir) in FNS.iter() {
+      for &(f, dir) in &FNS {
         ret.entry((f(tile), dir)).or_default().insert((id_a, id_b));
       }
     }
@@ -292,7 +292,7 @@ fn sqrt(n: usize) -> usize {
     match (ret * ret).cmp(&n) {
       Ordering::Less => ret += 1,
       Ordering::Equal => return ret,
-      Ordering::Greater => panic!("no exact square root for {}", n),
+      Ordering::Greater => panic!("no exact square root for {n}"),
     }
   }
 }
@@ -368,7 +368,7 @@ fn parse_one(s: &str) -> (u64, Tile) {
         .map(|c| match c {
           '#' => Pixel::Black,
           '.' => Pixel::White,
-          _ => panic!("bad pixel: {}", c),
+          _ => panic!("bad pixel: {c}"),
         })
         .collect()
     })
@@ -379,6 +379,6 @@ fn parse_one(s: &str) -> (u64, Tile) {
 #[test]
 fn t() {
   let s = include_str!("input/d20.txt");
-  assert_eq!(p1(s), 12519494280967);
+  assert_eq!(p1(s), 12_519_494_280_967);
   assert_eq!(p2(s), 2442);
 }

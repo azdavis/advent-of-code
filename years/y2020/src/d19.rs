@@ -2,23 +2,23 @@ use helpers::{hash_set, HashMap, HashSet};
 
 pub fn p1(s: &str) -> usize {
   let (rules, messages) = parse(s);
-  go(rules, messages)
+  go(&rules, messages)
 }
 
 pub fn p2(s: &str) -> usize {
   let (mut rules, messages) = parse(s);
   rules.insert(8, Rule::Alt(vec![42], vec![42, 8]));
   rules.insert(11, Rule::Alt(vec![42, 31], vec![42, 11, 31]));
-  go(rules, messages)
+  go(&rules, messages)
 }
 
-fn go(rules: Rules, messages: Vec<Msg>) -> usize {
+fn go(rules: &Rules, messages: Vec<Msg>) -> usize {
   let mut ret = 0;
   for mut m in messages {
     // don't use filter + count since we mutate
     m.reverse();
     let mut ms = hash_set([m]);
-    match_prefix(&mut ms, &rules, 0);
+    match_prefix(&mut ms, rules, 0);
     if ms.contains(&vec![]) {
       ret += 1;
     }
@@ -91,7 +91,7 @@ fn parse(s: &str) -> (Rules, Vec<Msg>) {
         .map(|c| match c {
           'a' => Char::A,
           'b' => Char::B,
-          _ => panic!("bad char: {}", c),
+          _ => panic!("bad char: {c}"),
         })
         .collect()
     })

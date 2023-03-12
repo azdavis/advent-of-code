@@ -19,9 +19,9 @@ where
     set = set
       .iter()
       .flat_map(|&v| {
-        let mut ret = neighbors(v);
-        ret.push(v);
-        ret
+        let mut ns = neighbors(v);
+        ns.push(v);
+        ns
       })
       .filter(|&v| {
         let ns_on = neighbors(v).into_iter().filter(|n| set.contains(n)).count();
@@ -45,7 +45,7 @@ fn neighbors_vec3(v: Vec3) -> Vec<Vec3> {
         if add == v {
           continue;
         }
-        ret.push(add)
+        ret.push(add);
       }
     }
   }
@@ -68,7 +68,7 @@ fn neighbors_vec4(v: Vec4) -> Vec<Vec4> {
           if add == v {
             continue;
           }
-          ret.push(add)
+          ret.push(add);
         }
       }
     }
@@ -86,7 +86,7 @@ fn parse(s: &str) -> impl Iterator<Item = (i32, i32)> + '_ {
     line.chars().enumerate().filter_map(move |(y, c)| match c {
       '#' => Some((to_i32(x), to_i32(y))),
       '.' => None,
-      _ => panic!("bad char: {}", c),
+      _ => panic!("bad char: {c}"),
     })
   })
 }

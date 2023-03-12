@@ -62,16 +62,16 @@ where
     }
     loop {
       let num: usize = next.parse().unwrap();
-      let contained = Bag {
+      let bag = Bag {
         adj: iter.next().unwrap(),
         color: iter.next().unwrap(),
       };
-      let (key, val) = add(container, num, contained);
+      let (key, val) = add(container, num, bag);
       ret.entry(key).or_default().insert(val);
       match iter.next().unwrap() {
         "bag," | "bags," => {}
         "bag." | "bags." => break,
-        bad => panic!("bad next: {}", bad),
+        next => panic!("bad next: {next}"),
       }
       next = iter.next().unwrap();
     }

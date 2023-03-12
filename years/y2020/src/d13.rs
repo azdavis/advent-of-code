@@ -83,5 +83,5 @@ fn parse(s: &str) -> Input {
 fn t() {
   let s = include_str!("input/d13.txt");
   assert_eq!(p1(s), 333);
-  assert_eq!(p2(s), 690123192779524);
+  assert_eq!(p2(s), 690_123_192_779_524);
 }
