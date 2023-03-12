@@ -11,7 +11,7 @@ fn parse(s: &str) -> impl Iterator<Item = (Dir, u32)> + '_ {
       "forward" => Dir::Forward,
       "up" => Dir::Up,
       "down" => Dir::Down,
-      _ => panic!("unknown dir: {}", dir),
+      _ => panic!("unknown dir: {dir}"),
     };
     (dir, num.parse().unwrap())
   })
@@ -50,6 +50,6 @@ pub fn p2(s: &str) -> u32 {
 #[test]
 fn t() {
   let s = include_str!("input/d02.txt");
-  assert_eq!(p1(s), 2027977);
-  assert_eq!(p2(s), 1903644897);
+  assert_eq!(p1(s), 2_027_977);
+  assert_eq!(p2(s), 1_903_644_897);
 }

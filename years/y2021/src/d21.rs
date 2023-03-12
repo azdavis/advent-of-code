@@ -138,13 +138,13 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d21.txt");
-  assert_eq!(p1(s), 1067724);
-  assert_eq!(p2(s), 630947104784464);
+  assert_eq!(p1(s), 1_067_724);
+  assert_eq!(p2(s), 630_947_104_784_464);
 }
 
 #[test]
 fn ex1() {
   let s = include_str!("input/d21_ex1.txt");
-  assert_eq!(p1(s), 739785);
-  assert_eq!(p2(s), 444356092776315);
+  assert_eq!(p1(s), 739_785);
+  assert_eq!(p2(s), 444_356_092_776_315);
 }

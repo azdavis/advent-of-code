@@ -76,7 +76,7 @@ fn parse_packet(iter: &mut dyn Iterator<Item = bool>) -> Packet {
       let [lhs, rhs] = get_two(get_sub_packets(iter));
       Kind::Eq(lhs, rhs)
     }
-    _ => panic!("unknown type id: {}", type_id),
+    _ => panic!("unknown type id: {type_id}"),
   };
   Packet { version, kind }
 }
@@ -129,7 +129,7 @@ pub fn p2(s: &str) -> usize {
 fn t() {
   let s = include_str!("input/d16.txt");
   assert_eq!(p1(s), 943);
-  assert_eq!(p2(s), 167737115857);
+  assert_eq!(p2(s), 167_737_115_857);
 }
 
 #[test]

@@ -28,7 +28,7 @@ fn parse(s: &str) -> (Coords, Vec<(Axis, usize)>) {
       let axis = match &caps[1] {
         "x" => Axis::X,
         "y" => Axis::Y,
-        d => panic!("unknown axis: {}", d),
+        d => panic!("unknown axis: {d}"),
       };
       let n: usize = caps[2].parse().unwrap();
       (axis, n)

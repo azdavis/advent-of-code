@@ -16,7 +16,7 @@ fn parse(s: &str) -> impl Iterator<Item = (bool, Cube)> + '_ {
     let on = match action {
       "on" => true,
       "off" => false,
-      _ => panic!("unknown action: {}", action),
+      _ => panic!("unknown action: {action}"),
     };
     let mut coords = coords.split(',');
     let x = parse_vec2(coords.next().unwrap(), "x");
@@ -27,7 +27,8 @@ fn parse(s: &str) -> impl Iterator<Item = (bool, Cube)> + '_ {
   })
 }
 
-/// from https://redd.it/rlxhmg
+/// from <https://redd.it/rlxhmg>
+#[allow(clippy::similar_names)]
 fn run<I>(iter: I) -> isize
 where
   I: Iterator<Item = (bool, Cube)>,
@@ -36,7 +37,7 @@ where
   for (on, cube) in iter {
     let [[a_sx, a_ex], [a_sy, a_ey], [a_sz, a_ez]] = cube;
     let mut update = HashMap::<Cube, isize>::default();
-    for (&[[b_sx, b_ex], [b_sy, b_ey], [b_sz, b_ez]], &count) in cubes.iter() {
+    for (&[[b_sx, b_ex], [b_sy, b_ey], [b_sz, b_ez]], &count) in &cubes {
       let sx = a_sx.max(b_sx);
       let ex = a_ex.min(b_ex);
       let sy = a_sy.max(b_sy);
@@ -80,6 +81,6 @@ pub fn p2(s: &str) -> isize {
 #[test]
 fn t() {
   let s = include_str!("input/d22.txt");
-  assert_eq!(p1(s), 547648);
-  assert_eq!(p2(s), 1206644425246111);
+  assert_eq!(p1(s), 547_648);
+  assert_eq!(p2(s), 1_206_644_425_246_111);
 }

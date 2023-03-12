@@ -80,5 +80,5 @@ pub fn p2(s: &str) -> usize {
 fn t() {
   let s = include_str!("input/d08.txt");
   assert_eq!(p1(s), 479);
-  assert_eq!(p2(s), 1041746);
+  assert_eq!(p2(s), 1_041_746);
 }

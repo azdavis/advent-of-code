@@ -54,7 +54,7 @@ pub fn p2(s: &str) -> usize {
     for x in 0..REPEAT {
       let mut tile = tile.clone();
       let add: u8 = (x + y).try_into().unwrap();
-      for row in tile.iter_mut() {
+      for row in &mut tile {
         for x in row.iter_mut() {
           *x += add;
           while *x > 9 {

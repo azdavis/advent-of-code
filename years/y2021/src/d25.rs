@@ -38,7 +38,7 @@ pub fn p1(s: &str) -> usize {
           '.' => None,
           'v' => Some(Dir::Down),
           '>' => Some(Dir::Right),
-          _ => panic!("unknown char: {}", c),
+          _ => panic!("unknown char: {c}"),
         })
         .collect()
     })

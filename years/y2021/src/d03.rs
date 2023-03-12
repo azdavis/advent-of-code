@@ -4,7 +4,7 @@ fn byte_to_digit(b: u8) -> usize {
   match b {
     b'0' => 0,
     b'1' => 1,
-    _ => panic!("unknown byte: {}", b),
+    _ => panic!("unknown byte: {b}"),
   }
 }
 
@@ -12,12 +12,12 @@ fn get_digit(n1: usize, total: usize, ord: Ordering) -> usize {
   let n0 = total - n1;
   match (n1.cmp(&n0), ord) {
     (_, Ordering::Equal) => unreachable!(),
-    (Ordering::Less, Ordering::Less)
-    | (Ordering::Greater, Ordering::Greater)
-    | (Ordering::Equal, Ordering::Greater) => 1,
-    (Ordering::Less, Ordering::Greater)
-    | (Ordering::Greater, Ordering::Less)
-    | (Ordering::Equal, Ordering::Less) => 0,
+    (Ordering::Less, Ordering::Less) | (Ordering::Greater | Ordering::Equal, Ordering::Greater) => {
+      1
+    }
+    (Ordering::Less, Ordering::Greater) | (Ordering::Greater | Ordering::Equal, Ordering::Less) => {
+      0
+    }
   }
 }
 
@@ -71,8 +71,8 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d03.txt");
-  assert_eq!(p1(s), 3549854);
-  assert_eq!(p2(s), 3765399);
+  assert_eq!(p1(s), 3_549_854);
+  assert_eq!(p2(s), 3_765_399);
 }
 
 #[test]

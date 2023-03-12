@@ -56,7 +56,7 @@ fn score(draw: Tile, board: &Board) -> u32 {
 pub fn p1(s: &str) -> u32 {
   let (draws, mut boards) = parse(s);
   for draw in draws {
-    for board in boards.iter_mut() {
+    for board in &mut boards {
       play(draw, board);
       if is_win(board) {
         return score(draw, board);

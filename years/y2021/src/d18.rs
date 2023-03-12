@@ -15,7 +15,7 @@ impl Num {
   fn into_val(self) -> u32 {
     match self {
       Self::Val(v) => v,
-      _ => panic!("into_val not Val"),
+      Self::Pair(..) => panic!("into_val not Val"),
     }
   }
 

@@ -55,9 +55,8 @@ pub fn p1(s: &str) -> usize {
 }
 
 pub fn p2(s: &str) -> usize {
-  run(s, &mut |line| match straight(line) {
-    Some(x) => x,
-    None => {
+  run(s, &mut |line| {
+    straight(line).unwrap_or_else(|| {
       let [[sx, sy], [ex, ey]] = line;
       let (sx, sy, ex, ey) = if sx < ex {
         (sx, sy, ex, ey)
@@ -69,7 +68,7 @@ pub fn p2(s: &str) -> usize {
         let y = if sy < ey { sy + dy } else { sy - dy };
         [x, y]
       }))
-    }
+    })
   })
 }
 

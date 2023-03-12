@@ -65,7 +65,7 @@ pub fn p2(s: &str) -> usize {
     if n == evolve(&mut grid) {
       return idx;
     }
-    idx += 1
+    idx += 1;
   }
 }
 

@@ -1,5 +1,5 @@
 //! First I tried brute-force, that doesn't work. 9^14 is pretty big. Assuming
-//! we try 100_000 numbers per second, it'll take
+//! we try `100_000` numbers per second, it'll take
 //!
 //! ```not_rust
 //! 9^14 / 100000 / 60 / 60 / 24 / 365 =~= 7
@@ -24,5 +24,5 @@
 //! So, defeated, I went to the subreddit, and was vindicated in the fact that
 //! it basically seems you have to 'analyze' the input for patterns and
 //! essentially do the problem by hand (ish). Not wanting to do that, but also
-//! wanting to be done with AoC for this year, I downloaded a Python solution
+//! wanting to be done with `AoC` for this year, I downloaded a Python solution
 //! from the subreddit, ran it on my input, and moved on with my life.

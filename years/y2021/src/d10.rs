@@ -23,7 +23,7 @@ fn get_stack(s: &str) -> Result<Vec<char>, usize> {
           return Err(25137);
         }
       }
-      _ => panic!("unknown char: {}", c),
+      _ => panic!("unknown char: {c}"),
     }
   }
   Ok(stack)
@@ -44,7 +44,7 @@ pub fn p2(s: &str) -> usize {
           '[' => 2,
           '{' => 3,
           '<' => 4,
-          _ => panic!("unknown char: {}", c),
+          _ => panic!("unknown char: {c}"),
         };
         (ac * 5) + add
       });
@@ -58,6 +58,6 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d10.txt");
-  assert_eq!(p1(s), 436497);
-  assert_eq!(p2(s), 2377613374);
+  assert_eq!(p1(s), 436_497);
+  assert_eq!(p2(s), 2_377_613_374);
 }

@@ -4,7 +4,7 @@ fn is_lit(c: char) -> bool {
   match c {
     '#' => true,
     '.' => false,
-    _ => panic!("unknown pixel: {}", c),
+    _ => panic!("unknown pixel: {c}"),
   }
 }
 
