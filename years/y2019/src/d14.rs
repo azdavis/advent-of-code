@@ -77,7 +77,7 @@ fn process(s: &str) -> Input<'_> {
     })
     .collect();
   let mut graph = Graph::default();
-  for (&out, &(_, ref ins)) in recipes.iter() {
+  for (&out, (_, ins)) in recipes.iter() {
     for ing in ins.iter() {
       graph.entry(ing.chem).or_default().insert(out);
     }

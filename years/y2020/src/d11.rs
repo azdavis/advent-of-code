@@ -44,16 +44,14 @@ fn evolve_with(xs: &Grid, threshold: usize, get_one_tile: GetOneTile) -> Grid {
       match ret[i][j] {
         Tile::Floor => {}
         Tile::Empty => {
-          let any_nearby = get_all_tiles(i, j, xs, get_one_tile)
-            .into_iter()
-            .any(|x| matches!(x, Tile::Occupied));
+          let any_nearby =
+            get_all_tiles(i, j, xs, get_one_tile).any(|x| matches!(x, Tile::Occupied));
           if !any_nearby {
             ret[i][j] = Tile::Occupied;
           }
         }
         Tile::Occupied => {
           let count = get_all_tiles(i, j, xs, get_one_tile)
-            .into_iter()
             .filter(|x| matches!(x, Tile::Occupied))
             .count();
           if count >= threshold {

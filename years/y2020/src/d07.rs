@@ -24,7 +24,7 @@ pub fn p2(s: &str) -> usize {
   rec(START, &graph) - 1
 }
 
-fn rec<'a, 'b>(cur: Bag<'a>, graph: &HashMap<Bag<'b>, HashSet<Edge<'a>>>) -> usize {
+fn rec<'a>(cur: Bag<'a>, graph: &HashMap<Bag<'_>, HashSet<Edge<'a>>>) -> usize {
   graph
     .get(&cur)
     .into_iter()
