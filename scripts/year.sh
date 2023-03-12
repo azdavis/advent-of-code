@@ -22,7 +22,11 @@ mkdir -p "years/y$YEAR/src"
 
 cat <<EOF > "years/y$YEAR/src/lib.rs"
 #![deny(clippy::pedantic, rust_2018_idioms)]
-#![allow(clippy::missing_panics_doc, clippy::must_use_candidate)]
+#![allow(
+  clippy::missing_panics_doc,
+  clippy::missing_errors_doc,
+  clippy::must_use_candidate
+)]
 // TODO remove
 #![allow(clippy::manual_let_else)]
 
