@@ -44,5 +44,5 @@ fn t() {
   let ans = include_str!("input/d25_sol.txt");
   let mut reader = std::io::Cursor::new(ans);
   let mut writer = std::io::sink();
-  assert_eq!(go(s, &mut reader, &mut writer), 34095120);
+  assert_eq!(go(s, &mut reader, &mut writer), 34_095_120);
 }

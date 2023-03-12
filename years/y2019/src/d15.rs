@@ -37,7 +37,7 @@ fn go(prog: Intcode) -> Res {
     for _ in 0..queue.len() {
       let (point, prog) = queue.pop_front().unwrap();
       visited.insert(point);
-      for &(compass, neighbor) in neighbors(point).iter() {
+      for (compass, neighbor) in neighbors(point) {
         // note: having the visited check be here means replacing the queue with
         // a stack does not yield a DFS. we put the check here since we don't
         // want to return Found when finding an already visited spot. also cuts
@@ -52,7 +52,7 @@ fn go(prog: Intcode) -> Res {
           0 => {}
           1 => queue.push_back((neighbor, p)),
           2 => return Res::Found(level, p),
-          bad => panic!("bad output: {}", bad),
+          bad => panic!("bad output: {bad}"),
         }
         assert!(output.is_empty());
       }

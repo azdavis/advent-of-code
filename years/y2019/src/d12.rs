@@ -38,7 +38,7 @@ fn cycle_len(mut dim: Vec<Moon>) -> usize {
 fn p1_go(s: &str, rounds: usize) -> u32 {
   let mut dims = parse(s);
   for _ in 0..rounds {
-    for dim in dims.iter_mut() {
+    for dim in &mut dims {
       *dim = evolve(dim);
     }
   }
@@ -73,7 +73,7 @@ fn evolve(dim: &[Moon]) -> Vec<Moon> {
     }
   }
   // velocity
-  for m in ret.iter_mut() {
+  for m in &mut ret {
     m.pos += m.vel;
   }
   ret
@@ -101,7 +101,7 @@ fn parse(s: &str) -> [Vec<Moon>; 3] {
 fn t() {
   let s = include_str!("input/d12.txt");
   assert_eq!(p1(s), 7928);
-  assert_eq!(p2(s), 518311327635164);
+  assert_eq!(p2(s), 518_311_327_635_164);
 }
 
 #[test]
@@ -117,5 +117,5 @@ fn t_p2() {
   let s = include_str!("input/d12_ex1.txt");
   assert_eq!(p2(s), 2772);
   let s = include_str!("input/d12_ex2.txt");
-  assert_eq!(p2(s), 4686774924);
+  assert_eq!(p2(s), 4_686_774_924);
 }

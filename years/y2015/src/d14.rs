@@ -70,7 +70,7 @@ fn simulate(s: &str, f: fn(State) -> u32) -> u32 {
       }
     }
     let max_dist = states.iter().map(|st| st.distance).max().unwrap();
-    for st in states.iter_mut() {
+    for st in &mut states {
       if st.distance == max_dist {
         st.points += 1;
       }

@@ -75,7 +75,7 @@ fn parse_compass(c: char) -> Compass {
     'D' => Compass::South,
     'L' => Compass::West,
     'R' => Compass::East,
-    _ => panic!("bad char: {}", c),
+    _ => panic!("bad char: {c}"),
   }
 }
 

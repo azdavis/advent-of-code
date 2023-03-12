@@ -18,7 +18,7 @@ fn run(s: &str, map: &HashMap<Coord, char>, mut cur: Coord) -> String {
           Some(x) => [x, y],
         },
         'R' => [x + 1, y],
-        _ => panic!("unknown char: {}", c),
+        _ => panic!("unknown char: {c}"),
       };
       if map.contains_key(&next) {
         cur = next;

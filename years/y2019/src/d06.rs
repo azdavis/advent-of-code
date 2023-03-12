@@ -48,6 +48,6 @@ fn parse(s: &str, add: for<'a> fn(&mut MapGraph<&'a str>, &'a str, &'a str)) -> 
 #[test]
 fn t() {
   let s = include_str!("input/d06.txt");
-  assert_eq!(p1(s), 150150);
+  assert_eq!(p1(s), 150_150);
   assert_eq!(p2(s), 352);
 }

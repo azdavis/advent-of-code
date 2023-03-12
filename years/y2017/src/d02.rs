@@ -16,14 +16,14 @@ pub fn p1(s: &str) -> u32 {
 
 pub fn p2(s: &str) -> u32 {
   run(s, |ns| {
-    for a in ns.iter() {
-      for b in ns.iter() {
+    for a in &ns {
+      for b in &ns {
         if a != b && (a % b == 0 || b % a == 0) {
           return a.max(b) / a.min(b);
         }
       }
     }
-    panic!("no solution for {:?}", ns)
+    panic!("no solution for {ns:?}")
   })
 }
 

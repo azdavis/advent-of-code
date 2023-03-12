@@ -24,10 +24,10 @@ fn parse(s: &str) -> impl Iterator<Item = Instr> + '_ {
       "turn" => match iter.next().unwrap() {
         "on" => InstrKind::TurnOn,
         "off" => InstrKind::TurnOff,
-        t => panic!("unknown turn kind: {}", t),
+        t => panic!("unknown turn kind: {t}"),
       },
       "toggle" => InstrKind::Toggle,
-      t => panic!("unknown instr kind: {}", t),
+      t => panic!("unknown instr kind: {t}"),
     };
     let top_left = parse_coord(iter.next().unwrap());
     assert_eq!(iter.next(), Some("through"));
@@ -88,6 +88,6 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d06.txt");
-  assert_eq!(p1(s), 543903);
-  assert_eq!(p2(s), 14687245);
+  assert_eq!(p1(s), 543_903);
+  assert_eq!(p2(s), 14_687_245);
 }

@@ -45,13 +45,13 @@ fn go(s: &str, white: &mut HashSet<Vec2>) -> usize {
           1 => {
             white.insert(cur);
           }
-          _ => panic!("bad color: {}", color),
+          _ => panic!("bad color: {color}"),
         }
         did_paint.insert(cur);
         facing = match dir {
           0 => facing.left(),
           1 => facing.right(),
-          _ => panic!("bad dir: {}", dir),
+          _ => panic!("bad dir: {dir}"),
         };
         let [dx, dy] = facing.dx_dy();
         cur[0] += dx;

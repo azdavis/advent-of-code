@@ -60,6 +60,6 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d04.txt");
-  assert_eq!(p1(s), 361724);
+  assert_eq!(p1(s), 361_724);
   assert_eq!(p2(s), 482);
 }

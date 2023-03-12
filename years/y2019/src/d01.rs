@@ -26,6 +26,6 @@ fn parse(s: &str) -> impl Iterator<Item = u32> + '_ {
 #[test]
 fn t() {
   let s = include_str!("input/d01.txt");
-  assert_eq!(p1(s), 3296560);
-  assert_eq!(p2(s), 4941976);
+  assert_eq!(p1(s), 3_296_560);
+  assert_eq!(p2(s), 4_941_976);
 }

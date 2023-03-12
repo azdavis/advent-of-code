@@ -8,8 +8,8 @@ enum Tile {
 }
 
 impl Tile {
-  fn is_bug(&self) -> bool {
-    matches!(*self, Tile::Bug)
+  fn is_bug(self) -> bool {
+    matches!(self, Tile::Bug)
   }
 }
 
@@ -21,7 +21,7 @@ fn parse(s: &str) -> Vec<Vec<Tile>> {
         .map(|c| match c {
           '#' => Tile::Bug,
           '.' | '?' => Tile::Empty,
-          _ => panic!("unknown char: {}", c),
+          _ => panic!("unknown char: {c}"),
         })
         .collect()
     })
@@ -117,16 +117,16 @@ fn run3(s: &str, rounds: usize) -> usize {
   let init = parse(s);
   let n = init.len();
   assert_eq!(n % 2, 1);
-  let mid = n / 2;
+  let n_over_2 = n / 2;
   let mut cur = hash_map([(0, init)]);
   for _ in 0..rounds {
     let min = cur.keys().copied().min().unwrap();
     let max = cur.keys().copied().max().unwrap();
     assert_eq!(cur.len(), usize::try_from(max - min + 1).unwrap());
-    if cur[&min].iter().flatten().any(Tile::is_bug) {
+    if cur[&min].iter().flatten().any(|x| x.is_bug()) {
       cur.insert(min - 1, vec![vec![Tile::Empty; n]; n]);
     }
-    if cur[&max].iter().flatten().any(Tile::is_bug) {
+    if cur[&max].iter().flatten().any(|x| x.is_bug()) {
       cur.insert(max + 1, vec![vec![Tile::Empty; n]; n]);
     }
     cur = cur
@@ -140,7 +140,7 @@ fn run3(s: &str, rounds: usize) -> usize {
               .iter()
               .enumerate()
               .map(|(x, &tile)| {
-                if x == mid && y == mid {
+                if x == n_over_2 && y == n_over_2 {
                   // the middle tile doesn't actually exist
                   return Tile::Empty;
                 }
@@ -160,7 +160,7 @@ fn run3(s: &str, rounds: usize) -> usize {
           .collect();
         (level, grid)
       })
-      .collect()
+      .collect();
   }
   cur
     .values()
@@ -177,7 +177,7 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d24.txt");
-  assert_eq!(p1(s), 28903899);
+  assert_eq!(p1(s), 28_903_899);
   assert_eq!(p2(s), 1896);
 }
 
@@ -196,7 +196,7 @@ mod examples {
 #....
 .#...
 "#;
-    assert_eq!(biodiversity_rating(&parse(s.trim())), 2129920);
+    assert_eq!(biodiversity_rating(&parse(s.trim())), 2_129_920);
   }
 
   #[test]

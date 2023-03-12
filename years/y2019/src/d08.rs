@@ -37,7 +37,7 @@ pub fn p2(s: &str) -> String {
       };
       ret.push(c);
     }
-    ret.push('\n')
+    ret.push('\n');
   }
   ret
 }
@@ -62,7 +62,7 @@ impl Pixel {
       '0' => Self::Black,
       '1' => Self::White,
       '2' => Self::Transparent,
-      _ => panic!("bad pixel: {}", c),
+      _ => panic!("bad pixel: {c}"),
     }
   }
 }

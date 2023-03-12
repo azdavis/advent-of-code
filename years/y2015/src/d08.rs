@@ -14,7 +14,7 @@ fn decode_len(s: &str) -> usize {
           assert!(iter.next().unwrap().is_ascii_hexdigit());
           assert!(iter.next().unwrap().is_ascii_hexdigit());
         }
-        c => panic!("unknown escape: {}", c),
+        c => panic!("unknown escape: {c}"),
       },
       _ => {}
     }

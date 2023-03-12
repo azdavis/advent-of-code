@@ -48,11 +48,11 @@ const MAX_ORE: usize = 1_000_000_000_000;
 
 fn ore_for_fuel(inp: &Input<'_>, num_fuel: usize) -> usize {
   let mut want = hash_map([("FUEL", num_fuel)]);
-  for &chem in inp.order.iter() {
+  for &chem in &inp.order {
     let num_need = want.remove(chem).unwrap();
-    let (per_batch, ref ins) = inp.recipes[&chem];
+    let (per_batch, ref to_ins) = inp.recipes[&chem];
     let num_batches = ceil_div(num_need, per_batch);
-    for ing in ins.iter() {
+    for ing in to_ins.iter() {
       *want.entry(ing.chem).or_default() += num_batches * ing.count;
     }
   }
@@ -77,8 +77,8 @@ fn process(s: &str) -> Input<'_> {
     })
     .collect();
   let mut graph = Graph::default();
-  for (&out, (_, ins)) in recipes.iter() {
-    for ing in ins.iter() {
+  for (&out, (_, ins)) in &recipes {
+    for ing in ins {
       graph.entry(ing.chem).or_default().insert(out);
     }
   }
@@ -110,9 +110,7 @@ where
         if done.contains(&cur) {
           continue;
         }
-        if !active.insert(cur) {
-          panic!("not a DAG");
-        }
+        assert!(active.insert(cur));
         stack.push((Action::Finish, cur));
         if let Some(ns) = graph.get(&cur) {
           stack.extend(ns.iter().map(|&x| (Action::Start, x)));
@@ -153,24 +151,24 @@ fn t_p1() {
   let s = include_str!("input/d14_ex3.txt");
   assert_eq!(p1(s), 13312);
   let s = include_str!("input/d14_ex4.txt");
-  assert_eq!(p1(s), 180697);
+  assert_eq!(p1(s), 180_697);
   let s = include_str!("input/d14_ex5.txt");
-  assert_eq!(p1(s), 2210736);
+  assert_eq!(p1(s), 2_210_736);
 }
 
 #[test]
 fn t_p2() {
   let s = include_str!("input/d14_ex3.txt");
-  assert_eq!(p2(s), 82892753);
+  assert_eq!(p2(s), 82_892_753);
   let s = include_str!("input/d14_ex4.txt");
-  assert_eq!(p2(s), 5586022);
+  assert_eq!(p2(s), 5_586_022);
   let s = include_str!("input/d14_ex5.txt");
-  assert_eq!(p2(s), 460664);
+  assert_eq!(p2(s), 460_664);
 }
 
 #[test]
 fn t() {
   let s = include_str!("input/d14.txt");
-  assert_eq!(p1(s), 870051);
-  assert_eq!(p2(s), 1863741);
+  assert_eq!(p1(s), 870_051);
+  assert_eq!(p2(s), 1_863_741);
 }

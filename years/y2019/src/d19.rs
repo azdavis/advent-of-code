@@ -22,7 +22,7 @@ impl Beam {
     match self.out.pop().unwrap() {
       0 => false,
       1 => true,
-      out => panic!("bad out: {}", out),
+      out => panic!("bad out: {out}"),
     }
   }
 }
@@ -47,7 +47,7 @@ pub fn p2(s: &str) -> i64 {
     }
     y += 1;
     while beam.affects(x + 1, y) {
-      x += 1
+      x += 1;
     }
   }
 }
@@ -56,5 +56,5 @@ pub fn p2(s: &str) -> i64 {
 fn t() {
   let s = include_str!("input/d19.txt");
   assert_eq!(p1(s), 197);
-  assert_eq!(p2(s), 9181022);
+  assert_eq!(p2(s), 9_181_022);
 }

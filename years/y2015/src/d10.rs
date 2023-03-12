@@ -43,8 +43,8 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d10.txt");
-  assert_eq!(p1(s), 492982);
-  assert_eq!(p2(s), 6989950);
+  assert_eq!(p1(s), 492_982);
+  assert_eq!(p2(s), 6_989_950);
 }
 
 #[test]
@@ -56,6 +56,6 @@ fn ex() {
   assert_eq!(run(1, 3), [1, 2, 1, 1]);
   assert_eq!(run(1211, 1), [1, 1, 1, 2, 2, 1]);
   assert_eq!(run(1, 4), [1, 1, 1, 2, 2, 1]);
-  assert_eq!(run(111221, 1), [3, 1, 2, 2, 1, 1]);
+  assert_eq!(run(111_221, 1), [3, 1, 2, 2, 1, 1]);
   assert_eq!(run(1, 5), [3, 1, 2, 2, 1, 1]);
 }

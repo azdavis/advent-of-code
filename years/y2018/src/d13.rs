@@ -36,7 +36,7 @@ fn parse(s: &str) -> (Tiles, Carts) {
         '<' => ignore(carts.insert(pos, (Turn::Left, Compass::West))),
         '>' => ignore(carts.insert(pos, (Turn::Left, Compass::East))),
         '|' | '-' | ' ' => {}
-        _ => panic!("unknown char: {}", c),
+        _ => panic!("unknown char: {c}"),
       }
     }
   }

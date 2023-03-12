@@ -4,7 +4,7 @@ fn is_plant(c: char) -> bool {
   match c {
     '.' => false,
     '#' => true,
-    _ => panic!("unknown char: {}", c),
+    _ => panic!("unknown char: {c}"),
   }
 }
 
@@ -49,7 +49,7 @@ fn parse(s: &str) -> (HashSet<isize>, Vec<bool>) {
 
 fn run(s: &str, rounds: usize) -> isize {
   let (mut cur, rules) = parse(s);
-  let window = WINDOW as isize;
+  let window = isize::try_from(WINDOW).unwrap();
   let window_2 = window / 2;
   for _ in 0..rounds {
     let mut next = HashSet::default();
@@ -83,7 +83,7 @@ pub fn p2(_: &str) -> isize {
 fn t() {
   let s = include_str!("input/d12.txt");
   assert_eq!(p1(s), 1447);
-  assert_eq!(p2(s), 1050000000480);
+  assert_eq!(p2(s), 1_050_000_000_480);
 }
 
 #[test]

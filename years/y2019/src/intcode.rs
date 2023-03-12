@@ -113,7 +113,7 @@ impl Intcode {
           self.cur_addr + 2
         }
         99 => return Res::Done,
-        _ => panic!("bad op: {}", op),
+        _ => panic!("bad op: {op}"),
       };
     }
   }
@@ -144,12 +144,12 @@ pub(crate) enum Res {
 }
 
 impl Res {
-  pub(crate) fn is_done(&self) -> bool {
-    matches!(*self, Self::Done)
+  pub(crate) fn is_done(self) -> bool {
+    matches!(self, Self::Done)
   }
 
-  pub(crate) fn needs_input(&self) -> bool {
-    matches!(*self, Self::NeedInput)
+  pub(crate) fn needs_input(self) -> bool {
+    matches!(self, Self::NeedInput)
   }
 }
 
@@ -167,7 +167,7 @@ impl Mode {
       0 => Self::Position,
       1 => Self::Immediate,
       2 => Self::Relative,
-      m => panic!("bad mode: {}", m),
+      m => panic!("bad mode: {m}"),
     }
   }
 }

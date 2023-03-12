@@ -12,7 +12,7 @@ fn parse(s: &str) -> impl Iterator<Item = (Dir, u32)> + '_ {
     let dir = match iter.next().unwrap() {
       'L' => Dir::Left,
       'R' => Dir::Right,
-      c => panic!("unknown dir: {}", c),
+      c => panic!("unknown dir: {c}"),
     };
     (dir, iter.as_str().parse().unwrap())
   })
@@ -25,7 +25,7 @@ struct State {
 }
 
 impl State {
-  fn update<F>(&mut self, dir: Dir, n: u32, f: &mut F) -> ControlFlow<()>
+  fn update<F>(&mut self, dir: &Dir, n: u32, f: &mut F) -> ControlFlow<()>
   where
     F: FnMut([i32; 2]) -> ControlFlow<()>,
   {
@@ -60,7 +60,7 @@ impl Default for State {
 pub fn p1(s: &str) -> i32 {
   let mut st = State::default();
   for (dir, n) in parse(s) {
-    match st.update(dir, n, &mut |_| ControlFlow::Continue(())) {
+    match st.update(&dir, n, &mut |_| ControlFlow::Continue(())) {
       ControlFlow::Continue(()) => {}
       ControlFlow::Break(()) => unreachable!(),
     }
@@ -72,7 +72,7 @@ pub fn p2(s: &str) -> i32 {
   let mut st = State::default();
   let mut prev = HashSet::<[i32; 2]>::default();
   for (dir, n) in parse(s) {
-    let res = st.update(dir, n, &mut |p| {
+    let res = st.update(&dir, n, &mut |p| {
       if prev.insert(p) {
         ControlFlow::Continue(())
       } else {

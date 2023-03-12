@@ -34,9 +34,8 @@ pub fn p2(s: &str) -> usize {
     }
     if map == new_map {
       break;
-    } else {
-      map = new_map;
     }
+    map = new_map;
   }
   sum_all(map)
 }
@@ -45,5 +44,5 @@ pub fn p2(s: &str) -> usize {
 fn t() {
   let s = include_str!("input/d09.txt");
   assert_eq!(p1(s), 97714);
-  assert_eq!(p2(s), 10762972461);
+  assert_eq!(p2(s), 10_762_972_461);
 }

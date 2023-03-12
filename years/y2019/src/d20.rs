@@ -83,7 +83,7 @@ impl Graph for RecursiveBoard {
 }
 
 fn parse(text: &str) -> (Board, Coord, Coord) {
-  let lines: Vec<_> = text.lines().map(|line| line.as_bytes()).collect();
+  let lines: Vec<_> = text.lines().map(str::as_bytes).collect();
   let mut tiles: Vec<Vec<_>> = lines
     .iter()
     .map(|&line| {
@@ -106,7 +106,7 @@ fn parse(text: &str) -> (Board, Coord, Coord) {
     })
     .collect();
   let row_len = tiles[PORTAL_LEN].len() + PORTAL_LEN;
-  for row in tiles.iter_mut() {
+  for row in &mut tiles {
     if row.len() < row_len {
       row.resize(row_len, Tile::Blank);
     }

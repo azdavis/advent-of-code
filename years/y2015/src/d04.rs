@@ -5,7 +5,7 @@ fn run(s: &str, zeroes: usize) -> Result<usize, Error> {
   let mut inp = String::with_capacity(s.len());
   let mut out = String::with_capacity(32);
   loop {
-    write!(&mut inp, "{}{}", s, ret)?;
+    write!(&mut inp, "{s}{ret}")?;
     write!(&mut out, "{:x}", md5::compute(&inp))?;
     if out.bytes().take(zeroes).all(|b| b == b'0') {
       return Ok(ret);
@@ -27,6 +27,6 @@ pub fn p2(s: &str) -> usize {
 #[test]
 fn t() {
   let s = include_str!("input/d04.txt");
-  assert_eq!(p1(s), 282749);
-  assert_eq!(p2(s), 9962624);
+  assert_eq!(p1(s), 282_749);
+  assert_eq!(p2(s), 9_962_624);
 }

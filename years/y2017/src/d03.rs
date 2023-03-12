@@ -31,5 +31,5 @@ pub fn p2(s: &str) -> u32 {
 fn t() {
   let s = include_str!("input/d03.txt");
   assert_eq!(p1(s), 552);
-  assert_eq!(p2(s), 330785);
+  assert_eq!(p2(s), 330_785);
 }

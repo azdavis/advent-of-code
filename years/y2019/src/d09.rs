@@ -21,6 +21,6 @@ fn go(s: &str, inp: i64) -> i64 {
 #[test]
 fn t() {
   let s = include_str!("input/d09.txt");
-  assert_eq!(p1(s), 2204990589);
+  assert_eq!(p1(s), 2_204_990_589);
   assert_eq!(p2(s), 50008);
 }

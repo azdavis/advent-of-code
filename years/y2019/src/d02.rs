@@ -8,7 +8,7 @@ pub fn p2(s: &str) -> i64 {
   let p: Vec<_> = parse(s).collect();
   for noun in 0..=99 {
     for verb in 0..=99 {
-      if go(p.clone(), noun, verb) == 19690720 {
+      if go(p.clone(), noun, verb) == 19_690_720 {
         return 100 * noun + verb;
       }
     }
@@ -29,6 +29,6 @@ fn go(mut ns: Vec<i64>, noun: i64, verb: i64) -> i64 {
 #[test]
 fn t() {
   let s = include_str!("input/d02.txt");
-  assert_eq!(p1(s), 11590668);
+  assert_eq!(p1(s), 11_590_668);
   assert_eq!(p2(s), 2254);
 }

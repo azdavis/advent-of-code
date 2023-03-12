@@ -45,8 +45,8 @@ pub fn p2(s: &str) -> u32 {
 #[test]
 fn t() {
   let s = include_str!("input/d09.txt");
-  assert_eq!(p1(s), 399645);
-  assert_eq!(p2(s), 3352507536);
+  assert_eq!(p1(s), 399_645);
+  assert_eq!(p2(s), 3_352_507_536);
 }
 
 #[cfg(test)]
@@ -65,7 +65,7 @@ mod examples {
 
   #[test]
   fn ex3() {
-    assert_eq!(run(13, 7999), 146373);
+    assert_eq!(run(13, 7999), 146_373);
   }
 
   #[test]

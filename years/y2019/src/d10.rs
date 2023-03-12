@@ -14,7 +14,7 @@ pub fn p2(s: &str) -> u32 {
   let (best, _) = get_best(&points);
   assert!(points.remove(&best));
   let mut map = HashMap::<(i32, i32), Vec<Vec2>>::default();
-  for &p in points.iter() {
+  for &p in &points {
     map.entry(diff_gcd(best, p)).or_default().push(p);
   }
   for points in map.values_mut() {
@@ -22,7 +22,7 @@ pub fn p2(s: &str) -> u32 {
   }
   let mut points: Vec<_> = map.into_iter().collect();
   points.sort_by_cached_key(|&((x, y), _)| {
-    let mut ret = (x as f64).atan2(-y as f64);
+    let mut ret = f64::from(x).atan2(f64::from(-y));
     if ret < 0.0 {
       ret += std::f64::consts::TAU;
     }
@@ -30,18 +30,15 @@ pub fn p2(s: &str) -> u32 {
   });
   let mut idx = 1;
   loop {
-    for (_, ps) in points.iter_mut() {
+    for (_, ps) in &mut points {
       if let Some([x, y]) = ps.pop() {
         if idx == 200 {
           return to_u32((x * 100) + y);
-        } else {
-          idx += 1;
         }
+        idx += 1;
       }
     }
-    if points.iter().all(|(_, ps)| ps.is_empty()) {
-      panic!("no solution")
-    }
+    assert!(points.iter().any(|(_, ps)| !ps.is_empty()));
   }
 }
 
@@ -63,7 +60,7 @@ fn parse(s: &str) -> HashSet<Vec2> {
       line.chars().enumerate().filter_map(move |(x, c)| match c {
         '.' => None,
         '#' => Some([to_i32(x), to_i32(y)]),
-        _ => panic!("bad tile: {}", c),
+        _ => panic!("bad tile: {c}"),
       })
     })
     .collect()

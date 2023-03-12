@@ -71,7 +71,7 @@ fn p2_help(s: &str, mut workers: usize, extra_duration: usize) -> usize {
       }
     };
     workers += 1;
-    for job in dependents[&finished_job].iter() {
+    for job in &dependents[&finished_job] {
       dependencies.get_mut(job).unwrap().remove(&finished_job);
     }
   }

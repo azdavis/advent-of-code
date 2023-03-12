@@ -27,13 +27,13 @@ fn parse(s: &str) -> impl Iterator<Item = Instr> + '_ {
         let axis = match axis {
           "x" => Axis::X,
           "y" => Axis::Y,
-          it => panic!("unknown axis: {}", it),
+          it => panic!("unknown axis: {it}"),
         };
         let idx: usize = idx.parse().unwrap();
         let by: usize = iter.next().unwrap().parse().unwrap();
         Instr::Rotate(axis, idx, by)
       }
-      it => panic!("unknown instr: {}", it),
+      it => panic!("unknown instr: {it}"),
     }
   })
 }
@@ -81,9 +81,9 @@ fn draw(w: &mut dyn Write, screen: &[[bool; WIDTH]; HEIGHT]) -> io::Result<()> {
   Ok(())
 }
 
-pub fn p2(s: &str) -> io::Result<()> {
+pub fn p2(s: &str) {
   let screen = run(s);
-  draw(&mut io::stdout(), &screen)
+  draw(&mut io::stdout(), &screen).unwrap();
 }
 
 #[test]

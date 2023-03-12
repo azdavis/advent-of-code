@@ -66,7 +66,7 @@ fn parse_tile(n: i64) -> Tile {
     2 => Tile::Block,
     3 => Tile::HorizontalPaddle,
     4 => Tile::Ball,
-    _ => panic!("bad tile: {}", n),
+    _ => panic!("bad tile: {n}"),
   }
 }
 

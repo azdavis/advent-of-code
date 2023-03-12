@@ -57,6 +57,6 @@ RUN
 #[test]
 fn t() {
   let s = include_str!("input/d21.txt");
-  assert_eq!(p1(s), 19352864);
-  assert_eq!(p2(s), 1142488337);
+  assert_eq!(p1(s), 19_352_864);
+  assert_eq!(p2(s), 1_142_488_337);
 }

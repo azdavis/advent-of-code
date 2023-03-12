@@ -20,17 +20,15 @@ pub fn p2(s: &str) -> usize {
 
 fn prepare_input_p2(input: &mut Input) {
   let (x, y) = input.start;
-  for point in [(x, y), (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)].iter() {
-    assert!(input.walkable.remove(point));
+  for point in [(x, y), (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)] {
+    assert!(input.walkable.remove(&point));
   }
-  for &(point, node) in [
+  for (point, node) in [
     ((x - 1, y - 1), Node::Start1),
     ((x - 1, y + 1), Node::Start2),
     ((x + 1, y - 1), Node::Start3),
     ((x + 1, y + 1), Node::Start4),
-  ]
-  .iter()
-  {
+  ] {
     assert!(input.nodes.insert(point, node).is_none());
   }
 }
@@ -45,15 +43,17 @@ struct State {
 fn go(s: &str, init: Vec<Node>, prepare_input: fn(&mut Input)) -> usize {
   let mut input = parse(s);
   prepare_input(&mut input);
-  let graph = mk_graph(input);
+  let graph = mk_graph(&input);
   // depends on no dupe keys
-  let num_keys = graph
+  let num_keys: u32 = graph
     .keys()
     .filter(|&&node| matches!(node, Node::Key(_)))
-    .count() as u32;
+    .count()
+    .try_into()
+    .unwrap();
   let mut states = vec![State {
     at: init,
-    keys: BitSet::new(),
+    keys: BitSet::default(),
     steps: 0,
   }];
   let mut cache = HashMap::<(Vec<Node>, BitSet), usize>::default();
@@ -148,7 +148,7 @@ fn parse(s: &str) -> Input {
           } else if b.is_ascii_uppercase() {
             ret.nodes.insert((x, y), Node::Door(b - b'A'));
           } else {
-            panic!("bad byte: {}", b)
+            panic!("bad byte: {b}")
           }
         }
       }
@@ -158,11 +158,11 @@ fn parse(s: &str) -> Input {
   ret
 }
 
-fn mk_graph(input: Input) -> Graph {
+fn mk_graph(input: &Input) -> Graph {
   let mut ret = Graph::default();
   let mut visited = HashSet::<Point>::default();
   let mut queue = VecDeque::<Point>::new();
-  for (&point, &node) in input.nodes.iter() {
+  for (&point, &node) in &input.nodes {
     let mut steps = 0;
     visited.clear();
     queue.clear();

@@ -53,12 +53,10 @@ pub fn p2(s: &str) -> i64 {
         continue 'outer;
       }
       // then try turning
-      for &(m, c) in [
+      for (m, c) in [
         (Move::TurnLeft, screen.facing.left()),
         (Move::TurnRight, screen.facing.right()),
-      ]
-      .iter()
-      {
+      ] {
         let loc = neighbor(screen.loc, c);
         if screen.scaffold.contains(&loc) {
           screen.loc = loc;
@@ -85,16 +83,16 @@ pub fn p2(s: &str) -> i64 {
       ret.push(x);
     }
     for x in iter {
-      ret.push(b',' as i64);
+      ret.push(b','.into());
       ret.push(x);
     }
-    ret.push(b'\n' as i64);
-    for pat in [Pat::A, Pat::B, Pat::C].iter() {
-      write_moves(&decomposition.pats[pat], &mut ret);
-      ret.push(b'\n' as i64);
+    ret.push(b'\n'.into());
+    for pat in [Pat::A, Pat::B, Pat::C] {
+      write_moves(&decomposition.pats[&pat], &mut ret);
+      ret.push(b'\n'.into());
     }
-    ret.push(b'n' as i64);
-    ret.push(b'\n' as i64);
+    ret.push(b'n'.into());
+    ret.push(b'\n'.into());
     ret
   };
   for x in inp {
@@ -111,7 +109,7 @@ fn write_moves(ms: &[Move], buf: &mut Vec<i64>) {
     buf.extend(x);
   }
   for x in iter {
-    buf.push(b',' as i64);
+    buf.push(b','.into());
     buf.extend(x);
   }
 }
@@ -126,9 +124,9 @@ enum Pat {
 impl Pat {
   fn to_input(self) -> i64 {
     match self {
-      Pat::A => b'A' as i64,
-      Pat::B => b'B' as i64,
-      Pat::C => b'C' as i64,
+      Pat::A => b'A'.into(),
+      Pat::B => b'B'.into(),
+      Pat::C => b'C'.into(),
     }
   }
 }
@@ -159,9 +157,9 @@ fn decompose(route: &[Move]) -> Option<Res> {
     std::cmp::Reverse(count * (ms.len() - 1))
   });
   let mut sequence = Vec::with_capacity(MAX_CHARS / 2);
-  for &a in all_pats.iter() {
-    for &b in all_pats.iter() {
-      'outer: for &c in all_pats.iter() {
+  for &a in &all_pats {
+    for &b in &all_pats {
+      'outer: for &c in &all_pats {
         sequence.clear();
         let pats = hash_map([(a, Pat::A), (b, Pat::B), (c, Pat::C)]);
         if pats.len() != 3 {
@@ -225,8 +223,8 @@ enum Move {
 impl Move {
   fn to_input(self) -> ToInput {
     match self {
-      Move::TurnLeft => ToInput::Once(std::iter::once(b'L' as i64)),
-      Move::TurnRight => ToInput::Once(std::iter::once(b'R' as i64)),
+      Move::TurnLeft => ToInput::Once(std::iter::once(b'L'.into())),
+      Move::TurnRight => ToInput::Once(std::iter::once(b'R'.into())),
       Move::Forward(n) => ToInput::Digits(digits::get(n)),
     }
   }
@@ -275,7 +273,7 @@ fn parse_screen(output: &[i64]) -> Screen {
       b'v' => robot = Some(([x, y], Compass::South)),
       b'<' => robot = Some(([x, y], Compass::West)),
       b'>' => robot = Some(([x, y], Compass::East)),
-      b => panic!("bad output: {}", b),
+      b => panic!("bad output: {b}"),
     }
     x += 1;
   }
@@ -291,5 +289,5 @@ fn parse_screen(output: &[i64]) -> Screen {
 fn t() {
   let s = include_str!("input/d17.txt");
   assert_eq!(p1(s), 5940);
-  assert_eq!(p2(s), 923795);
+  assert_eq!(p2(s), 923_795);
 }

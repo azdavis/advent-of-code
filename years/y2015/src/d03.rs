@@ -6,7 +6,7 @@ fn parse(s: &str) -> impl Iterator<Item = [i32; 2]> + '_ {
     'v' => [0, -1],
     '<' => [-1, 0],
     '>' => [1, 0],
-    _ => panic!("unknown char: {}", c),
+    _ => panic!("unknown char: {c}"),
   })
 }
 

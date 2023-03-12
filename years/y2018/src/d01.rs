@@ -13,7 +13,7 @@ pub fn p2(s: &str) -> i32 {
   let mut cur = 0i32;
   let mut past = HashSet::<i32>::default();
   loop {
-    for &n in ns.iter() {
+    for &n in &ns {
       cur += n;
       if !past.insert(cur) {
         return cur;

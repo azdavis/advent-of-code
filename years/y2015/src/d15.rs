@@ -98,6 +98,6 @@ pub fn p2(s: &str) -> u32 {
 #[test]
 fn t() {
   let s = include_str!("input/d15.txt");
-  assert_eq!(p1(s), 222870);
-  assert_eq!(p2(s), 117936);
+  assert_eq!(p1(s), 222_870);
+  assert_eq!(p2(s), 117_936);
 }

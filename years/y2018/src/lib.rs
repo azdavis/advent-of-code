@@ -1,4 +1,11 @@
-#![deny(rust_2018_idioms)]
+#![deny(clippy::pedantic, rust_2018_idioms)]
+#![allow(
+  clippy::missing_panics_doc,
+  clippy::missing_errors_doc,
+  clippy::must_use_candidate
+)]
+// TODO remove
+#![allow(clippy::manual_let_else)]
 
 pub mod d01;
 pub mod d02;

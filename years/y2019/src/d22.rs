@@ -29,9 +29,9 @@ fn parse(s: &str) -> impl Iterator<Item = Instr> + '_ {
           assert!(iter.next().is_none());
           Instr::NewStack
         }
-        deal => panic!("unknown deal: {}", deal),
+        deal => panic!("unknown deal: {deal}"),
       },
-      instr => panic!("unknown instr: {}", instr),
+      instr => panic!("unknown instr: {instr}"),
     }
   })
 }
@@ -44,8 +44,8 @@ fn run(s: &str, len: u16) -> Vec<u16> {
       Instr::NewStack => deck.reverse(),
       Instr::Cut(cut) => match cut.cmp(&0) {
         Ordering::Equal => {}
-        Ordering::Greater => deck.rotate_left((cut as usize) % len),
-        Ordering::Less => deck.rotate_right(((-cut) as usize) % len),
+        Ordering::Greater => deck.rotate_left(usize::try_from(cut).unwrap() % len),
+        Ordering::Less => deck.rotate_right(usize::try_from(-cut).unwrap() % len),
       },
       Instr::Incr(inc) => {
         let mut new_deck = vec![0u16; len];
@@ -67,9 +67,9 @@ pub fn p1(s: &str) -> usize {
   deck.iter().position(|&c| c == 2019).unwrap()
 }
 
-/// something something modular arithmitic
+/// something something modular arithmetic
 ///
-/// https://www.reddit.com/r/adventofcode/comments/ee56wh
+/// <https://www.reddit.com/r/adventofcode/comments/ee56wh>
 pub fn p2(s: &str) -> usize {
   s.len()
 }

@@ -16,7 +16,7 @@ fn parse(s: &str) -> (Graph, usize) {
       let sign: i16 = match &caps[2] {
         "gain" => 1,
         "lose" => -1,
-        s => panic!("unknown sign: {}", s),
+        s => panic!("unknown sign: {s}"),
       };
       let points: i16 = caps[3].parse().unwrap();
       let b = intern.get(caps.get(4).unwrap().as_str());

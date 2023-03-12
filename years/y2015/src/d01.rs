@@ -4,7 +4,7 @@ fn parse(s: &str) -> impl Iterator<Item = i32> + '_ {
   s.trim().chars().map(|c| match c {
     '(' => 1,
     ')' => -1,
-    _ => panic!("unknown char: {}", c),
+    _ => panic!("unknown char: {c}"),
   })
 }
 

@@ -34,7 +34,7 @@ fn add_val(ones: &mut Ones, twos: &mut Twos, bot: u16, val: u16) {
     Some(other) => {
       let mut ins = [other, val];
       ins.sort_unstable();
-      assert!(twos.insert(bot, ins).is_none())
+      assert!(twos.insert(bot, ins).is_none());
     }
     None => assert!(ones.insert(bot, val).is_none()),
   }
@@ -57,7 +57,7 @@ fn parse(s: &str) -> (Rules, Ones, Twos) {
       let bot: u16 = caps[2].parse().unwrap();
       add_val(&mut ones, &mut twos, bot, val);
     } else {
-      panic!("cannot parse line: {}", line);
+      panic!("cannot parse line: {line}");
     }
   }
   (rules, ones, twos)
@@ -80,7 +80,7 @@ fn run(s: &str) -> (u16, u16) {
     let mut new_twos = Twos::default();
     for (bot, [lo_v, hi_v]) in twos {
       if lo_v == 17 && hi_v == 61 {
-        p1 = Some(bot)
+        p1 = Some(bot);
       }
       let &[(lo_give, lo_idx), (hi_give, hi_idx)] = &rules[&bot];
       do_give(&mut out, &mut ones, &mut new_twos, lo_give, lo_idx, lo_v);
