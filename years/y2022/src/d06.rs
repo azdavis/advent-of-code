@@ -1,9 +1,5 @@
 use std::collections::hash_map::{Entry, HashMap};
 
-pub fn p1(s: &str) -> usize {
-  go(s, 4)
-}
-
 fn go(s: &str, n: usize) -> usize {
   let s = s.as_bytes();
   let mut map = HashMap::<u8, usize>::new();
@@ -26,6 +22,10 @@ fn go(s: &str, n: usize) -> usize {
     *map.entry(b).or_default() += 1;
   }
   unreachable!()
+}
+
+pub fn p1(s: &str) -> usize {
+  go(s, 4)
 }
 
 pub fn p2(s: &str) -> usize {
