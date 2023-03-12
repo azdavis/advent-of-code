@@ -1,5 +1,5 @@
 use crate::intcode::{parse, Intcode};
-use helpers::digits::{digits, to_char, Digits};
+use helpers::digits::{self, to_char, Digits};
 use helpers::{hash_map, Compass, HashMap, HashSet};
 
 type Vec2 = [i32; 2];
@@ -227,7 +227,7 @@ impl Move {
     match self {
       Move::TurnLeft => ToInput::Once(std::iter::once(b'L' as i64)),
       Move::TurnRight => ToInput::Once(std::iter::once(b'R' as i64)),
-      Move::Forward(n) => ToInput::Digits(digits(n)),
+      Move::Forward(n) => ToInput::Digits(digits::get(n)),
     }
   }
 }

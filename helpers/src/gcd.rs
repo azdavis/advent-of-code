@@ -1,7 +1,11 @@
 //! Calculating the GCD (and LCM).
 
 /// Returns the greatest common divisor of `a` and `b` using Euclid's algorithm.
-/// Panics if both are zero.
+///
+/// # Panics
+///
+/// If both are zero.
+#[must_use]
 pub fn gcd(mut a: usize, mut b: usize) -> usize {
   assert!(a != 0 || b != 0);
   while b != 0 {
@@ -13,6 +17,7 @@ pub fn gcd(mut a: usize, mut b: usize) -> usize {
 }
 
 /// Returns the least common multiple of `a` and `b`. Panics if both are zero.
+#[must_use]
 pub fn lcm(a: usize, b: usize) -> usize {
   a * b / gcd(a, b)
 }

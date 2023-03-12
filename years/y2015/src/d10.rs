@@ -1,7 +1,7 @@
-use helpers::digits::digits;
+use helpers::digits;
 
 fn digits_u8(n: u32) -> impl Iterator<Item = u8> {
-  digits(n).map(|x| x.try_into().unwrap())
+  digits::get(n).map(|x| x.try_into().unwrap())
 }
 
 fn run(n: u32, rounds: usize) -> Vec<u8> {

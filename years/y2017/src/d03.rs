@@ -1,6 +1,6 @@
 mod spiral;
 
-use helpers::neighbors::{signed_neighbors, SignedCoord};
+use helpers::neighbors::{self, SignedCoord};
 use helpers::HashMap;
 
 pub fn p1(s: &str) -> u32 {
@@ -15,7 +15,7 @@ pub fn p2(s: &str) -> u32 {
   let mut iter = spiral::Spiral::default();
   map.insert(iter.next().unwrap(), 1);
   for coord in iter {
-    let val: u32 = signed_neighbors(coord)
+    let val: u32 = neighbors::signed(coord)
       .into_iter()
       .filter_map(|ne| map.get(&ne))
       .sum();

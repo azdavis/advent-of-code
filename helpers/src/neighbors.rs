@@ -41,10 +41,7 @@ where
 
 /// Returns the neighbors (including diagonal neighbors) of `coord` in `matrix`.
 /// The iterator will be at most 8 items long.
-pub fn neighbors_diag<'a, M, R, T>(
-  matrix: &'a M,
-  coord: Coord,
-) -> impl Iterator<Item = (&'a T, Coord)>
+pub fn diag<'a, M, R, T>(matrix: &'a M, coord: Coord) -> impl Iterator<Item = (&'a T, Coord)>
 where
   M: Deref<Target = [R]>,
   R: 'a + Deref<Target = [T]>,
@@ -72,7 +69,8 @@ where
 pub type SignedCoord = [isize; 2];
 
 /// Returns the signed neighbors of the coord.
-pub fn signed_neighbors(coord: SignedCoord) -> [SignedCoord; 8] {
+#[must_use]
+pub fn signed(coord: SignedCoord) -> [SignedCoord; 8] {
   let [x, y] = coord;
   [
     [x - 1, y - 1],

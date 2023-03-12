@@ -8,6 +8,7 @@ pub const EMPTY: char = '░';
 
 /// - If given `true`, returns [`FILLED`].
 /// - If given `false`, returns [`EMPTY`].
+#[must_use]
 pub fn get(b: bool) -> char {
   if b {
     FILLED

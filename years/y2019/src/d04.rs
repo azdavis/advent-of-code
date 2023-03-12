@@ -14,7 +14,7 @@ fn is_valid_p1(n: u32) -> bool {
   if !(100_000..1_000_000).contains(&n) {
     return false;
   }
-  let mut ds = helpers::digits::digits(n);
+  let mut ds = helpers::digits::get(n);
   let mut prev = ds.next().unwrap();
   let mut has_double = false;
   for d in ds {
@@ -32,7 +32,7 @@ fn is_valid_p2(n: u32) -> bool {
   if !(100_000..1_000_000).contains(&n) {
     return false;
   }
-  let mut ds = helpers::digits::digits(n);
+  let mut ds = helpers::digits::get(n);
   let mut prev = ds.next().unwrap();
   let mut has_double = false;
   let mut run = Run::One;

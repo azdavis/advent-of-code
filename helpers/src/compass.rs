@@ -12,6 +12,7 @@ pub enum Compass {
 
 impl Compass {
   /// Returns the result of turning left.
+  #[must_use]
   pub fn left(self) -> Self {
     match self {
       Self::North => Self::West,
@@ -22,6 +23,7 @@ impl Compass {
   }
 
   /// Returns the result of turning right.
+  #[must_use]
   pub fn right(self) -> Self {
     match self {
       Self::North => Self::East,
@@ -32,6 +34,7 @@ impl Compass {
   }
 
   /// Returns the result of turning around.
+  #[must_use]
   pub fn reverse(self) -> Self {
     match self {
       Self::North => Self::South,
@@ -43,6 +46,7 @@ impl Compass {
 
   /// Returns the change in x and y respectively that would result from moving
   /// forward 1 unit in this direction. North and East are positive.
+  #[must_use]
   pub fn dx_dy(self) -> [i32; 2] {
     match self {
       Self::North => [0, 1],

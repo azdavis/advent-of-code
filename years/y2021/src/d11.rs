@@ -1,4 +1,4 @@
-use helpers::neighbors::{neighbors_diag, Coord};
+use helpers::neighbors::{self, Coord};
 use helpers::HashSet;
 
 type Grid = Vec<Vec<u8>>;
@@ -33,7 +33,7 @@ fn evolve(grid: &mut Grid) -> usize {
     }
     let increased: Vec<Coord> = flashed
       .iter()
-      .flat_map(|&coord| neighbors_diag(grid, coord))
+      .flat_map(|&coord| neighbors::diag(grid, coord))
       .map(|it| it.1)
       .collect();
     for [x, y] in increased {

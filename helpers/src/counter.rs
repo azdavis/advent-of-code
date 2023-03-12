@@ -1,5 +1,5 @@
 use crate::HashMap;
-use std::hash::Hash;
+use std::hash::{BuildHasherDefault, Hash};
 use std::iter::IntoIterator;
 
 /// A counter of `T`s.
@@ -13,15 +13,16 @@ where
   T: Hash + Eq,
 {
   /// Returns a new counter with the given capacity.
+  #[must_use]
   pub fn with_capacity(cap: usize) -> Counter<T> {
     Counter {
-      map: HashMap::with_capacity_and_hasher(cap, Default::default()),
+      map: HashMap::with_capacity_and_hasher(cap, BuildHasherDefault::default()),
     }
   }
 
   /// Returns the count for `key`. Defaults to 0.
-  pub fn get(&self, key: T) -> usize {
-    self.map.get(&key).copied().unwrap_or_default()
+  pub fn get(&self, key: &T) -> usize {
+    self.map.get(key).copied().unwrap_or_default()
   }
 
   /// Adds `num` to the count for `key`. Returns the new count.
@@ -38,11 +39,13 @@ where
   }
 
   /// Returns the length of this counter.
+  #[must_use]
   pub fn len(&self) -> usize {
     self.map.len()
   }
 
   /// Returns whether this counter is empty.
+  #[must_use]
   pub fn is_empty(&self) -> bool {
     self.len() == 0
   }

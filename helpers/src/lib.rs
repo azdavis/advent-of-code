@@ -1,7 +1,14 @@
 //! Helpers that are generic enough that they may be used across various
 //! problems, as well as re-exports of dependencies.
 
-#![deny(missing_debug_implementations, missing_docs, rust_2018_idioms)]
+#![deny(
+  clippy::pedantic,
+  missing_debug_implementations,
+  missing_docs,
+  rust_2018_idioms
+)]
+// TODO remove
+#![allow(clippy::manual_let_else)]
 
 pub mod block_char;
 mod compass;
