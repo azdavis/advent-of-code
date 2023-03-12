@@ -26,5 +26,5 @@ fn get_all(s: &str) -> Vec<u32> {
 fn t() {
   let s = include_str!("input/d01.txt");
   assert_eq!(p1(s), 66487);
-  assert_eq!(p2(s), 197301);
+  assert_eq!(p2(s), 197_301);
 }
