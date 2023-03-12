@@ -1,17 +1,21 @@
 use std::collections::hash_map::{Entry, HashMap};
 
 pub fn p1(s: &str) -> usize {
+  go(s, 4)
+}
+
+fn go(s: &str, n: usize) -> usize {
   let s = s.as_bytes();
   let mut map = HashMap::<u8, usize>::new();
-  assert!(s.len() >= 4);
-  for &b in s.iter().take(4) {
+  assert!(s.len() >= n);
+  for &b in s.iter().take(n) {
     *map.entry(b).or_default() += 1;
   }
-  for (idx, &b) in s.iter().enumerate().skip(4) {
-    if map.len() == 4 {
+  for (idx, &b) in s.iter().enumerate().skip(n) {
+    if map.len() == n {
       return idx;
     }
-    let mut oc = match map.entry(s[idx - 4]) {
+    let mut oc = match map.entry(s[idx - n]) {
       Entry::Occupied(x) => x,
       Entry::Vacant(_) => unreachable!(),
     };
@@ -24,8 +28,8 @@ pub fn p1(s: &str) -> usize {
   unreachable!()
 }
 
-pub fn p2(_: &str) -> u32 {
-  0
+pub fn p2(s: &str) -> usize {
+  go(s, 14)
 }
 
 #[test]
