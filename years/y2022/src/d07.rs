@@ -84,13 +84,22 @@ pub fn p1(s: &str) -> u32 {
   ret
 }
 
-pub fn p2(_: &str) -> u32 {
-  0
+const TOTAL_AVAIL: u32 = 70_000_000;
+const REQ_FOR_UPDATE: u32 = 30_000_000;
+
+pub fn p2(s: &str) -> u32 {
+  let e = parse_entries(s);
+  let mut sizes = Vec::<u32>::new();
+  let used = go(&e, &mut |size| sizes.push(size));
+  let free = TOTAL_AVAIL - used;
+  assert!(free < REQ_FOR_UPDATE);
+  let needed = REQ_FOR_UPDATE - free;
+  sizes.into_iter().filter(|&x| x >= needed).min().unwrap()
 }
 
 #[test]
 fn t() {
   let s = include_str!("input/d07.txt");
   assert_eq!(p1(s), 1_428_881);
-  assert_eq!(p2(s), 0);
+  assert_eq!(p2(s), 10_475_598);
 }
