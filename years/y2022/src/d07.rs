@@ -59,17 +59,6 @@ fn parse_entries(s: &str) -> DirEntry<'_> {
   }
 }
 
-pub fn p1(s: &str) -> u32 {
-  let e = parse_entries(s);
-  let mut ret = 0u32;
-  go(&e, &mut |size| {
-    if size <= 100_000 {
-      ret += size;
-    }
-  });
-  ret
-}
-
 fn go<F>(dir: &DirEntry<'_>, f: &mut F) -> u32
 where
   F: FnMut(u32),
@@ -82,6 +71,17 @@ where
     .sum();
   f(size);
   size
+}
+
+pub fn p1(s: &str) -> u32 {
+  let e = parse_entries(s);
+  let mut ret = 0u32;
+  go(&e, &mut |size| {
+    if size <= 100_000 {
+      ret += size;
+    }
+  });
+  ret
 }
 
 pub fn p2(_: &str) -> u32 {
