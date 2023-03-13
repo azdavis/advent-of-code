@@ -62,20 +62,25 @@ fn parse_entries(s: &str) -> DirEntry<'_> {
 pub fn p1(s: &str) -> u32 {
   let e = parse_entries(s);
   let mut ret = 0u32;
-  go(&mut ret, &e);
+  go(&e, &mut |size| {
+    if size <= 100_000 {
+      ret += size;
+    }
+  });
   ret
 }
 
-fn go(ac: &mut u32, dir: &DirEntry<'_>) -> u32 {
+fn go<F>(dir: &DirEntry<'_>, f: &mut F) -> u32
+where
+  F: FnMut(u32),
+{
   let size: u32 = dir
     .dirs
     .values()
-    .map(|x| go(ac, x))
+    .map(|x| go(x, f))
     .chain(dir.files.values().map(|x| x.size))
     .sum();
-  if size <= 100_000 {
-    *ac += size;
-  }
+  f(size);
   size
 }
 
