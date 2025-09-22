@@ -1,3 +1,13 @@
 [workspace]
 resolver = "3"
-members = ["helpers", "years/*"]
+members = [
+  "helpers",
+  "years/y2015",
+  "years/y2016",
+  "years/y2017",
+  "years/y2018",
+  "years/y2019",
+  "years/y2020",
+  "years/y2021",
+  "years/y2022",
+]
