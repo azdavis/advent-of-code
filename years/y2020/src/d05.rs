@@ -43,7 +43,7 @@ fn parse_seat(s: &str) -> Seat {
   let mut lo = 0;
   let mut hi = MAX_ROW;
   for _ in 0..7 {
-    let mid = (lo + hi) / 2;
+    let mid = u32::midpoint(lo, hi);
     match bs[idx] {
       b'F' => hi = mid,
       b'B' => lo = mid + 1,
@@ -56,7 +56,7 @@ fn parse_seat(s: &str) -> Seat {
   lo = 0;
   hi = MAX_COL;
   for _ in 0..3 {
-    let mid = (lo + hi) / 2;
+    let mid = u32::midpoint(lo, hi);
     match bs[idx] {
       b'L' => hi = mid,
       b'R' => lo = mid + 1,

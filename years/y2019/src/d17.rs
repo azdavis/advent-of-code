@@ -258,7 +258,7 @@ fn parse_screen(output: &[i64]) -> Screen {
   let mut robot: Option<(Vec2, Compass)> = None;
   let mut x = 0i32;
   let mut y = 0i32;
-  for &n in output.iter() {
+  for &n in output {
     match u8::try_from(n).unwrap() {
       b'\n' => {
         x = 0;

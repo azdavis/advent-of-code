@@ -20,7 +20,7 @@ pub fn p1(s: &str) -> usize {
       for c in name.chars() {
         if c == '-' {
           continue;
-        };
+        }
         counts.inc(c);
       }
       let mut order: Vec<_> = counts

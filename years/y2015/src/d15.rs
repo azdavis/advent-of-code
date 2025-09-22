@@ -82,7 +82,8 @@ fn run(s: &str, f: fn(&Ingredient) -> bool) -> u32 {
     .collect();
   all_combs(&ingredients, 100)
     .into_iter()
-    .filter_map(|it| f(&it).then(|| it.score()))
+    .filter(|&it| f(&it))
+    .map(Ingredient::score)
     .max()
     .unwrap()
 }

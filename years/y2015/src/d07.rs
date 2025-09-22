@@ -41,7 +41,7 @@ fn parse_expr(s: &str) -> Expr<'_> {
   if let Some((lhs, rhs)) = s.split_once(" RSHIFT ") {
     return Expr::RShift(parse_val(lhs), parse_val(rhs));
   }
-  return Expr::Val(parse_val(s));
+  Expr::Val(parse_val(s))
 }
 
 type Gates<'a> = HashMap<Gate<'a>, Expr<'a>>;

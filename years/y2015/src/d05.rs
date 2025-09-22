@@ -13,21 +13,13 @@ pub fn p1(s: &str) -> usize {
   })
 }
 
-fn diff(a: usize, b: usize) -> usize {
-  if a >= b {
-    a - b
-  } else {
-    b - a
-  }
-}
-
 pub fn p2(s: &str) -> usize {
   run(s, |line| {
     let bs = line.as_bytes();
     bs.windows(2).enumerate().any(|(i1, w1)| {
       bs.windows(2)
         .enumerate()
-        .any(|(i2, w2)| w1 == w2 && diff(i1, i2) >= 2)
+        .any(|(i2, w2)| w1 == w2 && i1.abs_diff(i2) >= 2)
     }) && bs.windows(3).any(|w| w[0] == w[2])
   })
 }

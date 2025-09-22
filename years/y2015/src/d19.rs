@@ -56,8 +56,8 @@ fn replace_all<F>(g: &Graph<&str>, start: &str, f: &mut F)
 where
   F: FnMut(String),
 {
-  for (&k, vs) in g.iter() {
-    for v in vs.iter() {
+  for (&k, vs) in g {
+    for v in vs {
       let mut cursor = 0usize;
       while let Some(idx) = start.get(cursor..).and_then(|s| s.find(k)) {
         cursor += idx;

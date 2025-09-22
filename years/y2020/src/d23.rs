@@ -60,7 +60,7 @@ fn mk_map_p2(s: &str) -> (Vec<u32>, u32) {
 // indexing logic and linked lists, and just map each element to its successor.
 // but use a Vec as the map with vec[0] = 0 since we also know there won't be
 // a whole lot of wasted space.
-fn go(cups: &mut Vec<u32>, mut cur: u32, rounds: usize) {
+fn go(cups: &mut [u32], mut cur: u32, rounds: usize) {
   assert!(cups.len() >= 5);
   let min_cup = to_u32(cups.iter().position(|&c| c != 0).unwrap());
   let max_cup = to_u32(cups.len() - 1);

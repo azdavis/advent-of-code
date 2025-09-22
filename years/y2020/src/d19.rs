@@ -35,7 +35,7 @@ fn match_prefix(ms: &mut HashSet<Msg>, rules: &Rules, idx: usize) {
     Rule::Char(c) => {
       *ms = ms
         .drain()
-        .filter_map(|mut m| m.pop().map_or(false, |x| x == c).then_some(m))
+        .filter_map(|mut m| (m.pop() == Some(c)).then_some(m))
         .collect();
     }
     Rule::Seq(ref seq) => match_prefix_seq(ms, rules, seq),

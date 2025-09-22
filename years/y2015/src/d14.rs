@@ -1,7 +1,7 @@
 use helpers::static_regex;
 
 static_regex!(
-  RE = r#"^\w+ can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds.$"#
+  RE = r"^\w+ can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds.$"
 );
 
 #[derive(Debug, Clone, Copy)]

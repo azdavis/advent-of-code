@@ -61,8 +61,8 @@ where
       InstrKind::TurnOff => turn_off,
       InstrKind::Toggle => toggle,
     };
-    for row in grid[instr.top_left[1]..=instr.bot_right[1]].iter_mut() {
-      for tile in row[instr.top_left[0]..=instr.bot_right[0]].iter_mut() {
+    for row in &mut grid[instr.top_left[1]..=instr.bot_right[1]] {
+      for tile in &mut row[instr.top_left[0]..=instr.bot_right[0]] {
         *tile = f(*tile);
       }
     }

@@ -35,7 +35,7 @@ fn get_delta(a: usize, off: usize, b: usize) -> usize {
   let mut idx = 0;
   loop {
     let ret = a * idx;
-    if ret.checked_sub(off).map_or(false, |y| y % b == 0) {
+    if ret.checked_sub(off).is_some_and(|y| y % b == 0) {
       return ret;
     }
     idx += 1;

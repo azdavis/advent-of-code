@@ -33,7 +33,8 @@ fn parse(s: &str) -> (HashSet<isize>, Vec<bool>) {
     .unwrap()
     .chars()
     .enumerate()
-    .filter_map(|(idx, c)| is_plant(c).then(|| idx.try_into().unwrap()))
+    .filter(|&(_, c)| is_plant(c))
+    .map(|(idx, _)| idx.try_into().unwrap())
     .collect();
   assert!(lines.next().unwrap().is_empty());
   let mut rules = vec![false; 1 << WINDOW];

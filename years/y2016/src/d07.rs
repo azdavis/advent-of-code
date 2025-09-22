@@ -33,7 +33,8 @@ fn get_aba<'a>(xs: &'a [&str]) -> impl Iterator<Item = [u8; 2]> + 'a {
   xs.iter().flat_map(|&s| {
     s.as_bytes()
       .windows(3)
-      .filter_map(|w| (w[0] == w[2] && w[0] != w[1]).then(|| [w[0], w[1]]))
+      .filter(|&w| (w[0] == w[2] && w[0] != w[1]))
+      .map(|w| [w[0], w[1]])
   })
 }
 

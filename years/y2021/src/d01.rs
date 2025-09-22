@@ -9,7 +9,7 @@ where
   let mut prev = None::<u16>;
   iter
     .filter(|&x| {
-      let ret = prev.map_or(false, |y| y < x);
+      let ret = prev.is_some_and(|y| y < x);
       prev = Some(x);
       ret
     })

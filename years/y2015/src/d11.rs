@@ -9,7 +9,8 @@ fn valid(s: &[u8]) -> bool {
   }
   let two_same: HashSet<_> = s
     .windows(2)
-    .filter_map(|w| (w[0] == w[1]).then(|| w[0]))
+    .filter(|&w| (w[0] == w[1]))
+    .map(|w| w[0])
     .collect();
   two_same.len() >= 2
 }

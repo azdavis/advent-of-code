@@ -21,8 +21,8 @@ pub fn p2(s: &str) -> u64 {
 
 fn go(nums: &[u64]) -> u64 {
   'outer: for (idx, &n) in nums.iter().enumerate().skip(WINDOW) {
-    for &a in nums[idx - WINDOW..idx].iter() {
-      for &b in nums[idx - WINDOW..idx].iter() {
+    for &a in &nums[idx - WINDOW..idx] {
+      for &b in &nums[idx - WINDOW..idx] {
         if a + b == n {
           continue 'outer;
         }

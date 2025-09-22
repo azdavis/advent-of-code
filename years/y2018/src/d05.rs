@@ -5,10 +5,8 @@ fn react(upper: u8, lower: u8) -> bool {
 fn run(bs: &[u8]) -> Vec<u8> {
   let mut ret = Vec::with_capacity(bs.len());
   assert_eq!(bs.len() % 2, 0);
-  for &b2 in bs.iter() {
-    let should_rm = ret
-      .last()
-      .map_or(false, |&b1| react(b1, b2) || react(b2, b1));
+  for &b2 in bs {
+    let should_rm = ret.last().is_some_and(|&b1| react(b1, b2) || react(b2, b1));
     if should_rm {
       ret.pop().unwrap();
     } else {

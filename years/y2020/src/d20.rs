@@ -2,7 +2,7 @@ use helpers::{static_regex, HashMap, HashSet};
 use std::cmp::Ordering;
 
 /// Rotates the matrix to the left. Requires there exists c such that for all x
-/// in xs, x.len() == c.
+/// in xs, `x.len()` == c.
 fn rotate_left<T>(xs: &[Vec<T>]) -> Vec<Vec<T>>
 where
   T: Copy,
@@ -32,7 +32,7 @@ fn t_rotate_left() {
 }
 
 /// Transposes the matrix. Requires there exists c such that for all x in xs,
-/// x.len() == c.
+/// `x.len()` == c.
 fn transpose<T>(xs: &[Vec<T>]) -> Vec<Vec<T>>
 where
   T: Copy,
@@ -153,22 +153,19 @@ pub fn p2(s: &str) -> usize {
       .iter()
       .enumerate()
       .flat_map(|(y, row)| row.iter().enumerate().map(move |(x, _)| (y, x)))
-      .filter_map(|(y, x)| {
+      .filter(|&(y, x)| {
+        sea_monster.iter().all(|&(sm_y, sm_x)| {
+          board
+            .get(y + sm_y)
+            .and_then(|row| row.get(x + sm_x))
+            .is_some_and(|x| x.is_black())
+        })
+      })
+      .flat_map(|(y, x)| {
         sea_monster
           .iter()
-          .all(|&(sm_y, sm_x)| {
-            board
-              .get(y + sm_y)
-              .and_then(|row| row.get(x + sm_x))
-              .map_or(false, |x| x.is_black())
-          })
-          .then(|| {
-            sea_monster
-              .iter()
-              .map(move |&(sm_y, sm_x)| (sm_y + y, sm_x + x))
-          })
+          .map(move |&(sm_y, sm_x)| (sm_y + y, sm_x + x))
       })
-      .flatten()
       .collect();
     // if we found at least one sea monster, this orientation is the one.
     if !deleted.is_empty() {
@@ -267,7 +264,7 @@ fn go(s: &str) -> Board {
 
 fn mk_edges(tiles: &Tiles) -> Edges {
   let mut ret = Edges::default();
-  for (&id_a, tile_translations) in tiles.iter() {
+  for (&id_a, tile_translations) in tiles {
     for (id_b, tile) in tile_translations.iter().enumerate() {
       for &(f, dir) in &FNS {
         ret.entry((f(tile), dir)).or_default().insert((id_a, id_b));

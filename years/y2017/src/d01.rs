@@ -8,7 +8,8 @@ pub fn p1(s: &str) -> u32 {
   let &last = digits.last().unwrap();
   digits
     .windows(2)
-    .filter_map(|w| (w[0] == w[1]).then(|| w[0]))
+    .filter(|&w| (w[0] == w[1]))
+    .map(|w| w[0])
     .chain((first == last).then_some(first))
     .sum()
 }

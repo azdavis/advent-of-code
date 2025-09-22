@@ -3,7 +3,7 @@ mod cycle_zipper;
 use cycle_zipper::CycleZipper;
 use helpers::static_regex;
 
-static_regex!(RE = r#"^(\d+) players; last marble is worth (\d+) points$"#);
+static_regex!(RE = r"^(\d+) players; last marble is worth (\d+) points$");
 
 fn parse(s: &str) -> (usize, u32) {
   let caps = RE.captures(s.trim()).unwrap();

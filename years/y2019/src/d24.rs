@@ -189,25 +189,25 @@ mod examples {
 
   #[test]
   fn t_biodiversity_rating() {
-    let s = r#"
+    let s = r"
 .....
 .....
 .....
 #....
 .#...
-"#;
+";
     assert_eq!(biodiversity_rating(&parse(s.trim())), 2_129_920);
   }
 
   #[test]
   fn t_p2_small() {
-    let s = r#"
+    let s = r"
 ....#
 #..#.
 #.?##
 ..#..
 #....
-"#;
+";
     assert_eq!(run3(s.trim(), 10), 99);
   }
 

@@ -23,11 +23,8 @@ pub fn p1(s: &str) -> u32 {
       row
         .iter()
         .enumerate()
-        .filter_map(|(x, &n1)| {
-          neighbors(&grid, [x, y])
-            .all(|(&n2, _)| n1 < n2)
-            .then(|| u32::from(n1) + 1)
-        })
+        .filter(|&(x, &n1)| neighbors(&grid, [x, y]).all(|(&n2, _)| n1 < n2))
+        .map(|(_, &n1)| u32::from(n1) + 1)
         .sum::<u32>()
     })
     .sum()

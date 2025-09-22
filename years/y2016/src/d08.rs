@@ -72,8 +72,8 @@ pub fn p1(s: &str) -> usize {
 }
 
 fn draw(w: &mut dyn Write, screen: &[[bool; WIDTH]; HEIGHT]) -> io::Result<()> {
-  for row in screen.iter() {
-    for &it in row.iter() {
+  for row in screen {
+    for &it in row {
       write!(w, "{}", block_char::get(it))?;
     }
     writeln!(w)?;
@@ -92,14 +92,14 @@ fn t() {
   assert_eq!(p1(s), 115);
   let mut buf = io::Cursor::new(Vec::new());
   draw(&mut buf, &run(s)).unwrap();
-  let p2 = r#"
+  let p2 = r"
 ████░████░████░█░░░██░░█░████░███░░████░░███░░░██░
 █░░░░█░░░░█░░░░█░░░██░█░░█░░░░█░░█░█░░░░░░█░░░░░█░
 ███░░███░░███░░░█░█░██░░░███░░█░░█░███░░░░█░░░░░█░
 █░░░░█░░░░█░░░░░░█░░█░█░░█░░░░███░░█░░░░░░█░░░░░█░
 █░░░░█░░░░█░░░░░░█░░█░█░░█░░░░█░█░░█░░░░░░█░░█░░█░
 ████░█░░░░████░░░█░░█░░█░█░░░░█░░█░█░░░░░███░░██░░
-"#;
+";
   let s = String::from_utf8(buf.into_inner()).unwrap();
   assert_eq!(s.trim(), p2.trim());
 }

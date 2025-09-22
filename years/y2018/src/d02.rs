@@ -21,7 +21,7 @@ pub fn p1(s: &str) -> usize {
 pub fn p2(s: &str) -> String {
   let words: Vec<Vec<_>> = s.lines().map(|line| line.chars().collect()).collect();
   for (idx, w1) in words.iter().enumerate() {
-    for w2 in words[idx..].iter() {
+    for w2 in &words[idx..] {
       let diff = w1
         .iter()
         .zip(w2.iter())

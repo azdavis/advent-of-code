@@ -1,7 +1,7 @@
 use helpers::{block_char, static_regex, HashSet};
 use std::io::{self, Write};
 
-static_regex!(RE = r#"^position=< *(-?\d+), *(-?\d+)> velocity=< *(-?\d+), *(-?\d+)>$"#);
+static_regex!(RE = r"^position=< *(-?\d+), *(-?\d+)> velocity=< *(-?\d+), *(-?\d+)>$");
 
 type Vec2 = [isize; 2];
 
@@ -76,7 +76,7 @@ fn t() {
   }
   let mut buf = io::Cursor::new(Vec::new());
   draw(&mut buf, get_bounding_corners(&position), &position).unwrap();
-  let p1 = r#"
+  let p1 = r"
 ░████░░░█████░░░█░░░░█░░█░░░░█░░██████░░██████░░█████░░░██████
 █░░░░█░░█░░░░█░░█░░░░█░░█░░░█░░░█░░░░░░░░░░░░█░░█░░░░█░░░░░░░█
 █░░░░░░░█░░░░█░░░█░░█░░░█░░█░░░░█░░░░░░░░░░░░█░░█░░░░█░░░░░░░█
@@ -87,7 +87,7 @@ fn t() {
 █░░░░░░░█░░░█░░░░█░░█░░░█░░█░░░░█░░░░░░░█░░░░░░░█░░░░░░░█░░░░░
 █░░░░█░░█░░░░█░░█░░░░█░░█░░░█░░░█░░░░░░░█░░░░░░░█░░░░░░░█░░░░░
 ░████░░░█░░░░█░░█░░░░█░░█░░░░█░░██████░░██████░░█░░░░░░░██████
-"#;
+";
   let s = String::from_utf8(buf.into_inner()).unwrap();
   assert_eq!(s.trim(), p1.trim());
 }

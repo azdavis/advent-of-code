@@ -32,7 +32,7 @@ fn run(s: &str, f: fn(HashMap<&str, usize>) -> bool) -> usize {
 }
 
 fn has(map: &HashMap<&str, usize>, key: &str, val: usize, f: fn(&usize, &usize) -> bool) -> bool {
-  map.get(key).map_or(true, |it| f(it, &val))
+  map.get(key).is_none_or(|it| f(it, &val))
 }
 
 pub fn p1(s: &str) -> usize {

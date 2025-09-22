@@ -41,7 +41,6 @@ fn evolve_with(xs: &Grid, threshold: usize, get_one_tile: GetOneTile) -> Grid {
   let mut ret = xs.clone();
   for i in 0..ret.len() {
     for j in 0..ret[i].len() {
-      #[allow(clippy::match_on_vec_items)]
       match ret[i][j] {
         Tile::Floor => {}
         Tile::Empty => {

@@ -33,7 +33,7 @@ fn go(s: &str, reader: &mut dyn BufRead, writer: &mut dyn Write) -> i64 {
     buf_u8.clear();
     reader.read_until(b'\n', &mut buf_u8).unwrap();
     for b in buf_u8.drain(..) {
-      prog.input(b.try_into().unwrap());
+      prog.input(b.into());
     }
   }
 }

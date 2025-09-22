@@ -6,7 +6,7 @@ fn run(real: bool, prog: &str, commands: &[u8]) -> usize {
   let mut out = Vec::new();
   assert!(p.run(&mut out).needs_input());
   out.clear();
-  for &b in commands.iter() {
+  for &b in commands {
     p.input(b.into());
   }
   assert!(p.run(&mut out).is_done());
@@ -22,7 +22,7 @@ fn run(real: bool, prog: &str, commands: &[u8]) -> usize {
 
 pub fn p1(s: &str) -> usize {
   // (A and B and C).not and D
-  let inp = br#"
+  let inp = br"
 NOT T T
 AND A T
 AND B T
@@ -32,13 +32,13 @@ AND D T
 NOT T T
 NOT T J
 WALK
-"#;
+";
   run(true, s, &inp[1..])
 }
 
 pub fn p2(s: &str) -> usize {
   // (((A and B and C).not and D and H).not and A).not
-  let inp = br#"
+  let inp = br"
 NOT T T
 AND A T
 AND B T
@@ -50,7 +50,7 @@ NOT T T
 AND A T
 NOT T J
 RUN
-"#;
+";
   run(true, s, &inp[1..])
 }
 

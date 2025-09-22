@@ -85,7 +85,7 @@ fn go(s: &str, init: Vec<Node>, prepare_input: fn(&mut Input)) -> usize {
                 let mut at = st.at.clone();
                 at[node_idx] = node;
                 let tup = (at.clone(), keys);
-                if cache.get(&tup).map_or(true, |&x| x > steps) {
+                if cache.get(&tup).is_none_or(|&x| x > steps) {
                   cache.insert(tup, steps);
                   states.push(State { at, keys, steps });
                 }

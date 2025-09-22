@@ -3,11 +3,7 @@ fn parse(s: &str) -> Vec<u32> {
 }
 
 fn diff(a: u32, b: u32) -> u32 {
-  if a > b {
-    a - b
-  } else {
-    b - a
-  }
+  a.abs_diff(b)
 }
 
 fn run(s: &str, cost: fn(u32, u32) -> u32) -> u32 {

@@ -52,7 +52,7 @@ fn ore_for_fuel(inp: &Input<'_>, num_fuel: usize) -> usize {
     let num_need = want.remove(chem).unwrap();
     let (per_batch, ref to_ins) = inp.recipes[&chem];
     let num_batches = ceil_div(num_need, per_batch);
-    for ing in to_ins.iter() {
+    for ing in to_ins {
       *want.entry(ing.chem).or_default() += num_batches * ing.count;
     }
   }
