@@ -11,13 +11,13 @@ def parse() -> tuple[list[int], list[int]]:
         snd.append(int(b))
     return fst, snd
 
-def p1():
+def p1() -> int:
     fst, snd = parse()
     fst.sort()
     snd.sort()
     return sum(abs(a - b) for a, b in zip(fst, snd))
 
-def p2():
+def p2() -> int:
     fst, snd = parse()
     c = Counter(snd)
     ret = 0

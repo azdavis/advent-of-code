@@ -20,14 +20,14 @@ def parse() -> list[list[int]]:
             ret.append([int(x) for x in line.strip().split()])
     return ret
 
-def p1():
+def p1() -> int:
     return sum(1 for xs in parse() if safe(xs))
 
 def remove_one(xs: list[int]) -> Generator[list[int], None, None]:
     for i in range(len(xs)):
         yield [x for j, x in enumerate(xs) if i != j]
 
-def p2():
+def p2() -> int:
     return sum(1 for xs in parse() if safe(xs) or any(safe(ys) for ys in remove_one(xs)))
 
 print(p2())
